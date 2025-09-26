@@ -25,9 +25,9 @@ const Login = () => {
       { withCredentials: true }
     );
     if (result.status == 200) {
-        if(result.data.role=='admin'){
-            window.location.href="/"
-        }
+      if (result.data.role == "admin") {
+        window.location.href = "/admin/dashboard";
+      }
     }
   }
 
