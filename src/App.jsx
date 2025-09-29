@@ -11,6 +11,7 @@ import UnauthorizedPage from "./components/UnauthorizedPage";
 import Student from "./components/Student";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Classes from "./components/Classes";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -31,6 +32,14 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
+            <Route
+              path="/admin/classes"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <Classes />
+                </RoleProtectedRoute>
+              }
+            />
 
             <Route
               path="/teachers"
@@ -40,6 +49,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="*" element={<UnauthorizedPage />} />
+
             <Route path="/students" element={<Student />} />
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
           </Routes>

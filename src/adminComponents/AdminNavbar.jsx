@@ -24,7 +24,8 @@ const AdminNavbar = () => {
   const [dbNavItems, setDbNavItems] = useState([]);
 
   const fixedNavItems = [
-    { name: "Dashboard", icon: Home, href: "/dashboard  " },
+    { name: "Dashboard", icon: Home, href: "/admin/dashboard" },
+    { name: "Classes", icon: Home, href: "/admin/classes" },
     { name: "Settings", icon: Settings, href: "/settings" },
   ];
 
@@ -48,7 +49,7 @@ const AdminNavbar = () => {
     if (result.status == 200) {
       const items = result.data.data.map((item) => ({
         name: item.name,
-        href: item.slug,
+        href: "/" + item.slug,
         icon: iconMap[item.name],
       }));
       setDbNavItems(items);
@@ -60,7 +61,6 @@ const AdminNavbar = () => {
   }, []);
 
   const navigationItems = [...dbNavItems, ...fixedNavItems];
-
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -84,9 +84,9 @@ const AdminNavbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:ml-6 md:flex md:space-x-8">
-              {navigationItems.map((item,index) => {
+              {navigationItems.map((item, index) => {
                 const Icon = item.icon;
-                const isActive = location.pathname === item.href;
+                const isActive = location.pathname.trim() === item.href.trim();
                 return (
                   <Link
                     key={index}
@@ -148,14 +148,16 @@ const AdminNavbar = () => {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 fixed top-17 left-0 w-screen bg-white border-t border-gray-200">
             {/* Mobile Search */}
 
-            {navigationItems.map((item,index) => {
+            {navigationItems.map((item, index) => {
               const Icon = item.icon;
+              const isActive = location.pathname.trim() === item.href.trim();
+              console.log(location.pathname);
               return (
                 <Link
                   key={index}
-                  href={item.href}
+                  to={item.href}
                   className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
-                    item.active
+                    isActive
                       ? "bg-black text-white"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
