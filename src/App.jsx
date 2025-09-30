@@ -12,6 +12,10 @@ import Student from "./components/Student";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Classes from "./components/Classes";
+import "primereact/resources/themes/lara-light-blue/theme.css"; // Theme
+import "primereact/resources/primereact.min.css"; // Core CSS
+import ViewStudent from "./components/ViewStudent";
+import Fees from "./components/Fees";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -49,10 +53,32 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/student/detail"
+              element={
+                <ProtectedRoute slug="students">
+                  <ViewStudent />
+                </ProtectedRoute>
+              }
+            />
 
+            <Route
+              path="/students"
+              element={
+                <ProtectedRoute slug="students">
+                  <Student />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/fees"
+              element={
+                <ProtectedRoute slug="fees">
+                  <Fees />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<UnauthorizedPage />} />
-
-            <Route path="/students" element={<Student />} />
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
           </Routes>
         </div>

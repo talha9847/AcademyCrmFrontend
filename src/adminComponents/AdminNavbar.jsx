@@ -12,6 +12,7 @@ import {
   LogOut,
   Menu,
   X,
+  Wallet,
   icons,
 } from "lucide-react";
 import axios from "axios";
@@ -39,6 +40,7 @@ const AdminNavbar = () => {
     Finances: CreditCard,
     Analytics: BarChart3,
     Settings: Settings,
+    Fees: Wallet,
   };
 
   async function getSlugs() {
