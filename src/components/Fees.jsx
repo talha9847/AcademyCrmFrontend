@@ -6,6 +6,12 @@ import axios from "axios";
 
 const Fees = () => {
   const [fees, setFees] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [collectAmount, setCollectAmount] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState();
+  const [message, setMessage] = useState();
+  const [isValid, setIsValid] = useState(false);
+
   async function fetchFees() {
     const result = await axios.get("http://localhost:5000/api/fees/fetchFees", {
       withCredentials: true,
@@ -18,71 +24,15 @@ const Fees = () => {
 
   useEffect(() => {
     fetchFees();
-  },[]);
-  const [selectedFee, setSelectedFee] = useState(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [collectAmount, setCollectAmount] = useState("");
-  const [modalMessage, setModalMessage] = useState({ text: "", type: "" }); // For custom alert/message box
+  }, []);
 
-  const openCollectDialog = (fee) => {
-    setSelectedFee(fee);
-    setCollectAmount("");
-    setModalMessage({ text: "", type: "" });
-    setIsDialogOpen(true);
-  };
+  const totalAmount = fees.reduce((sum, fee) => sum + fee.total_fees, 0);
+  const totalDueAmount = fees.reduce(
+    (sum, fee) => sum + (fee.total_fees - fee.paid_amount),
+    0
+  );
 
-  const showMessage = (text, type = "error") => {
-    setModalMessage({ text, type });
-    // Hide after 3 seconds
-    setTimeout(() => setModalMessage({ text: "", type: "" }), 3000);
-  };
-
-  const handleCollectFee = () => {
-    const amount = parseFloat(collectAmount);
-
-    if (!collectAmount || isNaN(amount) || amount <= 0) {
-      showMessage("Please enter a valid amount greater than zero.");
-      return;
-    }
-
-    const remainingAmount = selectedFee.amount - selectedFee.paidAmount;
-
-    if (amount > remainingAmount) {
-      showMessage(
-        `Amount cannot exceed the remaining due amount of ${formatCurrency(
-          remainingAmount
-        )}.`,
-        "error"
-      );
-      return;
-    }
-
-    setFees((prevFees) =>
-      prevFees.map((fee) =>
-        fee.id === selectedFee.id
-          ? {
-              ...fee,
-              paidAmount: fee.paidAmount + amount,
-              status: fee.paidAmount + amount >= fee.amount ? "paid" : "unpaid",
-            }
-          : fee
-      )
-    );
-
-    showMessage(
-      `${formatCurrency(amount)} collected successfully for ${
-        selectedFee.studentName
-      }.`,
-      "success"
-    );
-
-    // Close the dialog after a brief delay so the user sees the success message
-    setTimeout(() => {
-      setIsDialogOpen(false);
-      setSelectedFee(null);
-      setCollectAmount("");
-    }, 500);
-  };
+  const totalPaidAmount = totalAmount - totalDueAmount;
 
   const formatCurrency = (amount) =>
     new Intl.NumberFormat("en-US", {
@@ -97,14 +47,30 @@ const Fees = () => {
       day: "numeric",
     });
 
-  const totalAmount = fees.reduce((sum, fee) => sum + fee.total_fees, 0);
-  const totalDueAmount = fees.reduce(
-    (sum, fee) => sum + (fee.total_fees - fee.paid_amount),
-    0
-  );
+  async function getDetails(user) {
+    setSelectedStudent(user);
+    console.log(user);
+  }
 
-
-  const totalPaidAmount = totalAmount - totalDueAmount;
+  async function validationError(amount, due) {
+    if (amount == "") {
+      setMessage("Amount is required");
+      setIsValid(false);
+      return false;
+    } else if (amount < 100) {
+      setMessage("Minimum amount is 100");
+      setIsValid(false);
+      return false;
+    } else if (parseInt(amount) > due) {
+      setMessage("Amount can't be greater than remaining amount");
+      setIsValid(false);
+      return false;
+    } else {
+      setMessage("");
+      setIsValid(true);
+      return true;
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50  font-sans">
@@ -244,14 +210,15 @@ const Fees = () => {
                         </span>
                       </td>
                       <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-center">
-                        {!isPaid && (
-                          <button
-                            onClick={() => openCollectDialog(fee)}
-                            className="bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                          >
-                            Collect
-                          </button>
-                        )}
+                        <button
+                          onClick={() => {
+                            getDetails(fee);
+                            setIsDialogOpen(true);
+                          }}
+                          className="bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        >
+                          Collect
+                        </button>
                       </td>
                     </tr>
                   );
@@ -261,31 +228,15 @@ const Fees = () => {
           </div>
         </div>
 
-        {/* Custom Message Box (Replaces alert) */}
-        {modalMessage.text && (
-          <div
-            className="fixed bottom-4 right-4 z-[60] p-4 rounded-lg shadow-xl text-white max-w-sm w-full transition-opacity duration-300"
-            style={{
-              backgroundColor:
-                modalMessage.type === "error" ? "#EF4444" : "#10B981",
-            }}
-          >
-            <p className="font-semibold">
-              {modalMessage.type === "error" ? "Error" : "Success"}
-            </p>
-            <p className="text-sm mt-1">{modalMessage.text}</p>
-          </div>
-        )}
-
         {/* Modal/Dialog for Fee Collection */}
-        {isDialogOpen && selectedFee && (
-          <div className="fixed inset-0 flex items-center justify-center p-4  bg-opacity-60 z-50 transition-opacity duration-300">
+        {isDialogOpen && (
+          <div className="fixed inset-0 flex items-center justify-center p-4  bg-opacity-60 z-50 transition-opacity duration-300 ">
             <div className="bg-white rounded-xl w-full max-w-sm p-6 sm:p-8 shadow-2xl transform scale-100 transition-transform duration-300">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Collect Payment
               </h2>
               <p className="text-gray-500 text-sm mb-6">
-                Processing fee for **{selectedFee.studentName}**.
+                Processing fee for **{selectedStudent.full_name}**
               </p>
 
               <div className="space-y-4 mb-6">
@@ -293,10 +244,10 @@ const Fees = () => {
                 <div className="grid grid-cols-2 gap-4 border-b pb-4">
                   <div>
                     <div className="text-xs font-medium text-gray-500 uppercase">
-                      Fee Type
+                      Paid Amount
                     </div>
                     <div className="font-semibold text-gray-700">
-                      {selectedFee.feeType}
+                      {formatCurrency(selectedStudent.paid_amount)}
                     </div>
                   </div>
                   <div>
@@ -304,7 +255,7 @@ const Fees = () => {
                       Total Amount
                     </div>
                     <div className="font-semibold text-gray-700">
-                      {formatCurrency(selectedFee.amount)}
+                      {formatCurrency(selectedStudent.total_fees)}
                     </div>
                   </div>
                 </div>
@@ -315,9 +266,7 @@ const Fees = () => {
                     Remaining Due
                   </div>
                   <div className="text-xl font-extrabold text-blue-800">
-                    {formatCurrency(
-                      selectedFee.amount - selectedFee.paidAmount
-                    )}
+                    {formatCurrency(selectedStudent.due_amount)}
                   </div>
                 </div>
 
@@ -332,14 +281,21 @@ const Fees = () => {
                   <input
                     id="collection-amount"
                     type="number"
-                    placeholder="e.g., 500.00"
+                    placeholder="1000.00"
                     value={collectAmount}
                     onChange={(e) => setCollectAmount(e.target.value)}
+                    onInput={(e) => {
+                      validationError(
+                        e.target.value,
+                        selectedStudent.due_amount
+                      );
+                    }}
                     className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-150"
-                    min="0.01"
+                    min="1000"
                     step="0.01"
-                    max={selectedFee.amount - selectedFee.paidAmount}
+                    max={selectedStudent.due_amount}
                   />
+                  <div className="text-red-500 text-xs">{message}</div>
                 </div>
               </div>
 
@@ -351,8 +307,7 @@ const Fees = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={handleCollectFee}
-                  disabled={!collectAmount || parseFloat(collectAmount) <= 0}
+                  disabled={!isValid}
                   className="px-5 py-2.5 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 transition duration-150 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Confirm Collection

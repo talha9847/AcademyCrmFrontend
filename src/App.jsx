@@ -16,6 +16,7 @@ import "primereact/resources/themes/lara-light-blue/theme.css"; // Theme
 import "primereact/resources/primereact.min.css"; // Core CSS
 import ViewStudent from "./components/ViewStudent";
 import Fees from "./components/Fees";
+import Hero from "./components/Hero";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -25,7 +26,8 @@ function App() {
       <div className="flex flex-col min-h-screen bg-gray-100">
         <div className="flex-grow">
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Hero />} />
             <Route path="/test" element={<Dashboard />} />
 
             <Route
