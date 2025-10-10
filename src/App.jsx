@@ -17,6 +17,7 @@ import "primereact/resources/primereact.min.css"; // Core CSS
 import ViewStudent from "./components/ViewStudent";
 import Fees from "./components/Fees";
 import Hero from "./components/Hero";
+import Website from "./components/Website";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -27,7 +28,7 @@ function App() {
         <div className="flex-grow">
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Hero />} />
+            <Route path="/" element={<Website />} />
             <Route path="/test" element={<Dashboard />} />
 
             <Route

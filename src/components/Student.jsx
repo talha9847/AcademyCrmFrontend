@@ -3,31 +3,113 @@ import { Eye, Plus, X, Search, Users } from "lucide-react";
 import AdminNavbar from "../adminComponents/AdminNavbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Mock AdminNavbar component
 
 const Student = () => {
   const [showModal, setShowModal] = useState(false);
   const [students, setStudents] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [classId, setClassId] = useState(null);
+  const [sections, setSections] = useState([]);
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const submitStudent = async (data) => {
+    if (!data.sectionId) data.sectionId = 1;
+
+    try {
+      const result = await axios.post(
+        "http://localhost:5000/api/user/createStudent",
+        data,
+        { withCredentials: true }
+      );
+
+      if (result.status === 201 && result.data.success) {
+        toast.success("🎓 Student added successfully!");
+
+        // Fetch updated list before closing modal
+        await getStudents();
+
+        // Then reset form & close modal
+        reset();
+        setShowModal(false);
+      } else {
+        toast.error(result.data.message || "Something went wrong!");
+      }
+    } catch (error) {
+      console.error("Error submitting student:", error);
+      toast.error(
+        error.response?.data?.message || "Server error. Please try again."
+      );
+    }
+  };
+
   async function getStudents() {
+    console.log("I am called");
     const result = await axios.get(
       "http://localhost:5000/api/user/getAllStudents",
       { withCredentials: true }
     );
     if (result.status == 200) {
-      console.log(result.data.result);
+      console.log("  i am here still what is ngoijij kjlfkl kdjsl ksdfkl ");
       setStudents(result.data.result);
     }
   }
   const handleViewButton = (id) => {
     navigate("/student/detail", { state: { studentId: id } });
-    console.log(id);
   };
+  async function getClasses() {
+    const result = await axios.get(
+      "http://localhost:5000/api/extras/getClasses",
+      { withCredentials: true }
+    );
+    if (result.status == 200) {
+      setClasses(result.data.data);
+    }
+  }
+
+  async function getSectionById(classId) {
+    if (classId > 0) {
+      const result = await axios.get(
+        "http://localhost:5000/api/extras/getSectionById",
+        {
+          params: { id: classId },
+          withCredentials: true,
+        }
+      );
+      if (result.status == 200) {
+        setSections(result.data.data);
+      }
+    }
+  }
+
+  async function getSession() {
+    const result = await axios.get(
+      "http://localhost:5000/api/extras/getSessions",
+      { withCredentials: true }
+    );
+    if (result.status == 200) {
+      setSessions(result.data.data);
+    }
+  }
+  useEffect(() => {
+    getSectionById(classId);
+  }, [classId]);
 
   useEffect(() => {
     getStudents();
-  },[]);
+    getClasses();
+    getSession();
+  }, []);
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredStudents = students.filter(
@@ -39,7 +121,18 @@ const Student = () => {
   return (
     <div className="min-h-screen bg-white">
       <AdminNavbar />
-
+      <ToastContainer
+        position="top-right" // ✅ You can change this
+        autoClose={3000} // closes after 3 seconds
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" // "light", "dark", "colored"
+      />
       {/* Header Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -162,7 +255,7 @@ const Student = () => {
               </button>
             </div>
 
-            <form className="p-6">
+            <form onSubmit={handleSubmit(submitStudent)} className="p-6">
               {/* Student Information Section */}
               <div className="mb-8">
                 <h3 className="text-xl font-bold mb-4 pb-2 border-b-2 border-black">
@@ -177,12 +270,17 @@ const Student = () => {
                       Full Name *
                     </label>
                     <input
+                      {...register("fullName", {
+                        required: "Full name is required",
+                      })}
                       id="fullName"
                       name="fullName"
                       type="text"
-                      required
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.fullName?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -193,12 +291,21 @@ const Student = () => {
                       Email *
                     </label>
                     <input
+                      {...register("email", {
+                        required: "Email is required",
+                        pattern: {
+                          value: /^\S+@\S+\.\S+$/,
+                          message: "Please enter a valid email address",
+                        },
+                      })}
                       id="email"
                       name="email"
                       type="email"
-                      required
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.email?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -208,12 +315,25 @@ const Student = () => {
                     >
                       Class ID
                     </label>
-                    <input
+                    <select
+                      {...register("classId", {
+                        required: "Please select class",
+                        onChange: (e) => setClassId(e.target.value), // ✅ use onChange inside register
+                      })}
                       id="classId"
-                      name="classId"
-                      type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
-                    />
+                    >
+                      <option value="">--select class--</option>
+                      {classes.map((val) => (
+                        <option key={val.id} value={val.id}>
+                          {val.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    <p className="text-red-500 text-xs">
+                      {errors.classId?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -223,12 +343,25 @@ const Student = () => {
                     >
                       Section ID
                     </label>
-                    <input
+                    <select
+                      {...register("sectionId", {
+                        required: false,
+                      })}
                       id="sectionId"
                       name="sectionId"
                       type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
-                    />
+                      disabled={classId == null}
+                    >
+                      <option key={0} value="">
+                        --select section--
+                      </option>
+                      {sections.map((val, ind) => (
+                        <option key={ind + 1} value={val.id}>
+                          {val.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
@@ -239,11 +372,17 @@ const Student = () => {
                       Admission Number
                     </label>
                     <input
+                      {...register("admissionNumber", {
+                        required: "Admission Number is required",
+                      })}
                       id="admissionNumber"
                       name="admissionNumber"
                       type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.admissionNumber?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -254,11 +393,17 @@ const Student = () => {
                       Roll Number
                     </label>
                     <input
+                      {...register("rollNo", {
+                        required: "Roll No is required",
+                      })}
                       id="rollNo"
                       name="rollNo"
                       type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.rollNo?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -269,11 +414,17 @@ const Student = () => {
                       Date of Birth
                     </label>
                     <input
+                      {...register("dob", {
+                        required: "Date of birth is required",
+                      })}
                       id="dob"
                       name="dob"
                       type="date"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.dob?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -284,6 +435,9 @@ const Student = () => {
                       Gender
                     </label>
                     <select
+                      {...register("gender", {
+                        required: "Gender is required",
+                      })}
                       id="gender"
                       name="gender"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
@@ -292,6 +446,9 @@ const Student = () => {
                       <option value="male">Male</option>
                       <option value="female">Female</option>
                     </select>
+                    <p className="text-red-500 text-xs">
+                      {errors.gender?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -301,12 +458,27 @@ const Student = () => {
                     >
                       Session ID
                     </label>
-                    <input
+                    <select
+                      {...register("sessionId", {
+                        required: "Session is required",
+                      })}
                       id="sessionId"
                       name="sessionId"
                       type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
-                    />
+                    >
+                      <option key={0} value="">
+                        --select session--
+                      </option>
+                      {sessions.map((val, ind) => (
+                        <option key={ind + 1} value={val.id}>
+                          {val.timing}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-red-500 text-xs">
+                      {errors.sessionId?.message}
+                    </p>
                   </div>
 
                   <div className="md:col-span-2 lg:col-span-3">
@@ -317,11 +489,17 @@ const Student = () => {
                       Address
                     </label>
                     <input
+                      {...register("address", {
+                        required: "Address is required",
+                      })}
                       id="address"
                       name="address"
                       type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.address?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -332,11 +510,17 @@ const Student = () => {
                       Total Fee
                     </label>
                     <input
+                      {...register("totalFee", {
+                        required: "Total fee is required",
+                      })}
                       id="totalFee"
                       name="totalFee"
                       type="number"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.totalFee?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -347,11 +531,17 @@ const Student = () => {
                       Due Date
                     </label>
                     <input
+                      {...register("dueDate", {
+                        required: "Due date is required",
+                      })}
                       id="dueDate"
                       name="dueDate"
                       type="date"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.dueDate?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -362,6 +552,7 @@ const Student = () => {
                       Discount (%)
                     </label>
                     <input
+                      {...register("discount")}
                       id="discount"
                       name="discount"
                       type="number"
@@ -377,16 +568,21 @@ const Student = () => {
                       Description
                     </label>
                     <textarea
+                      {...register("description", {
+                        required: "Description is required",
+                      })}
                       id="description"
                       name="description"
                       rows="3"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     ></textarea>
+                    <p className="text-red-500 text-xs">
+                      {errors.description?.message}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* Parent Information Section */}
               <div className="mb-6">
                 <h3 className="text-xl font-bold mb-4 pb-2 border-b-2 border-black">
                   Parent Information
@@ -400,11 +596,17 @@ const Student = () => {
                       Parent Name
                     </label>
                     <input
+                      {...register("p_name", {
+                        required: "parent name is required",
+                      })}
                       id="p_name"
                       name="p_name"
                       type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.p_name?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -415,11 +617,17 @@ const Student = () => {
                       Phone
                     </label>
                     <input
+                      {...register("p_phone", {
+                        required: "parent contact number is required",
+                      })}
                       id="p_phone"
                       name="p_phone"
                       type="tel"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.p_phone?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -430,11 +638,21 @@ const Student = () => {
                       Email
                     </label>
                     <input
+                      {...register("p_email", {
+                        required: "Email is required",
+                        pattern: {
+                          value: /^\S+@\S+\.\S+$/,
+                          message: "Please enter a valid email address",
+                        },
+                      })}
                       id="p_email"
                       name="p_email"
                       type="email"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.p_email?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -445,12 +663,18 @@ const Student = () => {
                       Relation
                     </label>
                     <input
+                      {...register("p_relation", {
+                        required: "Relation is required",
+                      })}
                       id="p_relation"
                       name="p_relation"
                       type="text"
                       placeholder="e.g., Father, Mother"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.p_relation?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -461,11 +685,17 @@ const Student = () => {
                       Occupation
                     </label>
                     <input
+                      {...register("p_occupation", {
+                        required: "Occupation is required",
+                      })}
                       id="p_occupation"
                       name="p_occupation"
                       type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.p_occupation?.message}
+                    </p>
                   </div>
 
                   <div className="md:col-span-2 lg:col-span-3">
@@ -476,11 +706,17 @@ const Student = () => {
                       Address
                     </label>
                     <input
+                      {...register("p_address", {
+                        required: "Address is required",
+                      })}
                       id="p_address"
                       name="p_address"
                       type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs">
+                      {errors.p_address?.message}
+                    </p>
                   </div>
                 </div>
               </div>

@@ -48,7 +48,7 @@ const Classes = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
-      
+
       <div className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Classes Section */}
         <div className="bg-white rounded-lg shadow-md p-6">
@@ -66,22 +66,35 @@ const Classes = () => {
             <table className="w-full">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">No.</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Class</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    No.
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    Class
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {classes.map((data, index) => (
-                  <tr key={index} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-gray-600">{index + 1}</td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-800">{data.name}</td>
+                  <tr
+                    key={index}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {index + 1}
+                    </td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-800">
+                      {data.name}
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
-                        <button className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded transition-colors">
+                        <button className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded transition-colors cursor-pointer">
                           <Edit2 size={16} />
                         </button>
-                        <button className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded transition-colors">
+                        <button className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded transition-colors cursor-pointer">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -109,22 +122,35 @@ const Classes = () => {
             <table className="w-full">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">No.</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Timings</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    No.
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    Timings
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {sessions.map((data, index) => (
-                  <tr key={index} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-gray-600">{index + 1}</td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-800">{data.timing}</td>
+                  <tr
+                    key={index}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {index + 1}
+                    </td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-800">
+                      {data.timing}
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
-                        <button className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded transition-colors">
+                        <button className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded transition-colors cursor-pointer">
                           <Edit2 size={16} />
                         </button>
-                        <button className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded transition-colors">
+                        <button className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded transition-colors cursor-pointer">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -136,7 +162,6 @@ const Classes = () => {
           </div>
         </div>
 
-        {/* Sections */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800">Sections</h2>
@@ -150,19 +175,25 @@ const Classes = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sections.map((cls) => (
-              <div key={cls.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+              <div
+                key={cls.id}
+                className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow"
+              >
                 <h3 className="font-bold text-lg text-gray-800 mb-3 pb-2 border-b border-gray-200">
                   {cls.name}
                 </h3>
                 <ul className="space-y-2">
                   {cls.sections.map((sec) => (
-                    <li key={sec.id} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                    <li
+                      key={sec.id}
+                      className="flex items-center justify-between p-2 hover:bg-gray-50 rounded"
+                    >
                       <span className="text-gray-700">{sec.name}</span>
                       <div className="flex gap-1">
-                        <button className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors">
+                        <button className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors cursor-pointer">
                           <Edit2 size={14} />
                         </button>
-                        <button className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors">
+                        <button className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors cursor-pointer">
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -175,7 +206,6 @@ const Classes = () => {
         </div>
       </div>
 
-
       {classModal && (
         <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
@@ -185,10 +215,15 @@ const Classes = () => {
             >
               <X size={24} />
             </button>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Class</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Add New Class
+            </h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="className" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="className"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Class Name
                 </label>
                 <input
@@ -215,7 +250,6 @@ const Classes = () => {
         </div>
       )}
 
-
       {sessionModal && (
         <div className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
@@ -225,10 +259,15 @@ const Classes = () => {
             >
               <X size={24} />
             </button>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Session</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Add New Session
+            </h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="sessionTiming" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="sessionTiming"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Session Timing
                 </label>
                 <input
@@ -255,7 +294,6 @@ const Classes = () => {
         </div>
       )}
 
-
       {sectionModal && (
         <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
@@ -265,10 +303,15 @@ const Classes = () => {
             >
               <X size={24} />
             </button>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Section</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Add New Section
+            </h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="selectClass" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="selectClass"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Select Class
                 </label>
                 <select
@@ -284,7 +327,10 @@ const Classes = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="sectionName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="sectionName"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Section Name
                 </label>
                 <input

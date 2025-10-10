@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import AdminNavbar from "../adminComponents/AdminNavbar";
 import axios from "axios";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 // Load Tailwind CSS script for utility classes
 /* global tailwind */
 
@@ -11,6 +13,12 @@ const Fees = () => {
   const [selectedStudent, setSelectedStudent] = useState();
   const [message, setMessage] = useState();
   const [isValid, setIsValid] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   async function fetchFees() {
     const result = await axios.get("http://localhost:5000/api/fees/fetchFees", {
@@ -18,7 +26,6 @@ const Fees = () => {
     });
     if (result.status == 200) {
       setFees(result.data.data);
-      console.log(result.data.data);
     }
   }
 
@@ -26,7 +33,9 @@ const Fees = () => {
     fetchFees();
   }, []);
 
-  const totalAmount = fees.reduce((sum, fee) => sum + fee.total_fees, 0);
+  const totalAmount = fees.reduce((sum, person) => {
+    return sum + parseFloat(person.total_fees || "0");
+  }, 0);
   const totalDueAmount = fees.reduce(
     (sum, fee) => sum + (fee.total_fees - fee.paid_amount),
     0
@@ -49,12 +58,16 @@ const Fees = () => {
 
   async function getDetails(user) {
     setSelectedStudent(user);
-    console.log(user);
   }
 
   async function validationError(amount, due) {
     if (amount == "") {
       setMessage("Amount is required");
+      setIsValid(false);
+      return false;
+    }
+    if (isNaN(amount)) {
+      setMessage("Amount must be a number");
       setIsValid(false);
       return false;
     } else if (amount < 100) {
@@ -71,6 +84,27 @@ const Fees = () => {
       return true;
     }
   }
+
+  const collectFee = async (data) => {
+    const send = {
+      studentId: selectedStudent.student_id,
+      feeId: selectedStudent.id,
+      amountPaid: data.collectAmount,
+      method: data.method,
+      status: "paid",
+    };
+    const result = await axios.post(
+      "http://localhost:5000/api/fees/collectFees",
+      send,
+      { withCredentials: true }
+    );
+    if (result.status == 200) {
+      fetchFees();
+      setIsDialogOpen(false);
+      reset();
+      console.log("fees paid successfullyy");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50  font-sans">
@@ -180,7 +214,7 @@ const Fees = () => {
                         <div className="font-bold text-gray-900 text-sm">
                           {formatCurrency(fee.total_fees)}
                         </div>
-                        {fee.paid_amount > 0 && (
+                        {fee.paid_amount >= 0 && (
                           <div className="text-xs text-gray-500 mt-1">
                             Paid: {formatCurrency(fee.paid_amount)} | Due:{" "}
                             <span
@@ -230,8 +264,11 @@ const Fees = () => {
 
         {/* Modal/Dialog for Fee Collection */}
         {isDialogOpen && (
-          <div className="fixed inset-0 flex items-center justify-center p-4  bg-opacity-60 z-50 transition-opacity duration-300 ">
-            <div className="bg-white rounded-xl w-full max-w-sm p-6 sm:p-8 shadow-2xl transform scale-100 transition-transform duration-300">
+          <div className="fixed inset-0  flex items-center justify-center p-4  bg-opacity-60 z-50 transition-opacity duration-300 ">
+            <form
+              onSubmit={handleSubmit(collectFee)}
+              className="bg-white rounded-xl w-full max-w-sm p-6 sm:p-8 shadow-2xl transform scale-100 transition-transform duration-300"
+            >
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Collect Payment
               </h2>
@@ -279,41 +316,72 @@ const Fees = () => {
                     Enter Collection Amount
                   </label>
                   <input
+                    {...register("collectAmount", {
+                      required: "Amount is required",
+                      min: {
+                        value: 100,
+                        message: "Minimum amount is 100",
+                      },
+                      max: {
+                        value: selectedStudent.due_amount,
+                        message: `Amount can't be greater than ${selectedStudent.due_amount}`,
+                      },
+                      pattern: {
+                        value: /^[0-9]+$/,
+                        message: "Only numbers are allowed",
+                      },
+                    })}
                     id="collection-amount"
-                    type="number"
+                    type="text"
                     placeholder="1000.00"
-                    value={collectAmount}
-                    onChange={(e) => setCollectAmount(e.target.value)}
-                    onInput={(e) => {
-                      validationError(
-                        e.target.value,
-                        selectedStudent.due_amount
-                      );
-                    }}
                     className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-150"
-                    min="1000"
-                    step="0.01"
-                    max={selectedStudent.due_amount}
                   />
-                  <div className="text-red-500 text-xs">{message}</div>
+                  <div className="text-red-500 text-xs">
+                    {errors.collectAmount?.message}
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="collection-amount"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
+                    Payment Method
+                  </label>
+                  <select
+                    {...register("method", {
+                      required: "Please select payment method",
+                    })}
+                    id="method"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-150"
+                  >
+                    <option value="cash">Cash</option>
+                    <option value="online">Online</option>
+                  </select>
+                  <div className="text-red-500 text-xs">
+                    {errors.method?.message}
+                  </div>
                 </div>
               </div>
 
               <div className="flex justify-end space-x-3">
                 <button
-                  onClick={() => setIsDialogOpen(false)}
+                  onClick={() => {
+                    setIsDialogOpen(false);
+                    reset();
+                  }}
                   className="px-5 py-2.5 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100 transition duration-150 font-medium"
                 >
                   Cancel
                 </button>
                 <button
-                  disabled={!isValid}
+                  type="submit"
                   className="px-5 py-2.5 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 transition duration-150 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Confirm Collection
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
       </div>

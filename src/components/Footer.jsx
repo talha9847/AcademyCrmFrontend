@@ -17,72 +17,60 @@ export default function Footer() {
     { href: "/", label: "Home" },
     { href: "/about", label: "About Us" },
     { href: "/courses", label: "Courses" },
-    { href: "/government-programs", label: "Government Programs" },
+    { href: "/programs", label: "Programs" },
   ];
 
   const courses = [
-    { href: "/courses#programming", label: "Programming" },
-    { href: "/courses#web-development", label: "Web Development" },
-    { href: "/courses#design", label: "Design & Multimedia" },
-    { href: "/courses#languages", label: "Language Training" },
+    { href: "#programming", label: "Programming" },
+    { href: "#web-development", label: "Web Development" },
+    { href: "#design", label: "Design & Multimedia" },
+    { href: "#languages", label: "Language Training" },
   ];
 
   return (
-    <footer className="bg-foreground text-white">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+    <footer className="bg-gray-900 text-white">
+      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
           {/* About */}
           <div>
-            <div className="flex items-center gap-2 mb-6">
-              <div className="bg-primary p-2 rounded-lg">
-                <GraduationCap className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-2 rounded-lg">
+                <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div className="font-serif font-bold text-xl">Mehtab Academy</div>
+              <div className="font-bold text-base sm:text-xl">
+                Mehtab Academy
+              </div>
             </div>
-            <p className="text-white/70 leading-relaxed mb-6">
+            <p className="text-xs sm:text-sm text-gray-400 leading-relaxed mb-4 sm:mb-6">
               ISO certified computer education institute in Surat with 20+ years
               of excellence in training.
             </p>
-            <div className="flex gap-4">
-              <a
-                href="#"
-                className="bg-white/10 hover:bg-primary p-2 rounded-lg transition-colors"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="bg-white/10 hover:bg-primary p-2 rounded-lg transition-colors"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="bg-white/10 hover:bg-primary p-2 rounded-lg transition-colors"
-              >
-                <Youtube className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="bg-white/10 hover:bg-primary p-2 rounded-lg transition-colors"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
+            <div className="flex gap-3 sm:gap-4">
+              {[Facebook, Instagram, Youtube, Linkedin].map((Icon, i) => (
+                <button
+                  key={i}
+                  className="bg-gray-800 hover:bg-blue-600 p-2 rounded-lg transition-colors"
+                >
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-serif font-bold text-lg mb-6">Quick Links</h3>
-            <ul className="space-y-3">
+            <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6">
+              Quick Links
+            </h3>
+            <ul className="space-y-2 sm:space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
+                  <a
                     href={link.href}
-                    className="text-white/70 hover:text-white transition-colors"
+                    className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -90,18 +78,18 @@ export default function Footer() {
 
           {/* Courses */}
           <div>
-            <h3 className="font-serif font-bold text-lg mb-6">
+            <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6">
               Popular Courses
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2 sm:space-y-3">
               {courses.map((course) => (
                 <li key={course.href}>
-                  <Link
+                  <a
                     href={course.href}
-                    className="text-white/70 hover:text-white transition-colors"
+                    className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
                   >
                     {course.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -109,26 +97,30 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="font-serif font-bold text-lg mb-6">Contact Us</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-white/70">Surat, Gujarat, India</span>
+            <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6">
+              Contact Us
+            </h3>
+            <ul className="space-y-3 sm:space-y-4">
+              <li className="flex items-start gap-2 sm:gap-3">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                <span className="text-xs sm:text-sm text-gray-400">
+                  Surat, Gujarat, India
+                </span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-primary flex-shrink-0" />
+              <li className="flex items-center gap-2 sm:gap-3">
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
                 <a
                   href="tel:+919825123456"
-                  className="text-white/70 hover:text-white transition-colors"
+                  className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   +91 98251 23456
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-primary flex-shrink-0" />
+              <li className="flex items-center gap-2 sm:gap-3">
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
                 <a
                   href="mailto:info@mehtabacademy.com"
-                  className="text-white/70 hover:text-white transition-colors"
+                  className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   info@mehtabacademy.com
                 </a>
@@ -137,24 +129,24 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-white/60 text-sm">
+        <div className="border-t border-gray-800 pt-6 sm:pt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+            <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
               © 2025 Mehtab Computer Academy. All rights reserved.
             </p>
-            <div className="flex gap-6 text-sm">
-              <Link
+            <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm">
+              <a
                 href="/privacy"
-                className="text-white/60 hover:text-white transition-colors"
+                className="text-gray-500 hover:text-white transition-colors"
               >
                 Privacy Policy
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/terms"
-                className="text-white/60 hover:text-white transition-colors"
+                className="text-gray-500 hover:text-white transition-colors"
               >
                 Terms of Service
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -162,3 +154,4 @@ export default function Footer() {
     </footer>
   );
 }
+ 

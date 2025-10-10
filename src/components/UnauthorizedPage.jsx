@@ -50,7 +50,7 @@ export default function UnauthorizedPage() {
         <div className="space-y-4">
           {/* Login Button */}
           <Link
-            to="/"
+            to="/login"
             className="w-full bg-black   text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
           >
             Login
