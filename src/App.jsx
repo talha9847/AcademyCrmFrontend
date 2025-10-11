@@ -18,6 +18,12 @@ import ViewStudent from "./components/ViewStudent";
 import Fees from "./components/Fees";
 import Hero from "./components/Hero";
 import Website from "./components/Website";
+import ViewTeacher from "./components/ViewTeacher";
+import ViewStudentTransaction from "./components/ViewStudentTransaction";
+import TDashboard from "./TeacherComponents/Dashboard";
+import SDashboard from "./StudentComponents/SDashboard";
+import SProfile from "./StudentComponents/SProfile";
+import ManageCourses from "./adminComponents/ManageCourses";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -31,6 +37,7 @@ function App() {
             <Route path="/" element={<Website />} />
             <Route path="/test" element={<Dashboard />} />
 
+            {/* Admin Routes */}
             <Route
               path="/admin/dashboard"
               element={
@@ -39,11 +46,58 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
+
             <Route
               path="/admin/classes"
               element={
                 <RoleProtectedRoute role="admin">
                   <Classes />
+                </RoleProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/manage"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <ManageCourses />
+                </RoleProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/fees/detail"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <ViewStudentTransaction />
+                </RoleProtectedRoute>
+              }
+            />
+
+            {/* Teachers Route */}
+            <Route
+              path="/teacher/dashboard"
+              element={
+                <RoleProtectedRoute role="teacher">
+                  <TDashboard />
+                </RoleProtectedRoute>
+              }
+            />
+
+            {/* Student Route    */}
+            <Route
+              path="/student/dashboard"
+              element={
+                <RoleProtectedRoute role="student">
+                  <SDashboard />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/profile"
+              element={
+                <RoleProtectedRoute role="student">
+                  <SProfile />
                 </RoleProtectedRoute>
               }
             />
@@ -56,6 +110,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/teacher/detail"
+              element={
+                <ProtectedRoute slug="teachers">
+                  <ViewTeacher />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/student/detail"
               element={

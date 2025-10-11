@@ -14,20 +14,21 @@ import {
   X,
   Wallet,
   icons,
-  Network,
+  PersonStanding,
+  User,
 } from "lucide-react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
 
-const AdminNavbar = () => {
+const SNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(3);
+  const [slugs, setSlugs] = useState([]);
   const [dbNavItems, setDbNavItems] = useState([]);
 
   const fixedNavItems = [
-    { name: "Dashboard", icon: Home, href: "/admin/dashboard" },
-    { name: "Classes", icon: Home, href: "/admin/classes" },
-    { name: "Manage", icon:Network, href: "/admin/manage" },
+    { name: "Dashboard", icon: Home, href: "/student/dashboard" },
+    { name: "Profile", icon: User, href: "/student/profile" },
     { name: "Settings", icon: Settings, href: "/settings" },
   ];
 
@@ -134,10 +135,10 @@ const AdminNavbar = () => {
             <div className="relative">
               <button className="flex items-center space-x-2 p-2 rounded-lg text-gray-700 hover:bg-gray-100">
                 <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">A</span>
+                  <span className="text-white text-sm font-medium">S</span>
                 </div>
                 <span className="hidden sm:block text-sm font-medium">
-                  Admin
+                  Student
                 </span>
               </button>
             </div>
@@ -195,4 +196,4 @@ const AdminNavbar = () => {
     </nav>
   );
 };
-export default AdminNavbar;
+export default SNavbar;

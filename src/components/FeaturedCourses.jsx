@@ -1,46 +1,23 @@
 import { Link } from "react-router-dom";
 import { Code, Palette, Globe, Languages, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function FeaturedCourses() {
-  const courses = [
-    {
-      icon: Code,
-      title: "Programming & Development",
-      description: "Master C, C++, Java, Python, and modern web development.",
-      courses: ["C & C++", "Java", "Python", "Full Stack"],
-      color: "text-blue-600",
-      bg: "bg-blue-50",
-      gradient: "from-blue-500 to-cyan-500",
-    },
-    {
-      icon: Globe,
-      title: "Web Development",
-      description: "Build modern websites with latest frameworks.",
-      courses: ["HTML/CSS", "JavaScript", "React", "Node.js"],
-      color: "text-purple-600",
-      bg: "bg-purple-50",
-      gradient: "from-purple-500 to-pink-500",
-    },
-    {
-      icon: Palette,
-      title: "Design & Multimedia",
-      description: "Create stunning visuals with design tools.",
-      courses: ["Photoshop", "CorelDRAW", "Video Edit", "3D Animation"],
-      color: "text-orange-600",
-      bg: "bg-orange-50",
-      gradient: "from-orange-500 to-red-500",
-    },
-    {
-      icon: Languages,
-      title: "Language Training",
-      description: "Achieve study abroad dreams with expert coaching.",
-      courses: ["IELTS", "PTE", "Spoken English", "Business"],
-      color: "text-green-600",
-      bg: "bg-green-50",
-      gradient: "from-green-500 to-emerald-500",
-    },
-  ];
+  const [course, setCourse] = useState([]);
 
+  const getCourses = async () => {
+    const result = await axios.get(
+      "http://localhost:5000/api/front/getCourses",
+      { withCredentials: true }
+    );
+    if (result.status == 200) {
+      setCourse(result.data.data);
+    }
+  };
+  useEffect(() => {
+    getCourses();
+  });
   return (
     <section id="courses" className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6">
@@ -57,37 +34,42 @@ export default function FeaturedCourses() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
-          {courses.map((course, index) => {
-            const Icon = course.icon;
+          {course.map((course, index) => {
             return (
               <div
-                key={index}
-                className="group bg-white border-2 border-gray-100 hover:border-transparent rounded-xl sm:rounded-2xl p-5 sm:p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                key={course.id}
+                onClick={() => setSelectedCourse(course)}
+                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all cursor-pointer hover:-translate-y-1"
               >
-                <div
-                  className={`inline-flex p-3 sm:p-3 rounded-lg ${course.bg} mb-3 sm:mb-4 group-hover:scale-110 transition-transform`}
-                >
-                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${course.color}`} />
+                <div className="relative h-40 overflow-hidden bg-gray-200">
+                  <img
+                    src={course.image}
+                    alt={course.title}
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 text-gray-900">
-                  {course.title}
-                </h3>
-                <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed">
-                  {course.description}
-                </p>
-                <ul className="space-y-1.5 sm:space-y-2">
-                  {course.courses.map((item, i) => (
-                    <li
-                      key={i}
-                      className="text-xs sm:text-sm flex items-center gap-2 text-gray-700"
-                    >
-                      <div
-                        className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${course.gradient}`}
-                      />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+                <div className="p-5">
+                  <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
+                    {course.category}
+                  </span>
+                  <h3 className="font-bold text-lg mt-2 text-gray-900 line-clamp-2">
+                    {course.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+                    {course.description}
+                  </p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
+                      {course.level}
+                    </span>
+                    <span className="font-bold text-blue-600">
+                      {course.price}
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-3">
+                    ⏱️ {course.duration}
+                  </div>
+                </div>
               </div>
             );
           })}

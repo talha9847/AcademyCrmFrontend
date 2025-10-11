@@ -3,16 +3,15 @@ import AdminNavbar from "../adminComponents/AdminNavbar";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-// Load Tailwind CSS script for utility classes
-/* global tailwind */
+import { useNavigate } from "react-router-dom";
 
 const Fees = () => {
+  const navigate = useNavigate();
   const [fees, setFees] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [collectAmount, setCollectAmount] = useState("");
   const [selectedStudent, setSelectedStudent] = useState();
-  const [message, setMessage] = useState();
-  const [isValid, setIsValid] = useState(false);
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const {
     register,
     handleSubmit,
@@ -32,6 +31,17 @@ const Fees = () => {
   useEffect(() => {
     fetchFees();
   }, []);
+
+  const getFilteredFees = () => {
+    if (activeTab === "paid") {
+      return fees.filter((fee) => fee.due_amount == 0);
+    } else if (activeTab === "due") {
+      return fees.filter((fee) => fee.due_amount > 0);
+    }
+    return fees;
+  };
+
+  const filteredFees = getFilteredFees();
 
   const totalAmount = fees.reduce((sum, person) => {
     return sum + parseFloat(person.total_fees || "0");
@@ -60,31 +70,6 @@ const Fees = () => {
     setSelectedStudent(user);
   }
 
-  async function validationError(amount, due) {
-    if (amount == "") {
-      setMessage("Amount is required");
-      setIsValid(false);
-      return false;
-    }
-    if (isNaN(amount)) {
-      setMessage("Amount must be a number");
-      setIsValid(false);
-      return false;
-    } else if (amount < 100) {
-      setMessage("Minimum amount is 100");
-      setIsValid(false);
-      return false;
-    } else if (parseInt(amount) > due) {
-      setMessage("Amount can't be greater than remaining amount");
-      setIsValid(false);
-      return false;
-    } else {
-      setMessage("");
-      setIsValid(true);
-      return true;
-    }
-  }
-
   const collectFee = async (data) => {
     const send = {
       studentId: selectedStudent.student_id,
@@ -105,6 +90,12 @@ const Fees = () => {
       console.log("fees paid successfullyy");
     }
   };
+
+  const filtered = filteredFees.filter(
+    (fee) =>
+      fee.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fee.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gray-50  font-sans">
@@ -169,6 +160,50 @@ const Fees = () => {
           </div>
         </div>
 
+        {/* Tab Pills */}
+        <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="flex gap-3 flex-wrap">
+            <button
+              onClick={() => setActiveTab("all")}
+              className={`px-6 py-2.5 rounded-full font-medium transition duration-200 ${
+                activeTab === "all"
+                  ? "bg-blue-600 text-white shadow-lg"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setActiveTab("due")}
+              className={`px-6 py-2.5 rounded-full font-medium transition duration-200 ${
+                activeTab === "due"
+                  ? "bg-red-600 text-white shadow-lg"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Due
+            </button>
+            <button
+              onClick={() => setActiveTab("paid")}
+              className={`px-6 py-2.5 rounded-full font-medium transition duration-200 ${
+                activeTab === "paid"
+                  ? "bg-green-600 text-white shadow-lg"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Paid
+            </button>
+          </div>
+
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full sm:w-64 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition duration-150"
+          />
+        </div>
+
         {/* Fee Table */}
         <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto table-container">
@@ -196,9 +231,9 @@ const Fees = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {fees.map((fee) => {
+                {filtered.map((fee) => {
                   const dueAmount = fee.total_fees - fee.paid_amount;
-                  const isPaid = fee.status === "paid";
+                  const isPaid = dueAmount == 0 ? true : false;
                   return (
                     <tr
                       key={fee.id}
@@ -244,15 +279,32 @@ const Fees = () => {
                         </span>
                       </td>
                       <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-center">
-                        <button
-                          onClick={() => {
-                            getDetails(fee);
-                            setIsDialogOpen(true);
-                          }}
-                          className="bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        >
-                          Collect
-                        </button>
+                        <div className="">
+                          <button
+                            onClick={() => {
+                              getDetails(fee);
+                              setIsDialogOpen(true);
+                            }}
+                            className="bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          >
+                            Collect
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              navigate("/admin/fees/detail", {
+                                state: {
+                                  studentId: fee.student_id,
+                                  name: fee.full_name,
+                                  total: fee.total_fees,
+                                },
+                              });
+                            }}
+                            className="ml-2 bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          >
+                            View
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

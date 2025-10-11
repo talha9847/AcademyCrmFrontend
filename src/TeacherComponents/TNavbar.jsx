@@ -14,20 +14,19 @@ import {
   X,
   Wallet,
   icons,
-  Network,
 } from "lucide-react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
 
-const AdminNavbar = () => {
+const TNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(3);
+  const [slugs, setSlugs] = useState([]);
   const [dbNavItems, setDbNavItems] = useState([]);
 
   const fixedNavItems = [
-    { name: "Dashboard", icon: Home, href: "/admin/dashboard" },
+    { name: "Dashboard", icon: Home, href: "/teacher/dashboard" },
     { name: "Classes", icon: Home, href: "/admin/classes" },
-    { name: "Manage", icon:Network, href: "/admin/manage" },
     { name: "Settings", icon: Settings, href: "/settings" },
   ];
 
@@ -195,4 +194,4 @@ const AdminNavbar = () => {
     </nav>
   );
 };
-export default AdminNavbar;
+export default TNavbar;

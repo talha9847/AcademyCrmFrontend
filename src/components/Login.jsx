@@ -28,6 +28,12 @@ const Login = () => {
       if (result.data.role == "admin") {
         window.location.href = "/admin/dashboard";
       }
+      if (result.data.role == "teacher") {
+        window.location.href = "teacher/dashboard";
+      }
+      if (result.data.role == "student") {
+        window.location.href = "student/dashboard";
+      }
     }
   }
 
