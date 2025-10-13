@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, GraduationCap } from "lucide-react";
@@ -20,7 +18,6 @@ export default function FNavbar() {
     { href: "#home", label: "Home" },
     { href: "#about", label: "About" },
     { href: "#courses", label: "Courses" },
-    { href: "#programs", label: "Programs" },
     { href: "#why-us", label: "Why Us" },
     { href: "#contact", label: "Contact" },
   ];
@@ -35,8 +32,12 @@ export default function FNavbar() {
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <div className="flex items-center gap-2 sm:gap-3 group cursor-pointer">
-            <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-2 rounded-lg group-hover:scale-110 transition-transform">
-              <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <div className=" rounded-lg group-hover:scale-110 transition-transform">
+              <img
+                className="w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] text-white"
+                alt="Logo"
+                src="/logo.png"
+              />
             </div>
             <div className="hidden sm:block">
               <div className="font-bold text-base sm:text-xl text-gray-900">
@@ -66,6 +67,12 @@ export default function FNavbar() {
             <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 xl:px-6 py-2 rounded-lg font-medium transition-all ml-2 shadow-md hover:shadow-lg">
               Enroll Now
             </button>
+            <Link
+              to="/login"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 xl:px-6 py-2 rounded-lg font-medium transition-all ml-2 shadow-md hover:shadow-lg"
+            >
+              Login
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -81,7 +88,7 @@ export default function FNavbar() {
         {/* Mobile Navigation */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-300 ${
-            isOpen ? "max-h-96 pb-4" : "max-h-0"
+            isOpen ? "max-h-104 pb-4" : "max-h-0"
           }`}
         >
           <div className="flex flex-col gap-2 pt-2 border-t border-gray-200">
@@ -97,7 +104,7 @@ export default function FNavbar() {
             ))}
             <button
               onClick={() => setIsOpen(false)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-medium transition-all mt-2 shadow-md"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-1 text-[16px] rounded-lg font-medium transition-all mt-2 shadow-md"
             >
               Enroll Now
             </button>

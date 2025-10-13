@@ -34,11 +34,15 @@ export default function Footer() {
           {/* About */}
           <div>
             <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-2 rounded-lg">
-                <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              <div className="rounded-lg">
+                <img
+                  className="w-[40px] h-[40px] text-white"
+                  alt=""
+                  src="./logo.png"
+                />
               </div>
               <div className="font-bold text-base sm:text-xl">
-                Mehtab Academy
+                Mehtab Computer Academy
               </div>
             </div>
             <p className="text-xs sm:text-sm text-gray-400 leading-relaxed mb-4 sm:mb-6">
@@ -154,4 +158,3 @@ export default function Footer() {
     </footer>
   );
 }
- 

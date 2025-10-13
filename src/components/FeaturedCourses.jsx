@@ -17,7 +17,7 @@ export default function FeaturedCourses() {
   };
   useEffect(() => {
     getCourses();
-  });
+  }, []);
   return (
     <section id="courses" className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6">

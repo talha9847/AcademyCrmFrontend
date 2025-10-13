@@ -1,16 +1,37 @@
 import { useState } from "react";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    course: "",
-    message: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      const result = await axios.post(
+        "http://localhost:5000/api/front/sendUsMessage",
+        data,
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        reset();
+        toast.success("Message sent successfully");
+      } else {
+        toast.error("Error in sending message");
+      }
+    } catch (error) {
+      toast.error("Some error occured");
+    }
+  };
   const contactInfo = [
     {
       icon: MapPin,
@@ -38,16 +59,23 @@ export default function Contact() {
     },
   ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-  };
-
   return (
     <section
       id="contact"
       className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-blue-50"
     >
+      <ToastContainer
+        position="top-right" // ✅ You can change this
+        autoClose={3000} // closes after 3 seconds
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" // "light", "dark", "colored"
+      />
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-10 sm:mb-16">
           <span className="text-blue-600 font-semibold text-xs sm:text-sm uppercase tracking-wider">
@@ -100,111 +128,125 @@ export default function Contact() {
               </p>
             </div>
 
-            <div className="space-y-4 sm:space-y-6">
-              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-                <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                    First Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, firstName: e.target.value })
-                    }
-                    className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
-                    placeholder="John"
-                  />
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="space-y-4 sm:space-y-6">
+                <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      First Name *
+                    </label>
+                    <input
+                      {...register("fname", {
+                        required: "First Name is required",
+                      })}
+                      type="text"
+                      className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
+                      placeholder="Talha"
+                    />
+                    <p className="text-xs text-red-500">
+                      {errors.fname?.message}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      Last Name *
+                    </label>
+                    <input
+                      {...register("lname", {
+                        required: "Last Name is required",
+                      })}
+                      type="text"
+                      className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
+                      placeholder="Malek"
+                    />
+                    <p className="text-xs text-red-500">
+                      {errors.lname?.message}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                    Last Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, lastName: e.target.value })
-                    }
-                    className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
-                    placeholder="Doe"
-                  />
-                </div>
-              </div>
 
-              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-                <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
-                    placeholder="john@example.com"
-                  />
+                <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      Email *
+                    </label>
+                    <input
+                      {...register("email", {
+                        required: "Email is required",
+                      })}
+                      type="email"
+                      className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
+                      placeholder="mtmalek47@gmail.com"
+                    />
+                    <p className="text-xs text-red-500">
+                      {errors.email?.message}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <input
+                      {...register("phone", {
+                        required: "Phone Number is required",
+                      })}
+                      type="tel"
+                      className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
+                      placeholder="+91 91067 04675"
+                    />
+                    <p className="text-xs text-red-500">
+                      {errors.phone?.message}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors text-sm sm:text-base"
-                    placeholder="+91 XXXXX XXXXX"
-                  />
-                </div>
-              </div>
 
-              <div>
-                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  Course Interested In
-                </label>
-                <select
-                  value={formData.course}
-                  onChange={(e) =>
-                    setFormData({ ...formData, course: e.target.value })
-                  }
-                  className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors bg-white text-sm sm:text-base"
+                <div>
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                    Course Interested In
+                  </label>
+                  <select
+                    {...register("course", {
+                      required: "Course is required",
+                    })}
+                    className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors bg-white text-sm sm:text-base"
+                  >
+                    <option value="">Select a course</option>
+                    <option value="web">Web Development</option>
+                    <option value="programming">Programming</option>
+                    <option value="design">Graphic Design</option>
+                    <option value="marketing">Digital Marketing</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <p className="text-xs text-red-500">
+                    {errors.course?.message}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    rows={4}
+                    {...register("message", {
+                      required: "Message is required",
+                    })}
+                    className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors resize-none text-sm sm:text-base"
+                    placeholder="Tell us about your requirements..."
+                  />
+                  <p className="text-xs text-red-500">
+                    {errors.message?.message}
+                  </p>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 sm:py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] text-sm sm:text-base"
                 >
-                  <option value="">Select a course</option>
-                  <option value="web">Web Development</option>
-                  <option value="programming">Programming</option>
-                  <option value="design">Graphic Design</option>
-                  <option value="marketing">Digital Marketing</option>
-                  <option value="other">Other</option>
-                </select>
+                  Send Message
+                </button>
               </div>
-
-              <div>
-                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  Message *
-                </label>
-                <textarea
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
-                  className="w-full px-4 py-3 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors resize-none text-sm sm:text-base"
-                  placeholder="Tell us about your requirements..."
-                />
-              </div>
-
-              <button
-                onClick={handleSubmit}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 sm:py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] text-sm sm:text-base"
-              >
-                Send Message
-              </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>

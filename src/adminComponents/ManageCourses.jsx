@@ -1,11 +1,12 @@
 import React from "react";
 import AdminNavbar from "./AdminNavbar";
+import SidebarManage from "./SidebarManage";
 
 const ManageCourses = () => {
   return (
     <div>
       <AdminNavbar />
-      <p>Manage Courses</p>
+      <SidebarManage/>
     </div>
   );
 };

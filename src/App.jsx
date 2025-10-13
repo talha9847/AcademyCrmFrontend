@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
@@ -16,7 +14,6 @@ import "primereact/resources/themes/lara-light-blue/theme.css"; // Theme
 import "primereact/resources/primereact.min.css"; // Core CSS
 import ViewStudent from "./components/ViewStudent";
 import Fees from "./components/Fees";
-import Hero from "./components/Hero";
 import Website from "./components/Website";
 import ViewTeacher from "./components/ViewTeacher";
 import ViewStudentTransaction from "./components/ViewStudentTransaction";
@@ -24,6 +21,8 @@ import TDashboard from "./TeacherComponents/Dashboard";
 import SDashboard from "./StudentComponents/SDashboard";
 import SProfile from "./StudentComponents/SProfile";
 import ManageCourses from "./adminComponents/ManageCourses";
+import ManageHero from "./adminComponents/ManageHero";
+import ManageFCourses from "./adminComponents/ManageFCourses";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -70,6 +69,23 @@ function App() {
               element={
                 <RoleProtectedRoute role="admin">
                   <ViewStudentTransaction />
+                </RoleProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/manage/hero"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <ManageHero />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/manage/featuredcourses"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <ManageFCourses />
                 </RoleProtectedRoute>
               }
             />
@@ -145,6 +161,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route path="*" element={<UnauthorizedPage />} />
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
           </Routes>

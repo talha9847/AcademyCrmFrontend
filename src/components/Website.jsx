@@ -14,7 +14,7 @@ import FNavbar from "./FNavbar";
 
 const Website = () => {
   return (
-    <div>
+    <div className=" px-6">
       <Hero />
       <FNavbar />
       <Stats />
