@@ -23,6 +23,8 @@ import SProfile from "./StudentComponents/SProfile";
 import ManageCourses from "./adminComponents/ManageCourses";
 import ManageHero from "./adminComponents/ManageHero";
 import ManageFCourses from "./adminComponents/ManageFCourses";
+import SCertificates from "./StudentComponents/SCertificates";
+import SNavbar from "./StudentComponents/SNavbar";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -114,6 +116,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="student">
                   <SProfile />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/certificate"
+              element={
+                <RoleProtectedRoute role="student">
+                  <SCertificates />
                 </RoleProtectedRoute>
               }
             />

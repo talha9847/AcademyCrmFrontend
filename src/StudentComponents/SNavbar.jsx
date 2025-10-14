@@ -27,8 +27,9 @@ const SNavbar = () => {
   const [dbNavItems, setDbNavItems] = useState([]);
 
   const fixedNavItems = [
-    { name: "Dashboard", icon: Home, href: "/student/dashboard" },
+    { name: "Dashboard", icon: Home, href: "/student/dashboard"},
     { name: "Profile", icon: User, href: "/student/profile" },
+    { name: "Certificate", icon: User, href: "/student/certificate" },
     { name: "Settings", icon: Settings, href: "/settings" },
   ];
 
