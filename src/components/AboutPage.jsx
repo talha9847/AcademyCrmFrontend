@@ -1,6 +1,3 @@
-"use client";
-
-import OurMission from "../components/OurMisson";
 import {
   Award,
   Users,
@@ -9,20 +6,25 @@ import {
   Shield,
   CheckCircle,
   Lightbulb,
-  TrendingUp
+  TrendingUp,
+  Briefcase,
+  Layers,
 } from "lucide-react";
+import { useState } from "react";
 
-export default function AboutPage() {
+// NOTE: Since the file structure requires a single file, the OurMission component logic is integrated directly below.
+
+export default function ProfessionalAboutPage() {
   const values = [
     {
       icon: Target,
       title: "Our Vision",
       description:
-        "To be the leading computer education institute in Gujarat, empowering students with cutting-edge skills for the digital age.",
+        "To be the leading computer education institute in the region, empowering students with skills for the digital age.",
       color: "from-blue-500 to-cyan-500",
     },
     {
-      icon: Award,
+      icon: Layers,
       title: "Quality Education",
       description:
         "ISO certified training programs with industry-recognized certifications and hands-on practical experience.",
@@ -32,79 +34,105 @@ export default function AboutPage() {
       icon: Users,
       title: "Expert Faculty",
       description:
-        "Experienced instructors with real-world industry knowledge and a passion for teaching.",
+        "Experienced instructors with real-world industry knowledge and a passion for teaching and mentoring.",
       color: "from-orange-500 to-red-500",
     },
     {
-      icon: Heart,
+      icon: Briefcase,
       title: "Student Success",
       description:
-        "Dedicated to student placement and career growth with 100% job assistance and ongoing support.",
+        "Dedicated to placement and career growth with 100% job assistance and ongoing professional support.",
       color: "from-green-500 to-emerald-500",
     },
   ];
 
-  return (
-    <section id="about" className="bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative pt-24 sm:pt-32 pb-12 sm:pb-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute inset-0">
-          <div className="absolute w-64 h-64 sm:w-96 sm:h-96 bg-white/10 rounded-full blur-3xl top-0 left-1/4"></div>
-          <div className="absolute w-64 h-64 sm:w-96 sm:h-96 bg-white/10 rounded-full blur-3xl bottom-0 right-1/4"></div>
-        </div>
+  const missionPillars = [
+    {
+      icon: TrendingUp,
+      title: "Empowerment",
+      description:
+        "Provide accessible, high-quality education that empowers individuals to achieve their career goals.",
+    },
+    {
+      icon: Lightbulb,
+      title: "Innovation",
+      description:
+        "Cultivate a learning environment that encourages creativity, critical thinking, and problem-solving skills.",
+    },
+    {
+      icon: Heart,
+      title: "Career Growth",
+      description:
+        "Bridge the gap between education and employment with industry-relevant skills and placement assistance.",
+    },
+    {
+      icon: Shield,
+      title: "Excellence",
+      description:
+        "Uphold the highest standards of education quality, infrastructure, and student support services.",
+    },
+  ];
 
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-6">
-              About Mehtab Computer Academy
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-white/90 leading-relaxed px-4">
-              With over 20 years of excellence in computer education, we've been
-              shaping careers and transforming lives in Surat since our
-              inception.
-            </p>
+  return (
+    <div className="font-sans">
+      {/* 1. Hero Section - Gradient Banner */}
+      <section id="about" className="bg-gray-50">
+        <div className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 bg-gradient-to-br from-blue-700 via-purple-700 to-pink-700 text-white overflow-hidden">
+          
+          {/* Subtle diagonal pattern overlay */}
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(45deg, #ffffff 25%, transparent 25%, transparent 75%, #ffffff 75%, #ffffff), linear-gradient(45deg, #ffffff 25%, transparent 25%, transparent 75%, #ffffff 75%, #ffffff)', backgroundSize: '60px 60px', backgroundPosition: '0 0, 30px 30px' }}></div>
+          
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="max-w-4xl mx-auto text-center">
+              <span className="inline-block px-4 py-1.5 text-xs font-semibold bg-white/20 rounded-full tracking-widest uppercase mb-4">
+                Our Legacy
+              </span>
+              <h1 className="font-extrabold text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6 leading-tight">
+                Empowering Futures in the Digital Age
+              </h1>
+              <p className="text-base sm:text-lg lg:text-xl text-white/90 leading-relaxed max-w-3xl mx-auto">
+                With over two decades of dedicated excellence, Mehtab Computer Academy has transformed thousands of lives, setting the benchmark for quality computer education in Gujarat.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Our Story */}
-      <div className="py-12 sm:py-16 lg:py-24">
+      {/* 2. Our Story Section - Image/Text Block */}
+      <section className="py-16 sm:py-20 lg:py-28 bg-white">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
-            <div className="space-y-4 sm:space-y-6">
-              <span className="text-blue-600 font-semibold text-xs sm:text-sm uppercase tracking-wider">
+          <div className="grid lg:grid-cols-2 gap-10 sm:gap-16 lg:gap-20 items-center">
+            
+            {/* Story Text Block */}
+            <div className="space-y-6 lg:space-y-8">
+              <span className="text-blue-600 font-bold text-sm uppercase tracking-widest">
                 Our Journey
               </span>
-              <h3 className="font-bold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl text-gray-900">
-                Two Decades of Excellence
+              <h3 className="font-extrabold text-3xl sm:text-4xl lg:text-5xl text-gray-900 leading-snug">
+                Two Decades of Excellence, Defined by Impact
               </h3>
-              <div className="space-y-3 sm:space-y-4 text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
+              <div className="space-y-4 text-gray-600 text-base lg:text-lg leading-relaxed">
                 <p>
-                  Mehtab Computer Academy was founded with a simple yet powerful
-                  vision: to make quality computer education accessible to
-                  everyone in Surat. What started as a small training center has
-                  grown into one of the most trusted names in computer
-                  education.
+                  Mehtab Computer Academy was founded with a powerful vision: to make quality computer education accessible to everyone. What began as a local training center has evolved into one of the most trusted names in the industry.
                 </p>
                 <p>
-                  Over the past two decades, we've trained thousands of
-                  students, helping them build successful careers in IT, design,
-                  programming, and various other fields.
+                  For over 20 years, we have been committed to adapting our curriculum to the latest industry standards, ensuring our students are not just taught, but are truly prepared for successful careers in IT, design, and development.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-3 sm:gap-4 pt-4">
+              
+              {/* Badges/Accolades */}
+              <div className="flex flex-wrap gap-3 sm:gap-4 pt-4 border-t border-gray-100">
                 {[
-                  { icon: Shield, text: "ISO Certified" },
-                  { icon: Award, text: "PMKVY Partner" },
-                  { icon: CheckCircle, text: "Gov. Approved" },
+                  { icon: Shield, text: "ISO 9001:2015 Certified" },
+                  { icon: Award, text: "Govt. Recognized Partner" },
+                  { icon: CheckCircle, text: "100% Job Assistance" },
                 ].map((badge, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 bg-white px-3 sm:px-4 py-2 rounded-full shadow-md"
+                    className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md text-sm transition-all hover:bg-gray-50 border border-gray-100"
                   >
-                    <badge.icon className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
-                    <span className="text-xs sm:text-sm font-semibold text-gray-700">
+                    <badge.icon className="w-4 h-4 text-purple-600" />
+                    <span className="font-medium text-gray-700">
                       {badge.text}
                     </span>
                   </div>
@@ -112,74 +140,58 @@ export default function AboutPage() {
               </div>
             </div>
 
+            {/* Image Block with Overlay Stat */}
             <div className="relative mt-8 lg:mt-0">
-              <div className="aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl ring-4 sm:ring-8 ring-white">
+              <div className="aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl ring-4 sm:ring-8 ring-blue-50/50">
                 <img
-                  src="/api/placeholder/800/600"
-                  alt="Classroom"
-                  className="w-full h-full object-cover"
+                  // Placeholder image for a professional classroom setting
+                  src="https://placehold.co/800x600/f0f9ff/1d4ed8?text=MCA+Student+Focus"
+                  alt="Students learning in a modern classroom"
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://placehold.co/800x600/f0f9ff/1d4ed8?text=MCA+Student+Focus";
+                  }}
                 />
               </div>
-              <div className="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-gradient-to-br from-blue-600 to-purple-600 text-white p-5 sm:p-8 rounded-xl sm:rounded-2xl shadow-2xl">
-                <div className="text-3xl sm:text-5xl font-bold mb-1">20+</div>
-                <div className="text-xs sm:text-sm font-medium">
+              
+              {/* Stat Overlay Card */}
+              <div className="absolute -bottom-6 sm:-bottom-8 -right-4 sm:-right-8 bg-gradient-to-br from-blue-600 to-purple-600 text-white p-6 sm:p-10 rounded-xl sm:rounded-2xl shadow-2xl transform rotate-1 transition-all duration-300 hover:rotate-0 hover:scale-[1.05]">
+                <div className="text-4xl sm:text-6xl font-extrabold mb-1">20+</div>
+                <div className="text-sm sm:text-base font-medium">
                   Years of Excellence
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Our Mission */}
-      <div className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+      {/* 3. Our Mission (Pillars) - Dark Section */}
+      <div className="py-16 sm:py-20 lg:py-28 bg-gray-900 text-white">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="font-bold text-2xl sm:text-3xl lg:text-4xl mb-3 sm:mb-4">
-              Our Mission
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="font-extrabold text-3xl sm:text-4xl lg:text-5xl mb-3 sm:mb-4">
+              Our Core Mission
             </h2>
-            <p className="text-sm sm:text-base lg:text-lg text-white/90 max-w-2xl mx-auto">
-              Transforming lives through quality education and skill development
+            <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto">
+              We are driven by a commitment to quality and a focus on measurable career outcomes for every student.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
-            {[
-              {
-                icon: Target,
-                title: "Empower Through Education",
-                description:
-                  "Provide accessible, high-quality computer education that empowers individuals to achieve their career goals.",
-              },
-              {
-                icon: Lightbulb,
-                title: "Foster Innovation",
-                description:
-                  "Cultivate a learning environment that encourages creativity, critical thinking, and problem-solving skills.",
-              },
-              {
-                icon: TrendingUp,
-                title: "Career Growth",
-                description:
-                  "Bridge the gap between education and employment with industry-relevant skills and 100% placement assistance.",
-              },
-              {
-                icon: Shield,
-                title: "Maintain Excellence",
-                description:
-                  "Uphold the highest standards of education quality, infrastructure, and student support services.",
-              },
-            ].map((mission, index) => (
+          
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-7xl mx-auto">
+            {missionPillars.map((mission, index) => (
               <div
                 key={index}
-                className="bg-white/10 backdrop-blur-sm p-5 sm:p-6 rounded-xl border border-white/20 hover:bg-white/15 transition-colors"
+                className="group bg-gray-800 p-6 sm:p-8 rounded-xl border border-gray-700 hover:border-blue-600 transition-all duration-300 transform hover:shadow-xl hover:translate-y-[-5px]"
               >
-                <div className="bg-white/20 w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
-                  <mission.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <div className="bg-blue-600/20 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mb-4 sm:mb-5">
+                  <mission.icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-400 group-hover:text-blue-200 transition-colors" />
                 </div>
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3">
+                <h3 className="font-bold text-xl sm:text-2xl mb-2 sm:mb-3 text-white">
                   {mission.title}
                 </h3>
-                <p className="text-xs sm:text-sm lg:text-base text-white/80 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
                   {mission.description}
                 </p>
               </div>
@@ -188,36 +200,34 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Values */}
-      <div className="py-12 sm:py-16 lg:py-24 bg-white">
+      {/* 4. Core Values Section - Card Grid */}
+      <div className="py-16 sm:py-20 lg:py-28 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-10 sm:mb-16">
-            <span className="text-blue-600 font-semibold text-xs sm:text-sm uppercase tracking-wider">
-              What Drives Us
+            <span className="text-purple-600 font-bold text-sm uppercase tracking-widest">
+              Guiding Principles
             </span>
-            <h3 className="font-bold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl text-gray-900 mt-2 sm:mt-3 mb-3 sm:mb-4">
+            <h3 className="font-extrabold text-3xl sm:text-4xl lg:text-5xl text-gray-900 mt-2 sm:mt-3 mb-3 sm:mb-4">
               Our Core Values
             </h3>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-              The principles that guide everything we do
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto">
+              These principles form the foundation of our institution and guide every decision we make.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {values.map((value, index) => (
               <div
                 key={index}
-                className="group relative bg-white p-6 sm:p-8 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-transparent hover:-translate-y-2"
+                className="group relative bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 transform hover:shadow-2xl hover:border-transparent hover:ring-2 hover:ring-offset-2 hover:ring-purple-500"
               >
+                {/* Icon Circle */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-5 rounded-xl sm:rounded-2xl transition-opacity`}
-                ></div>
-                <div
-                  className={`bg-gradient-to-br ${value.color} w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center mb-4 sm:mb-5 group-hover:scale-110 transition-transform`}
+                  className={`bg-gradient-to-br ${value.color} w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mb-5 sm:mb-6 group-hover:scale-105 transition-transform shadow-lg`}
                 >
-                  <value.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                  <value.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <h4 className="font-bold text-lg sm:text-xl text-gray-900 mb-2 sm:mb-3">
+                <h4 className="font-extrabold text-xl sm:text-2xl text-gray-900 mb-2">
                   {value.title}
                 </h4>
                 <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
@@ -228,6 +238,6 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

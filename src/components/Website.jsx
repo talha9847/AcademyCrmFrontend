@@ -15,11 +15,11 @@ import FNavbar from "./FNavbar";
 const Website = () => {
   return (
     <div className=" px-6">
-      <Hero />
       <FNavbar />
+      <Hero />
       <Stats />
-      <FeaturedCourses />
       <AboutPage />
+      <FeaturedCourses />
       <Journey />
       <ChooseUs />
       <Blog />

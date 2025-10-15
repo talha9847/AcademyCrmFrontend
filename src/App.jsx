@@ -25,6 +25,8 @@ import ManageHero from "./adminComponents/ManageHero";
 import ManageFCourses from "./adminComponents/ManageFCourses";
 import SCertificates from "./StudentComponents/SCertificates";
 import SNavbar from "./StudentComponents/SNavbar";
+import Attendence from "./adminComponents/Attendence";
+import CreateAttendancePage from "./adminComponents/CreateAttendancePage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -65,6 +67,14 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
+            <Route
+              path="/admin/attendence/"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <Attendence />
+                </RoleProtectedRoute>
+              }
+            />
 
             <Route
               path="/admin/fees/detail"
@@ -88,6 +98,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="admin">
                   <ManageFCourses />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/talha/"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <CreateAttendancePage />
                 </RoleProtectedRoute>
               }
             />
