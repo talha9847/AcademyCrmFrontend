@@ -16,6 +16,7 @@ import {
   icons,
   PersonStanding,
   User,
+  CalendarCheck,
 } from "lucide-react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
@@ -27,10 +28,10 @@ const SNavbar = () => {
   const [dbNavItems, setDbNavItems] = useState([]);
 
   const fixedNavItems = [
-    { name: "Dashboard", icon: Home, href: "/student/dashboard"},
+    { name: "Dashboard", icon: Home, href: "/student/dashboard" },
     { name: "Profile", icon: User, href: "/student/profile" },
     { name: "Certificate", icon: User, href: "/student/certificate" },
-    { name: "Settings", icon: Settings, href: "/settings" },
+    { name: "Attendance", icon: CalendarCheck, href: "/student/attendance" },
   ];
 
   const location = useLocation();

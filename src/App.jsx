@@ -25,8 +25,9 @@ import ManageHero from "./adminComponents/ManageHero";
 import ManageFCourses from "./adminComponents/ManageFCourses";
 import SCertificates from "./StudentComponents/SCertificates";
 import SNavbar from "./StudentComponents/SNavbar";
-import Attendence from "./adminComponents/Attendence";
 import CreateAttendancePage from "./adminComponents/CreateAttendancePage";
+import AttendanceView from "./adminComponents/attendanceView";
+import SAttendance from "./StudentComponents/SAttendance";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -67,14 +68,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-            <Route
-              path="/admin/attendence/"
-              element={
-                <RoleProtectedRoute role="admin">
-                  <Attendence />
-                </RoleProtectedRoute>
-              }
-            />
 
             <Route
               path="/admin/fees/detail"
@@ -102,10 +95,18 @@ function App() {
               }
             />
             <Route
-              path="/admin/talha/"
+              path="/admin/attendance/"
               element={
                 <RoleProtectedRoute role="admin">
                   <CreateAttendancePage />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/attendance/view"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <AttendanceView />
                 </RoleProtectedRoute>
               }
             />
@@ -142,6 +143,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="student">
                   <SCertificates />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/attendance"
+              element={
+                <RoleProtectedRoute role="student">
+                  <SAttendance />
                 </RoleProtectedRoute>
               }
             />

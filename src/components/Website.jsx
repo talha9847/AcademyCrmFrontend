@@ -11,6 +11,7 @@ import FeaturedCourses from "./FeaturedCourses";
 import AboutPage from "./AboutPage";
 import Journey from "./Journey";
 import FNavbar from "./FNavbar";
+import Gallery from "./Gallery";
 
 const Website = () => {
   return (
@@ -23,6 +24,7 @@ const Website = () => {
       <Journey />
       <ChooseUs />
       <Blog />
+      <Gallery/>
       <Testimonials />
       <Contact />
       <CtaSection />

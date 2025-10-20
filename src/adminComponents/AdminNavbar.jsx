@@ -15,6 +15,7 @@ import {
   Wallet,
   icons,
   Network,
+  CalendarCheck,
 } from "lucide-react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
@@ -28,6 +29,7 @@ const AdminNavbar = () => {
     { name: "Dashboard", icon: Home, href: "/admin/dashboard" },
     { name: "Classes", icon: Home, href: "/admin/classes" },
     { name: "Manage", icon:Network, href: "/admin/manage" },
+    { name: "Attendance", icon:CalendarCheck, href: "/admin/attendance" },
     { name: "Settings", icon: Settings, href: "/settings" },
   ];
 

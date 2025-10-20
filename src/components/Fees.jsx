@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import AdminNavbar from "../adminComponents/AdminNavbar";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 const Fees = () => {
@@ -87,7 +88,7 @@ const Fees = () => {
       fetchFees();
       setIsDialogOpen(false);
       reset();
-      console.log("fees paid successfullyy");
+      toast.success("Fees Collected Successfullyy");
     }
   };
 
@@ -99,6 +100,18 @@ const Fees = () => {
 
   return (
     <div className="min-h-screen bg-gray-50  font-sans">
+      <ToastContainer
+        position="top-right" // ✅ You can change this
+        autoClose={3000} // closes after 3 seconds
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" // "light", "dark", "colored"
+      />
       <AdminNavbar />
 
       <style>{`

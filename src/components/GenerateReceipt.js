@@ -1,5 +1,3 @@
-// receiptGenerator.js - Plain HTML/CSS Receipt Generator
-
 export const generateReceiptHTML = (transaction, studentInfo, totalFees) => {
   const receiptNumber = `REC-${transaction.id}-${new Date()
     .getTime()
