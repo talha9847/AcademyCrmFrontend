@@ -1,64 +1,13 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import SNavbar from "./SNavbar";
-// Assuming SNavbar is defined in a separate file and works correctly.
-// import SNavbar from "./SNavbar";
+import axios from "axios";
 
-// --- Static Data for Demonstration (SINGLE FLAT ARRAY) ---
 const studentInfo = {
   name: "Alex Johnson",
   id: "S00101",
   course: "Web Development Fundamentals",
 };
 
-// **This is the single array structure you requested.**
-const ALL_ATTENDANCE_ARRAY = [
-  // October 2024 Data
-  { date: "2024-10-01", status: "Present", remarks: "Active participation." },
-  {
-    date: "2024-10-02",
-    status: "Present",
-    remarks: "Submitted homework early.",
-  },
-  { date: "2024-10-03", status: "Absent", remarks: "Sick leave (reported)." },
-  { date: "2024-10-04", status: "Late", remarks: "Arrived 10 mins late." },
-  {
-    date: "2024-10-07",
-    status: "Present",
-    remarks: "Great work on the CSS task.",
-  },
-  { date: "2024-10-08", status: "Present", remarks: "Perfect attendance." },
-  { date: "2024-10-09", status: "Absent", remarks: "Unexcused absence." },
-  { date: "2024-10-10", status: "Present", remarks: "Completed quiz 100%." },
-  {
-    date: "2024-10-11",
-    status: "Late",
-    remarks: "Technical issue with internet.",
-  },
-  { date: "2024-10-14", status: "Present", remarks: "Good engagement." },
-  { date: "2024-10-15", status: "Present", remarks: "No issues." },
-  {
-    date: "2024-10-16",
-    status: "Present",
-    remarks: "Worked well in the group project.",
-  },
-  {
-    date: "2024-10-17",
-    status: "Absent",
-    remarks: "Attended doctor's appointment.",
-  },
-  {
-    date: "2024-10-18",
-    status: "Present",
-    remarks: "Final class of the week.",
-  },
-  // September 2024 Data
-  { date: "2024-09-02", status: "Present", remarks: "First day of class." },
-  { date: "2024-09-03", status: "Present", remarks: "Setup complete." },
-  { date: "2024-09-04", status: "Late", remarks: "Traffic delay." },
-  { date: "2024-09-05", status: "Present", remarks: "Good progress." },
-];
-
-// Map status to Tailwind background/text classes for the calendar cells
 const getStatusClasses = (status) => {
   switch (status) {
     case "Present":
@@ -78,45 +27,41 @@ const getAttendanceSummary = (data) => {
   const presentCount = data.filter((d) => d.status === "Present").length;
   const absentCount = data.filter((d) => d.status === "Absent").length;
   const lateCount = data.filter((d) => d.status === "Late").length;
-
   const presentPercentage =
     totalDays > 0 ? ((presentCount / totalDays) * 100).toFixed(1) : 0;
 
   return { totalDays, presentCount, absentCount, lateCount, presentPercentage };
 };
 
-// Function to group the flat array data by month/year key (e.g., "2024-10")
 const groupAttendanceByMonth = (data) => {
   return data.reduce((acc, record) => {
-    // Extracts YYYY-MM from YYYY-MM-DD
-    const monthYearKey = record.date.substring(0, 7);
-    if (!acc[monthYearKey]) {
-      acc[monthYearKey] = [];
+    const key = record.date.substring(0, 7); // "YYYY-MM"
+    if (!acc[key]) {
+      acc[key] = [];
     }
-    acc[monthYearKey].push(record);
+    acc[key].push(record);
     return acc;
   }, {});
 };
 
-// Function to generate the calendar grid structure
 const generateCalendar = (year, monthIndex, attendanceRecords) => {
   const firstDayOfMonth = new Date(year, monthIndex, 1);
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
   const startingDayOfWeek = firstDayOfMonth.getDay();
   const days = [];
 
-  // Map attendance data for quick lookup by day number
   const attendanceMap = attendanceRecords.reduce((acc, record) => {
-    acc[new Date(record.date).getDate()] = record;
+    const day = new Date(record.date).getDate();
+    acc[day] = record;
     return acc;
   }, {});
 
-  // 1. Add leading empty slots
+  // Empty slots at the start of the month
   for (let i = 0; i < startingDayOfWeek; i++) {
     days.push({ day: null, status: "Empty" });
   }
 
-  // 2. Add days of the month
+  // Fill actual days
   for (let i = 1; i <= daysInMonth; i++) {
     const record = attendanceMap[i];
     const status = record ? record.status : "None";
@@ -144,40 +89,85 @@ const getMonthName = (monthIndex) =>
     "December",
   ][monthIndex];
 
-// Main Component
 const SAttendance = () => {
-  // Use useMemo to process the flat data into a grouped object only once
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [userInfo, setUser] = useState({});
+
+  useEffect(() => {
+    const getAttendanceData = async () => {
+      try {
+        const result = await axios.get(
+          "http://localhost:5000/api/attendance/getAttendanceByStudent",
+          { withCredentials: true }
+        );
+        if (result.status === 200) {
+          setAttendanceData(result.data.data);
+          setUser(result.data.user);
+          console.log(result.data.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getAttendanceData();
+  }, []);
+
   const groupedAttendance = useMemo(
-    () => groupAttendanceByMonth(ALL_ATTENDANCE_ARRAY),
-    []
+    () => groupAttendanceByMonth(attendanceData),
+    [attendanceData]
   );
 
-  // Set initial date to the latest month available in the data (October 2024 in this static example)
-  const initialDateKey =
-    Object.keys(groupedAttendance).sort().pop() || "2024-10";
-  const [initialYear, initialMonth] = initialDateKey.split("-").map(Number);
+  const latestMonthYearKey = React.useMemo(() => {
+    const keys = Object.keys(groupedAttendance);
+    if (keys.length === 0) {
+      const today = new Date();
+      return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(
+        2,
+        "0"
+      )}`;
+    }
+    return keys.sort().pop();
+  }, [groupedAttendance]);
 
-  // Initialize state to the calculated initial month/year
-  const [currentDate, setCurrentDate] = useState(
-    new Date(initialYear, initialMonth - 1, 1)
-  );
+  const [year, month] = latestMonthYearKey.split("-").map(Number);
+  const monthIndex = month - 1;
 
-  const year = currentDate.getFullYear();
-  const monthIndex = currentDate.getMonth();
-  const monthYearKey = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+  const currentAttendance = groupedAttendance[latestMonthYearKey] || [];
 
-  // Get attendance data for the selected month
-  const currentAttendance = groupedAttendance[monthYearKey] || [];
-
-  // Recalculate summary and calendar view based on the current month
-  const summary = getAttendanceSummary(currentAttendance);
   const calendarDays = generateCalendar(year, monthIndex, currentAttendance);
 
+  const summary = getAttendanceSummary(currentAttendance);
+
+  const [currentMonthKey, setCurrentMonthKey] =
+    React.useState(latestMonthYearKey);
+
   const handleMonthChange = (direction) => {
-    const newDate = new Date(currentDate);
-    newDate.setMonth(monthIndex + direction);
-    setCurrentDate(newDate);
+    const [curYear, curMonth] = currentMonthKey.split("-").map(Number);
+    let newYear = curYear;
+    let newMonth = curMonth + direction;
+
+    if (newMonth < 1) {
+      newYear -= 1;
+      newMonth = 12;
+    } else if (newMonth > 12) {
+      newYear += 1;
+      newMonth = 1;
+    }
+
+    const newKey = `${newYear}-${String(newMonth).padStart(2, "0")}`;
+    setCurrentMonthKey(newKey);
   };
+
+  const currentMonthAttendance = groupedAttendance[currentMonthKey] || [];
+  const currentMonthYear = Number(currentMonthKey.split("-")[0]);
+  const currentMonthIndex = Number(currentMonthKey.split("-")[1]) - 1;
+  const currentCalendarDays = generateCalendar(
+    currentMonthYear,
+    currentMonthIndex,
+    currentMonthAttendance
+  );
+  const currentSummary = getAttendanceSummary(currentMonthAttendance);
+  console.log(currentSummary);
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -187,7 +177,6 @@ const SAttendance = () => {
           Student Attendance Calendar 🗓️
         </h1>
 
-        {/* Student Information Header */}
         <div className="bg-white p-4 rounded-lg shadow-md mb-8">
           <h2 className="text-xl font-semibold text-indigo-600 mb-2">
             Student Details
@@ -195,15 +184,11 @@ const SAttendance = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-600">
             <p>
               <span className="font-medium text-gray-800">Name:</span>{" "}
-              {studentInfo.name}
+              {userInfo.fullName}
             </p>
             <p>
               <span className="font-medium text-gray-800">ID:</span>{" "}
-              {studentInfo.id}
-            </p>
-            <p>
-              <span className="font-medium text-gray-800">Course:</span>{" "}
-              {studentInfo.course}
+              {"MCA-" + (userInfo.id + 500)}
             </p>
           </div>
         </div>
@@ -216,11 +201,6 @@ const SAttendance = () => {
               onClick={() => handleMonthChange(-1)}
               className="flex items-center p-2 bg-indigo-500 text-white rounded-full hover:bg-indigo-600 transition duration-150 disabled:opacity-50"
               // Optional: Disable button if no data exists for the previous month key
-              disabled={
-                !groupedAttendance[
-                  `${year}-${String(monthIndex).padStart(2, "0")}`
-                ] && monthYearKey !== Object.keys(groupedAttendance).sort()[0]
-              }
             >
               <svg
                 className="w-5 h-5 mr-1"
@@ -239,18 +219,12 @@ const SAttendance = () => {
               Previous
             </button>
             <h3 className="text-2xl font-bold text-gray-800">
-              {getMonthName(monthIndex)} {year}
+              {getMonthName(currentMonthIndex)} {currentMonthYear}
             </h3>
             <button
               onClick={() => handleMonthChange(1)}
               className="flex items-center p-2 bg-indigo-500 text-white rounded-full hover:bg-indigo-600 transition duration-150 disabled:opacity-50"
               // Optional: Disable button if no data exists for the next month key
-              disabled={
-                !groupedAttendance[
-                  `${year}-${String(monthIndex + 2).padStart(2, "0")}`
-                ] &&
-                monthYearKey !== Object.keys(groupedAttendance).sort().pop()
-              }
             >
               Next
               <svg
@@ -281,7 +255,7 @@ const SAttendance = () => {
 
           {/* Calendar Grid Body (Dates) */}
           <div className="grid grid-cols-7 gap-1">
-            {calendarDays.map((day, index) => (
+            {currentCalendarDays.map((day, index) => (
               <div
                 key={index}
                 className={`
@@ -350,7 +324,7 @@ const SAttendance = () => {
               Attendance Rate
             </p>
             <h3 className="text-4xl font-bold text-indigo-700 mt-1">
-              {summary.presentPercentage}%
+              {currentSummary.presentPercentage}%
             </h3>
             <p className="text-sm text-gray-400">Monthly Performance</p>
           </div>
@@ -361,7 +335,7 @@ const SAttendance = () => {
               Total Classes Held
             </p>
             <h3 className="text-4xl font-bold text-blue-700 mt-1">
-              {summary.totalDays}
+              {currentSummary.totalDays}
             </h3>
             <p className="text-sm text-gray-400">
               In {getMonthName(monthIndex)}
@@ -374,7 +348,7 @@ const SAttendance = () => {
               Days Absent
             </p>
             <h3 className="text-4xl font-bold text-red-700 mt-1">
-              {summary.absentCount}
+              {currentSummary.absentCount}
             </h3>
             <p className="text-sm text-gray-400">Total missed classes</p>
           </div>
@@ -385,7 +359,7 @@ const SAttendance = () => {
               Times Late
             </p>
             <h3 className="text-4xl font-bold text-yellow-700 mt-1">
-              {summary.lateCount}
+              {currentSummary.lateCount}
             </h3>
             <p className="text-sm text-gray-400">Recorded late entries</p>
           </div>

@@ -33,7 +33,7 @@ const AttedanceNavbar = () => {
       {/* Mobile Menu Button - Hidden on md and above */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 text-indigo-600 bg-white border border-indigo-100 rounded-lg shadow-md hover:bg-indigo-50 transition"
+        className="md:hidden fixed top-[46px] left-[16px] z-50 p-2 text-indigo-600 bg-white border border-indigo-100 rounded-lg shadow-md hover:bg-indigo-50 transition"
         aria-label="Toggle Attendance Navigation"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}

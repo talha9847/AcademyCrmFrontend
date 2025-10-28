@@ -28,6 +28,10 @@ import SNavbar from "./StudentComponents/SNavbar";
 import CreateAttendancePage from "./adminComponents/CreateAttendancePage";
 import AttendanceView from "./adminComponents/attendanceView";
 import SAttendance from "./StudentComponents/SAttendance";
+import SFeePayment from "./StudentComponents/SFeePayment";
+import SStudyMaterial from "./StudentComponents/SStudyMaterial";
+import Expense from "./adminComponents/Expense";
+import Certificate from "./adminComponents/Certificate";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -110,6 +114,22 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
+            <Route
+              path="/admin/expense/"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <Expense />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/certificate/"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <Certificate />
+                </RoleProtectedRoute>
+              }
+            />
 
             {/* Teachers Route */}
             <Route
@@ -146,6 +166,7 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
+
             <Route
               path="/student/attendance"
               element={
@@ -154,7 +175,22 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
+            <Route
+              path="/student/fees"
+              element={
+                <RoleProtectedRoute role="student">
+                  <SFeePayment />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/studymaterial"
+              element={
+                <RoleProtectedRoute role="student">
+                  <SStudyMaterial />
+                </RoleProtectedRoute>
+              }
+            />
             <Route
               path="/teachers"
               element={

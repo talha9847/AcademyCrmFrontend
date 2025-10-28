@@ -350,9 +350,6 @@ const CreateAttendancePage = () => {
                   </table>
 
                   <div className="mt-8 pt-4 border-t flex flex-col sm:flex-row justify-end gap-3">
-                    <button className="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-150">
-                      Change Criteria
-                    </button>
                     <button
                       type="submit"
                       className={`w-full sm:w-auto px-8 py-3 text-white font-semibold rounded-lg shadow-lg  transition duration-150 ${

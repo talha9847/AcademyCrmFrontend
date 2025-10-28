@@ -26,10 +26,41 @@ const Student = () => {
   const submitStudent = async (data) => {
     if (!data.sectionId) data.sectionId = 1;
 
+    const formData = new FormData();
+
+    // Append file fields
+    if (data.photoUrl?.[0]) {
+      formData.append("photoUrl", data.photoUrl[0]);
+    }
+
+    if (data.signatureUrl?.[0]) {
+      formData.append("signatureUrl", data.signatureUrl[0]);
+    }
+
+    formData.append("fullName", data.fullName);
+    formData.append("email", data.email);
+    formData.append("classId", data.classId);
+    formData.append("sectionId", data.sectionId);
+    formData.append("admissionNumber", data.admissionNumber);
+    formData.append("dob", data.dob);
+    formData.append("gender", data.gender);
+    formData.append("rollNo", data.rollNo);
+    formData.append("sessionId", data.sessionId);
+    formData.append("address", data.address);
+    formData.append("totalFee", data.totalFee);
+    formData.append("dueDate", data.dueDate);
+    formData.append("discount", data.discount);
+    formData.append("description", data.description);
+    formData.append("p_name", data.p_name);
+    formData.append("p_phone", data.p_phone);
+    formData.append("p_email", data.p_email);
+    formData.append("p_relation", data.p_relation);
+    formData.append("p_occupation", data.p_occupation);
+    formData.append("p_address", data.p_address);
     try {
       const result = await axios.post(
         "http://localhost:5000/api/user/createStudent",
-        data,
+        formData,
         { withCredentials: true }
       );
 
@@ -251,17 +282,17 @@ const Student = () => {
                 onClick={() => setShowModal(false)}
                 className="hover:bg-gray-800 p-2 rounded-full transition-colors"
               >
-                <X className="w-6 h-6" />
+                {/* <X className="w-6 h-6" /> */} ❌
               </button>
             </div>
 
             <form onSubmit={handleSubmit(submitStudent)} className="p-6">
-              {/* Student Information Section */}
               <div className="mb-8">
                 <h3 className="text-xl font-bold mb-4 pb-2 border-b-2 border-black">
                   Student Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Full Name */}
                   <div>
                     <label
                       htmlFor="fullName"
@@ -283,6 +314,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Email */}
                   <div>
                     <label
                       htmlFor="email"
@@ -291,13 +323,7 @@ const Student = () => {
                       Email *
                     </label>
                     <input
-                      {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value: /^\S+@\S+\.\S+$/,
-                          message: "Please enter a valid email address",
-                        },
-                      })}
+                      {...register("email", { required: "Email is required" })}
                       id="email"
                       name="email"
                       type="email"
@@ -308,6 +334,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Class ID */}
                   <div>
                     <label
                       htmlFor="classId"
@@ -318,10 +345,11 @@ const Student = () => {
                     <select
                       {...register("classId", {
                         required: "Please select class",
-                        onChange: (e) => setClassId(e.target.value), // ✅ use onChange inside register
+                        onChange: (e) => setClassId(e.target.value),
                       })}
                       id="classId"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      onChange={(e) => setClassId(e.target.value)} // Added to make section dropdown work
                     >
                       <option value="">--select class--</option>
                       {classes.map((val) => (
@@ -330,12 +358,12 @@ const Student = () => {
                         </option>
                       ))}
                     </select>
-
                     <p className="text-red-500 text-xs">
                       {errors.classId?.message}
                     </p>
                   </div>
 
+                  {/* Section ID */}
                   <div>
                     <label
                       htmlFor="sectionId"
@@ -344,14 +372,11 @@ const Student = () => {
                       Section ID
                     </label>
                     <select
-                      {...register("sectionId", {
-                        required: false,
-                      })}
+                      {...register("sectionId", { required: false })}
                       id="sectionId"
                       name="sectionId"
-                      type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
-                      disabled={classId == null}
+                      disabled={classId == null || classId === ""}
                     >
                       <option key={0} value="">
                         --select section--
@@ -364,6 +389,7 @@ const Student = () => {
                     </select>
                   </div>
 
+                  {/* Admission Number */}
                   <div>
                     <label
                       htmlFor="admissionNumber"
@@ -385,6 +411,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Roll Number */}
                   <div>
                     <label
                       htmlFor="rollNo"
@@ -406,6 +433,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Date of Birth */}
                   <div>
                     <label
                       htmlFor="dob"
@@ -427,6 +455,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Gender */}
                   <div>
                     <label
                       htmlFor="gender"
@@ -451,6 +480,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Session ID */}
                   <div>
                     <label
                       htmlFor="sessionId"
@@ -464,7 +494,6 @@ const Student = () => {
                       })}
                       id="sessionId"
                       name="sessionId"
-                      type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
                     >
                       <option key={0} value="">
@@ -481,6 +510,52 @@ const Student = () => {
                     </p>
                   </div>
 
+                  <div>
+                    <label
+                      htmlFor="photoUrl"
+                      className="block mb-2 font-semibold text-gray-900 text-sm"
+                    >
+                      Student Photo *
+                    </label>
+                    <input
+                      {...register("photoUrl", {
+                        required: "Photo is required",
+                      })}
+                      id="photoUrl"
+                      name="photoUrl"
+                      type="file"
+                      accept="image/*"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-black hover:file:bg-gray-200 transition-colors"
+                    />
+                    <p className="text-red-500 text-xs">
+                      {errors.photoUrl?.message}
+                    </p>
+                  </div>
+
+                  {/* --- NEW: Student Signature --- */}
+                  <div>
+                    <label
+                      htmlFor="signatureUrl"
+                      className="block mb-2 font-semibold text-gray-900 text-sm"
+                    >
+                      Digital Signature *
+                    </label>
+                    <input
+                      {...register("signatureUrl", {
+                        required: "Signature is required",
+                      })}
+                      id="signatureUrl"
+                      name="signatureUrl"
+                      type="file"
+                      accept="image/*"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-black hover:file:bg-gray-200 transition-colors"
+                    />
+                    <p className="text-red-500 text-xs">
+                      {errors.signatureUrl?.message}
+                    </p>
+                  </div>
+
+                  {/* Address (Full width for better input) */}
                   <div className="md:col-span-2 lg:col-span-3">
                     <label
                       htmlFor="address"
@@ -502,6 +577,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Total Fee */}
                   <div>
                     <label
                       htmlFor="totalFee"
@@ -523,6 +599,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Due Date */}
                   <div>
                     <label
                       htmlFor="dueDate"
@@ -544,6 +621,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Discount */}
                   <div>
                     <label
                       htmlFor="discount"
@@ -560,12 +638,13 @@ const Student = () => {
                     />
                   </div>
 
+                  {/* Description */}
                   <div className="md:col-span-2 lg:col-span-3">
                     <label
                       htmlFor="description"
                       className="block mb-2 font-semibold text-gray-900 text-sm"
                     >
-                      Description
+                      Fee Description
                     </label>
                     <textarea
                       {...register("description", {
@@ -583,11 +662,13 @@ const Student = () => {
                 </div>
               </div>
 
+              {/* Parent Information Section */}
               <div className="mb-6">
                 <h3 className="text-xl font-bold mb-4 pb-2 border-b-2 border-black">
                   Parent Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Parent Name */}
                   <div>
                     <label
                       htmlFor="p_name"
@@ -609,6 +690,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Parent Phone */}
                   <div>
                     <label
                       htmlFor="p_phone"
@@ -630,6 +712,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Parent Email */}
                   <div>
                     <label
                       htmlFor="p_email"
@@ -640,10 +723,6 @@ const Student = () => {
                     <input
                       {...register("p_email", {
                         required: "Email is required",
-                        pattern: {
-                          value: /^\S+@\S+\.\S+$/,
-                          message: "Please enter a valid email address",
-                        },
                       })}
                       id="p_email"
                       name="p_email"
@@ -655,6 +734,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Parent Relation */}
                   <div>
                     <label
                       htmlFor="p_relation"
@@ -677,6 +757,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Parent Occupation */}
                   <div>
                     <label
                       htmlFor="p_occupation"
@@ -698,6 +779,7 @@ const Student = () => {
                     </p>
                   </div>
 
+                  {/* Parent Address */}
                   <div className="md:col-span-2 lg:col-span-3">
                     <label
                       htmlFor="p_address"

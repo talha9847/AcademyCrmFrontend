@@ -17,6 +17,7 @@ import {
   PersonStanding,
   User,
   CalendarCheck,
+  Wallet2Icon,
 } from "lucide-react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
@@ -32,6 +33,7 @@ const SNavbar = () => {
     { name: "Profile", icon: User, href: "/student/profile" },
     { name: "Certificate", icon: User, href: "/student/certificate" },
     { name: "Attendance", icon: CalendarCheck, href: "/student/attendance" },
+    { name: "Fees", icon: Wallet2Icon, href: "/student/fees" },
   ];
 
   const location = useLocation();
