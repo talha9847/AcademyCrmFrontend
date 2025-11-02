@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 
 export default function ProfessionalNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,14 +21,13 @@ export default function ProfessionalNavbar() {
     { href: "#courses", label: "Programs" },
     { href: "#testimonials", label: "Success Stories" },
     { href: "#contact", label: "Contact" },
+    { href: "#gallery", label: "Gallery" },
   ];
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white shadow-md"
-          : "bg-white"
+        isScrolled ? "bg-white shadow-md" : "bg-white"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6">
@@ -49,9 +50,7 @@ export default function ProfessionalNavbar() {
               </div>
             </div>
             <div className="sm:hidden">
-              <div className="font-bold text-base text-gray-900">
-                MCA
-              </div>
+              <div className="font-bold text-base text-gray-900">MCA</div>
               <div className="text-[10px] text-gray-500 font-medium">
                 ISO Certified
               </div>
@@ -61,15 +60,22 @@ export default function ProfessionalNavbar() {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <HashLink
                 key={link.href}
-                href={link.href}
+                smooth
+                to={`/${link.href}`} // ensures it always goes to the homepage first
                 className="text-gray-700 hover:text-blue-600 font-medium text-[15px] transition-colors relative group"
               >
                 {link.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
-              </a>
+              </HashLink>
             ))}
+            <Link
+              className="text-gray-700 hover:text-blue-600 font-medium text-[15px] transition-colors relative group"
+              to="/verify"
+            >
+              Verification
+            </Link>
           </div>
 
           {/* CTA Buttons - Desktop */}

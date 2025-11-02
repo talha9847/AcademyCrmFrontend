@@ -3,7 +3,7 @@ import { Eye, Plus, X, Search, Users } from "lucide-react";
 import AdminNavbar from "../adminComponents/AdminNavbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // Mock AdminNavbar component
@@ -21,9 +21,21 @@ const Student = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+    control,
+    watch,
+  } = useForm({
+    defaultValues: {
+      enrollments: [{ classId: "", sessionId: "" }],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "enrollments",
+  });
 
   const submitStudent = async (data) => {
+    console.log(data);
     if (!data.sectionId) data.sectionId = 1;
 
     const formData = new FormData();
@@ -57,6 +69,7 @@ const Student = () => {
     formData.append("p_relation", data.p_relation);
     formData.append("p_occupation", data.p_occupation);
     formData.append("p_address", data.p_address);
+    formData.append("enrollments", JSON.stringify(data.enrollments));
     try {
       const result = await axios.post(
         "http://localhost:5000/api/user/createStudent",
@@ -91,7 +104,6 @@ const Student = () => {
       { withCredentials: true }
     );
     if (result.status == 200) {
-      console.log("  i am here still what is ngoijij kjlfkl kdjsl ksdfkl ");
       setStudents(result.data.result);
     }
   }
@@ -578,6 +590,99 @@ const Student = () => {
                   </div>
 
                   {/* Total Fee */}
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-xl font-bold mb-4 pb-2 border-b-2 border-gray-300">
+                  Classes And Fees
+                </h3>
+                <div className="space-y-4 mb-8">
+                  <label className="block font-semibold text-gray-900 text-sm mb-2">
+                    Enrollments
+                  </label>
+                  {fields.map((field, ind) => (
+                    <div
+                      key={field.id}
+                      className="flex flex-col sm:flex-row gap-4 w-full items-end border p-4 rounded-lg bg-gray-50"
+                    >
+                      <div className="w-full sm:w-2/5">
+                        <label className="block mb-1 font-medium text-gray-700 text-xs">
+                          Class
+                        </label>
+                        <select
+                          {...register(`enrollments.${ind}.classId`, {
+                            required: true,
+                          })}
+                          className="w-full border-2 border-gray-300 rounded-lg px-4 py-2  transition-colors text-sm"
+                        >
+                          <option value="">-- select class --</option>
+                          {classes.map((cl) => (
+                            <option key={cl.id} value={cl.id}>
+                              {cl.name}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.enrollments?.[ind]?.classId && (
+                          <p className="text-red-500 text-xs mt-1">
+                            Class selection is required
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="w-full sm:w-2/5">
+                        <label className="block mb-1 font-medium text-gray-700 text-xs">
+                          Session
+                        </label>
+                        <select
+                          {...register(`enrollments.${ind}.sessionId`, {
+                            required: true,
+                          })}
+                          className="w-full border-2 border-gray-300 rounded-lg px-4 py-2  transition-colors text-sm"
+                        >
+                          <option value="">-- select session --</option>
+                          {sessions.map((ss) => (
+                            <option key={ss.id} value={ss.id}>
+                              {ss.timing}
+                            </option>
+                          ))}
+                        </select>
+                        {errors.enrollments?.[ind]?.sessionId && (
+                          <p className="text-red-500 text-xs mt-1">
+                            Session selection is required
+                          </p>
+                        )}
+                      </div>
+
+                      {fields.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            remove(ind);
+                          }}
+                          className="w-full sm:w-1/5 py-2 px-3 text-sm font-semibold rounded-lg text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors h-[42px] mt-2 sm:mt-0"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      append({ classId: "", sessionId: "" });
+                    }}
+                    className="py-2 px-4 text-sm font-semibold rounded-lg text-white bg-black  focus:outline-none focus:ring-2   transition-colors mt-4"
+                  >
+                    + Add New Class Enrollment
+                  </button>
+                </div>
+
+                <hr className="my-8" />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Total Fee */}
                   <div>
                     <label
                       htmlFor="totalFee"
@@ -592,9 +697,9 @@ const Student = () => {
                       id="totalFee"
                       name="totalFee"
                       type="number"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-colors"
                     />
-                    <p className="text-red-500 text-xs">
+                    <p className="text-red-500 text-xs mt-1">
                       {errors.totalFee?.message}
                     </p>
                   </div>
@@ -614,9 +719,9 @@ const Student = () => {
                       id="dueDate"
                       name="dueDate"
                       type="date"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-colors"
                     />
-                    <p className="text-red-500 text-xs">
+                    <p className="text-red-500 text-xs mt-1">
                       {errors.dueDate?.message}
                     </p>
                   </div>
@@ -634,12 +739,12 @@ const Student = () => {
                       id="discount"
                       name="discount"
                       type="number"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-colors"
                     />
                   </div>
 
                   {/* Description */}
-                  <div className="md:col-span-2 lg:col-span-3">
+                  <div className="lg:col-span-3">
                     <label
                       htmlFor="description"
                       className="block mb-2 font-semibold text-gray-900 text-sm"
@@ -653,9 +758,9 @@ const Student = () => {
                       id="description"
                       name="description"
                       rows="3"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-colors"
                     ></textarea>
-                    <p className="text-red-500 text-xs">
+                    <p className="text-red-500 text-xs mt-1">
                       {errors.description?.message}
                     </p>
                   </div>

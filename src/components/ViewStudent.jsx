@@ -18,14 +18,46 @@ import {
   Download,
   Printer,
   CreditCard,
+  Edit3,
+  X,
 } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ViewStudent = () => {
   const location = useLocation();
   const { studentId } = location.state || {};
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form1Data, setForm1Data] = useState({
+    roll_no: "",
+    gender: "",
+  });
 
+  const edit1Click = async (rollNo, gender) => {
+    setForm1Data({
+      roll_no: rollNo,
+      gender: gender,
+    });
+  };
+
+  const handleSave1 = async (form1Data) => {
+    try {
+      console.log(form1Data);
+      const result = await axios.post(
+        "http://localhost:5000/api/student/updateStudentRollAndGender",
+        { rollNo: form1Data.roll_no, studentId, gender: form1Data.gender },
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        toast.success("Student Updated Successfully");
+      }
+    } catch (error) {
+      toast.error("Internal Server Error");
+      console.log(error);
+    }
+  };
   async function studentDetails(studentId) {
     try {
       setLoading(true);
@@ -591,7 +623,18 @@ const ViewStudent = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
-
+      <ToastContainer
+        position="top-right" // ✅ You can change this
+        autoClose={3000} // closes after 3 seconds
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" // "light", "dark", "colored"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header with Actions */}
         <div className="mb-6">
@@ -643,7 +686,18 @@ const ViewStudent = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Sidebar - Student Overview */}
           <div className="lg:col-span-1">
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden relative">
+              {/* Edit Button */}
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  edit1Click(student.roll_no, student.gender);
+                }}
+                className="absolute top-4 right-4 text-gray-600 hover:text-blue-600"
+              >
+                <Edit3 className="w-5 h-5" />
+              </button>
+
               {/* Student Image and Name */}
               <div className="p-6 text-center border-b border-gray-200">
                 <div className="w-32 h-32 mx-auto rounded-lg overflow-hidden mb-4 border-2 border-gray-200">
@@ -864,6 +918,81 @@ const ViewStudent = () => {
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h2 className="text-lg font-semibold mb-4">Edit Student Details</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-gray-600">
+                  Roll Number
+                </label>
+                <input
+                  type="text"
+                  name="roll_no"
+                  value={form1Data.roll_no}
+                  onChange={(e) => {
+                    setForm1Data({
+                      ...form1Data,
+                      roll_no: e.target.value,
+                    });
+                  }}
+                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-gray-600">
+                  Gender
+                </label>
+                <select
+                  name="gender"
+                  value={form1Data.gender}
+                  onChange={(e) => {
+                    setForm1Data({
+                      ...form1Data,
+                      gender: e.target.value,
+                    });
+                  }}
+                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleSave1(form1Data);
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -32,6 +32,9 @@ import SFeePayment from "./StudentComponents/SFeePayment";
 import SStudyMaterial from "./StudentComponents/SStudyMaterial";
 import Expense from "./adminComponents/Expense";
 import Certificate from "./adminComponents/Certificate";
+import ViewCertificate from "./adminComponents/ViewCertificate";
+import Verification from "./components/Verification";
+import Test from "./adminComponents/Test";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -44,6 +47,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Website />} />
             <Route path="/test" element={<Dashboard />} />
+            <Route path="/verify" element={<Verification />} />
+            <Route path="/test2" element={<Test />} />
 
             {/* Admin Routes */}
             <Route
@@ -127,6 +132,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="admin">
                   <Certificate />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/view-certificate/"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <ViewCertificate />
                 </RoleProtectedRoute>
               }
             />
