@@ -29,11 +29,11 @@ const SidebarManage = () => {
       path: "/admin/manage/featuredcourses",
       icon: Star,
     },
-    // { name: "About Manage", path: "/admin/manage/about", icon: Info },
+    { name: "About Manage", path: "/admin/manage/about", icon: Info },
     // { name: "Journey Manage", path: "/admin/manage/journey", icon: Map },
     // { name: "Choose Us", path: "/admin/manage/choose-us", icon: ThumbsUp },
     // { name: "Blog Manage", path: "/admin/manage/blog", icon: BookOpen },
-    // { name: "Testimonials", path: "/admin/manage/testimonials", icon: MessageSquare },
+    { name: "Testimonials", path: "/admin/manage/testimonials", icon: MessageSquare },
     // { name: "Contact Manage", path: "/admin/manage/contact", icon: Phone },
     // { name: "CTA Section", path: "/admin/manage/cta", icon: Zap },
     {

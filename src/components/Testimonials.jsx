@@ -1,28 +1,27 @@
 "use client";
 
+import axios from "axios";
 import { Star, Quote } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Testimonials() {
-  const testimonials = [
-    {
-      name: "Priya Patel",
-      course: "Full Stack Development",
-      rating: 5,
-      text: "The practical training and expert guidance helped me land my dream job as a web developer. The faculty is incredibly supportive!",
-    },
-    {
-      name: "Rahul Shah",
-      course: "Java Programming",
-      rating: 5,
-      text: "Best computer institute in Surat! The course content is up-to-date and the placement assistance is excellent.",
-    },
-    {
-      name: "Anjali Desai",
-      course: "IELTS Preparation",
-      rating: 5,
-      text: "Achieved 7.5 band score in IELTS thanks to the structured coaching and mock tests. Highly recommended for study abroad aspirants!",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const getTestimonials = async () => {
+    try {
+      const result = await axios.get(
+        "http://localhost:5000/api/front/getTestimonials",
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        setData(result.data.data);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getTestimonials();
+  }, []);
+ 
 
   return (
     <section id="testimonials" className="py-12 sm:py-16 lg:py-20 bg-white">
@@ -41,7 +40,7 @@ export default function Testimonials() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {testimonials.map((testimonial, index) => (
+          {data.map((testimonial, index) => (
             <div
               key={index}
               className="bg-white border-2 border-gray-100 rounded-xl sm:rounded-2xl p-6 sm:p-8 hover:shadow-2xl hover:border-blue-100 transition-all relative group hover:-translate-y-1"

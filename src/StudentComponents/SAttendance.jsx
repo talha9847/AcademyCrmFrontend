@@ -1,12 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
 import SNavbar from "./SNavbar";
 import axios from "axios";
-
-const studentInfo = {
-  name: "Alex Johnson",
-  id: "S00101",
-  course: "Web Development Fundamentals",
-};
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const getStatusClasses = (status) => {
   switch (status) {
@@ -92,24 +89,73 @@ const getMonthName = (monthIndex) =>
 const SAttendance = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [userInfo, setUser] = useState({});
+  const [id, setId] = useState(null);
+  const [classError, setClassError] = useState("");
 
-  useEffect(() => {
-    const getAttendanceData = async () => {
-      try {
-        const result = await axios.get(
-          "http://localhost:5000/api/attendance/getAttendanceByStudent",
-          { withCredentials: true }
-        );
-        if (result.status === 200) {
-          setAttendanceData(result.data.data);
-          setUser(result.data.user);
-          console.log(result.data.data);
-        }
-      } catch (error) {
-        console.error(error);
+  const navigate = useNavigate();
+
+  const checkId = async (id) => {
+    console.log(id);
+    if (id == null || id == "") {
+      setClassError("Please select class");
+    } else {
+      setClassError("");
+    }
+  };
+  const getAttendanceData = async () => {
+    try {
+      const result = await axios.post(
+        "http://localhost:5000/api/attendance/getAttendanceByStudent",
+        {},
+        { withCredentials: true }
+      );
+      if (result.status == 230) {
+        navigate("/unauthorized");
       }
-    };
+      if (result.status === 200) {
+        setAttendanceData(result.data.data);
+        setUser(result.data.user);
+        console.log(result.data.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getAttendanceDataByClass = async () => {
+    try {
+      const result = await axios.post(
+        "http://localhost:5000/api/attendance/getAttendanceByStudent",
+        { classId: id },
+        { withCredentials: true }
+      );
+      if (result.status == 230) {
+        navigate("/unauthorized");
+      }
+      if (result.status === 200) {
+        setAttendanceData(result.data.data);
+        setUser(result.data.user);
+        toast.success("Attendance loaded successfully");
+      }
+    } catch (error) {}
+  };
+  const [enrolled, setEnrolled] = useState([]);
+  const getEnrolledClass = async () => {
+    try {
+      const result = await axios.get(
+        "http://localhost:5000/api/attendance/getEnrolledClass",
+        {
+          withCredentials: true,
+        }
+      );
+      if (result.status == 200) {
+        setEnrolled(result.data.data);
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
     getAttendanceData();
+    getEnrolledClass();
   }, []);
 
   const groupedAttendance = useMemo(
@@ -172,6 +218,18 @@ const SAttendance = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <SNavbar />
+      <ToastContainer
+        position="top-right" // ✅ You can change this
+        autoClose={3000} // closes after 3 seconds
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" // "light", "dark", "colored"
+      />
       <div className="p-6 max-w-7xl mx-auto">
         <h1 className="text-3xl font-extrabold text-gray-800 mb-6 border-b pb-2">
           Student Attendance Calendar 🗓️
@@ -181,6 +239,7 @@ const SAttendance = () => {
           <h2 className="text-xl font-semibold text-indigo-600 mb-2">
             Student Details
           </h2>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-600">
             <p>
               <span className="font-medium text-gray-800">Name:</span>{" "}
@@ -190,6 +249,47 @@ const SAttendance = () => {
               <span className="font-medium text-gray-800">ID:</span>{" "}
               {"MCA-" + (userInfo.id + 500)}
             </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center justify-between bg-white shadow-md p-4 rounded-lg border border-gray-200 gap-4">
+          <div className="w-full sm:w-auto">
+            {enrolled.length > 1 && (
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <select
+                  onChange={(e) => {
+                    setId(e.target.value);
+                    checkId(e.target.value);
+                  }}
+                  className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                >
+                  <option value="">-- Select Class --</option>
+                  {enrolled.map((en, ind) => (
+                    <option key={ind} value={en.id}>
+                      {en.name}
+                    </option>
+                  ))}
+                </select>
+                {classError && (
+                  <p className="text-red-500 text-xs mt-1 sm:mt-0">
+                    {classError}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="w-full sm:w-auto">
+            <button
+              onClick={() => {
+                console.log("get clicked");
+                checkId(id);
+                getAttendanceDataByClass();
+              }}
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md transition duration-200"
+            >
+              Get Attendance
+            </button>
           </div>
         </div>
 

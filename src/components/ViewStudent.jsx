@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import AdminNavbar from "../adminComponents/AdminNavbar";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+
 import {
   User,
   Mail,
@@ -20,9 +25,9 @@ import {
   CreditCard,
   Edit3,
   X,
+  Plus,
+  Camera,
 } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const ViewStudent = () => {
   const location = useLocation();
@@ -30,9 +35,31 @@ const ViewStudent = () => {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [edit1, setEdit1] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [editId, setEditId] = useState(null);
   const [form1Data, setForm1Data] = useState({
     roll_no: "",
     gender: "",
+  });
+  const navigate = useNavigate();
+  const [edit3, setEdit3] = useState(false);
+  const [add, setAdd] = useState(false);
+  const [classes, setClasses] = useState([]);
+  const [classes1, setClasses1] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [feeEdit, setFeeEdit] = useState(false);
+  const [feeValue, setFeeValue] = useState();
+
+  const [saveData, setSaveData] = useState({
+    classId: "",
+    sessionId: "",
+  });
+  const [saveData2, setSaveData2] = useState({
+    dob: "",
+    status: "",
+    address: "",
+    contact: "",
   });
 
   const edit1Click = async (rollNo, gender) => {
@@ -42,19 +69,188 @@ const ViewStudent = () => {
     });
   };
 
-  const handleSave1 = async (form1Data) => {
-    try {
-      console.log(form1Data);
+  const handleStatusClick = async () => {
+    const action = student.is_active ? "disable" : "enable";
+
+    const result = await Swal.fire({
+      title: `Are you sure you want to ${action} this account?`,
+      text: student.is_active
+        ? "The user will not be able to log in after this."
+        : "The user will regain access after this.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: `Yes, ${action} it`,
+    });
+
+    if (result.isConfirmed) {
       const result = await axios.post(
-        "http://localhost:5000/api/student/updateStudentRollAndGender",
-        { rollNo: form1Data.roll_no, studentId, gender: form1Data.gender },
+        "http://localhost:5000/api/student/statusUpdate",
+        {
+          status: !student.is_active,
+          userId: studentId,
+        },
         { withCredentials: true }
       );
       if (result.status == 200) {
-        toast.success("Student Updated Successfully");
+        studentDetails(studentId);
+        Swal.fire({
+          title: "Updated!",
+          text: `User account has been ${action}d successfully.`,
+          icon: "success",
+        });
+      }
+    }
+  };
+  const handleSignatureChange = async (e, email) => {
+    try {
+      const formData = new FormData();
+      console.log(email);
+      const photo = e.target.files[0];
+      formData.append("signaturePhoto", photo);
+      formData.append("email", email);
+      formData.append("userId", studentId);
+      const result = await axios.post(
+        "http://localhost:5000/api/student/updateStudentSignature",
+        formData,
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        studentDetails(studentId);
+        toast.success("Profile picture changed kindly refresh");
       }
     } catch (error) {
-      toast.error("Internal Server Error");
+      console.log(error);
+      toast.error("Internal server error kindly refresh");
+    }
+  };
+
+  const feeSave = async () => {
+    if (feeValue == "" || feeValue == null) {
+      toast.error("Fee is required");
+    }
+
+    try {
+      const result = await axios.post(
+        "http://localhost:5000/api/student/updateFee",
+        { fee: feeValue, userId: studentId },
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        setFeeEdit(false);
+        studentDetails(studentId);
+        toast.success("fee updated successfully");
+      }
+    } catch (error) {}
+  };
+
+  const handleProfilePhotoChange = async (e, email) => {
+    console.log(email);
+    const file = e.target.files[0]; // get the first selected file
+    if (!file) return; // if no file selected, do nothing
+    console.log("Selected photo name:", file.name);
+    const formData = new FormData();
+    formData.append("profilePhoto", file);
+    formData.append("email", email);
+    formData.append("userId", studentId);
+    try {
+      const result = await axios.post(
+        "http://localhost:5000/api/student/updateStudentProfile",
+        formData,
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        studentDetails(studentId);
+        toast.success("Profile picture changed kindly refresh");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Internal server error kindly refresh");
+    }
+  };
+
+  const handleSave2 = async (id, saveData) => {
+    try {
+      if (add) {
+        const result = await axios.post(
+          "http://localhost:5000/api/student/addEnrolledClasses",
+          {
+            userId: studentId,
+            classId: saveData.classId,
+            sessionId: saveData.sessionId,
+          },
+          { withCredentials: true }
+        );
+        if (result.status == 200) {
+          studentDetails(studentId);
+          toast.success("Added successfully");
+        }
+      } else {
+        const result = await axios.post(
+          "http://localhost:5000/api/student/updateEnrolledClasses",
+          { eId: id, classId: saveData.classId, sessionId: saveData.sessionId },
+          { withCredentials: true }
+        );
+        if (result.status == 200) {
+          studentDetails(studentId);
+          toast.success("Updated successfully");
+        }
+      }
+    } catch (error) {}
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const result = await axios.post(
+        "http://localhost:5000/api/student/deleteEnrolledClasses",
+        { id: id },
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        studentDetails(studentId);
+        toast.warn("Deleted successfully");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSave1 = async (form1Data) => {
+    try {
+      if (edit1) {
+        const result = await axios.post(
+          "http://localhost:5000/api/student/updateStudentRollAndGender",
+          { rollNo: form1Data.roll_no, studentId, gender: form1Data.gender },
+          { withCredentials: true }
+        );
+        if (result.status == 200) {
+          studentDetails(studentId);
+          setIsModalOpen(false);
+          setEdit1(false);
+          toast.success("Details updated successfully");
+        }
+      }
+      if (edit3) {
+        const result = await axios.post(
+          "http://localhost:5000/api/student/updatePI",
+          {
+            dob: saveData2.dob,
+            userId: studentId,
+            address: saveData2.address,
+            status: saveData2.status,
+            contact: saveData2.contact,
+          },
+          { withCredentials: true }
+        );
+        if (result.status == 200) {
+          setIsModalOpen(false);
+          setEdit1(false);
+          studentDetails(studentId);
+          toast.success("Details updated successfully");
+        }
+      }
+    } catch (error) {
       console.log(error);
     }
   };
@@ -72,8 +268,8 @@ const ViewStudent = () => {
       );
 
       if (result.status == 200) {
-        console.log(result.data.data[0]);
-        setStudent(result.data.data[0]);
+        setClasses(result.data.data.enrolledClasses);
+        setStudent(result.data.data.student);
       }
     } catch (error) {
       console.error("Error fetching student details:", error);
@@ -82,8 +278,34 @@ const ViewStudent = () => {
     }
   }
 
+  const getClasses = async () => {
+    try {
+      const result = await axios.get(
+        "http://localhost:5000/api/extras/getClasses",
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        setClasses1(result.data.data);
+      }
+    } catch (error) {}
+  };
+
+  const getSessions = async () => {
+    try {
+      const result = await axios.get(
+        "http://localhost:5000/api/extras/getSessions",
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        setSessions(result.data.data);
+      }
+    } catch (error) {}
+  };
+
   useEffect(() => {
     studentDetails(studentId);
+    getClasses();
+    getSessions();
   }, []);
 
   const handlePrint = () => {
@@ -623,24 +845,17 @@ const ViewStudent = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
-      <ToastContainer
-        position="top-right" // ✅ You can change this
-        autoClose={3000} // closes after 3 seconds
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored" // "light", "dark", "colored"
-      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header with Actions */}
         <div className="mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center space-x-4">
-              <button className="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+              <button
+                onClick={() => {
+                  navigate(-1);
+                }}
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
                 <ArrowLeft className="w-5 h-5 mr-2" />
                 <span className="hidden sm:inline">Back</span>
               </button>
@@ -670,14 +885,6 @@ const ViewStudent = () => {
                 <Printer className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Print Form</span>
               </button>
-              <button className="px-3 sm:px-4 py-2 text-sm text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors flex items-center">
-                <Edit2 className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Edit Student</span>
-                <span className="sm:hidden">Edit</span>
-              </button>
-              <button className="p-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <MoreVertical className="w-5 h-5" />
-              </button>
             </div>
           </div>
         </div>
@@ -691,6 +898,8 @@ const ViewStudent = () => {
               <button
                 onClick={() => {
                   setIsModalOpen(true);
+                  setEdit1(true);
+                  setEdit3(false);
                   edit1Click(student.roll_no, student.gender);
                 }}
                 className="absolute top-4 right-4 text-gray-600 hover:text-blue-600"
@@ -700,7 +909,7 @@ const ViewStudent = () => {
 
               {/* Student Image and Name */}
               <div className="p-6 text-center border-b border-gray-200">
-                <div className="w-32 h-32 mx-auto rounded-lg overflow-hidden mb-4 border-2 border-gray-200">
+                <div className="relative w-32 h-32 mx-auto rounded-lg overflow-hidden mb-4 border-2 border-gray-200 group">
                   {student.profile_photo ? (
                     <img
                       src={`http://localhost:5000/uploads/${student.profile_photo}`}
@@ -712,13 +921,45 @@ const ViewStudent = () => {
                       <User className="w-16 h-16 text-gray-400" />
                     </div>
                   )}
+
+                  {/* Edit button overlay (appears on hover) */}
+                  <label
+                    htmlFor="profilePhotoInput"
+                    className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  >
+                    <Camera className="w-6 h-6 mb-1" />
+                    Change Photo
+                  </label>
+
+                  {/* Hidden file input */}
+                  <input
+                    id="profilePhotoInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                      handleProfilePhotoChange(e, student.student_email)
+                    }
+                    className="hidden"
+                  />
                 </div>
+
+                {/* Student Info */}
                 <h2 className="text-xl font-bold text-gray-900 mb-1">
                   {student.student_name}
                 </h2>
                 <p className="text-sm text-gray-500 mb-3">Student</p>
-                <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 border border-green-200">
-                  Active
+
+                <span
+                  onClick={() => {
+                    handleStatusClick();
+                  }}
+                  className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full border cursor-pointer ${
+                    student.is_active
+                      ? "bg-green-100 text-green-800 border-green-200"
+                      : "bg-red-100 text-red-800 border-red-200"
+                  }`}
+                >
+                  {student.is_active ? "Enabled" : "Disabled"}
                 </span>
               </div>
 
@@ -760,7 +1001,8 @@ const ViewStudent = () => {
                   <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
                     Student Signature
                   </label>
-                  <div className="w-full h-24 border-2 border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
+
+                  <div className="relative w-full h-24 border-2 border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center group">
                     {student.signature_photo ? (
                       <img
                         src={`http://localhost:5000/uploads/${student.signature_photo}`}
@@ -770,6 +1012,73 @@ const ViewStudent = () => {
                     ) : (
                       <div className="text-gray-400 text-sm">No signature</div>
                     )}
+
+                    {/* Edit overlay on hover */}
+                    <label
+                      htmlFor="signatureInput"
+                      className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    >
+                      <Camera className="w-5 h-5 mb-1" />
+                      Change Signature
+                    </label>
+
+                    {/* Hidden file input */}
+                    <input
+                      id="signatureInput"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) =>
+                        handleSignatureChange(e, student.student_email)
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* Fee Details Section */}
+                <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase">
+                      Fee Details
+                    </h3>
+
+                    {/* Static Edit Button */}
+                    <button
+                      onClick={() => {
+                        setFeeEdit(true);
+                      }}
+                      className="text-xs font-medium px-2 py-1 rounded bg-blue-100 text-blue-700 border border-blue-300 hover:bg-blue-200"
+                    >
+                      Edit
+                    </button>
+                  </div>
+
+                  <div className="flex justify-between text-gray-900 font-medium">
+                    <span>Total Fee:</span>
+                    <span>{student.total_fee}</span>{" "}
+                    {/* Static value for now */}
+                  </div>
+                </div>
+
+                {/* Delete Section */}
+                <div className="mt-6 p-4 border-t border-gray-200">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                    Danger Zone
+                  </h3>
+
+                  <div className="flex items-center justify-between bg-red-50 border border-red-200 rounded-md p-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-red-700">
+                        Delete Student Record
+                      </h4>
+                      <p className="text-xs text-red-500">
+                        Once deleted, this student’s data cannot be recovered.
+                      </p>
+                    </div>
+
+                    <button className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none">
+                      Delete Student
+                    </button>
                   </div>
                 </div>
               </div>
@@ -779,91 +1088,173 @@ const ViewStudent = () => {
           {/* Right Content - Detailed Information */}
           <div className="lg:col-span-2 space-y-6">
             {/* Academic Information */}
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              {/* Header */}
               <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                   <BookOpen className="w-5 h-5 mr-2 text-gray-700" />
                   Academic Information
                 </h3>
                 <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition duration-150 p-2 -my-2 rounded-lg hover:bg-gray-100"
+                  onClick={() => {
+                    setEdit1(false);
+                    setAdd(true);
+                    setEditModal(true);
+                    setSaveData({
+                      classId: "",
+                      sessionId: "",
+                    });
+                  }}
+                  className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-800 transition duration-150 p-2 -my-2 rounded-lg hover:bg-indigo-50"
                 >
-                  Edit
+                  <span className="text-sm font-medium">Add</span>
+                  <Plus className="w-4 h-4" />
                 </button>
               </div>
-              <div className="p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
-                      Class
-                    </label>
-                    <p className="text-gray-900 font-medium text-lg">
-                      {student.class_name}
-                    </p>
+
+              {/* Content */}
+              <div className="p-6 space-y-6">
+                {/* Classes List */}
+                {classes.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {classes.map((cs, ind) => (
+                      <div
+                        key={ind}
+                        className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white"
+                      >
+                        <div className="mb-3">
+                          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1">
+                            Class
+                          </label>
+                          <p className="text-gray-900 font-semibold text-lg">
+                            {cs.name}
+                          </p>
+                        </div>
+
+                        <div className="mb-3">
+                          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1">
+                            Session Timing
+                          </label>
+                          <p className="text-gray-900 font-medium">
+                            {cs.timing}
+                          </p>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-3 mt-4">
+                          <button
+                            onClick={() => {
+                              setEditModal(true);
+                              setSaveData({
+                                classId: cs.class_id,
+                                sessionId: cs.session_id,
+                              });
+                              setAdd(false);
+                              setEditId(cs.id);
+                            }}
+                            className="flex-1 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-indigo-600 border border-indigo-200 rounded-md hover:bg-indigo-50 transition"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(cs.id)}
+                            className="flex-1 inline-flex items-center justify-center px-3 py-1.5 text-sm font-medium text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
-                      Section
-                    </label>
-                    <p className="text-gray-900 font-medium text-lg">
-                      {student.section_name}
-                    </p>
+                ) : (
+                  <div className="text-center text-gray-500 italic py-6">
+                    No academic records found.
                   </div>
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
-                      Session Timing
-                    </label>
-                    <p className="text-gray-900 font-medium">
-                      {student.session_timing}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
-                      Admission Number
-                    </label>
-                    <p className="text-gray-900 font-medium">
-                      {student.admission_number}
-                    </p>
-                  </div>
+                )}
+
+                {/* Admission Number */}
+                <div className="border-t border-gray-200 pt-4">
+                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
+                    Admission Number
+                  </label>
+                  <p className="text-gray-900 font-medium text-lg">
+                    {student.admission_number}
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* Personal Information */}
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                  <User className="w-5 h-5 mr-2 text-gray-700" />
+                  <BookOpen className="w-5 h-5 mr-2 text-gray-700" />
                   Personal Information
                 </h3>
+                <button
+                  onClick={() => {
+                    setIsModalOpen(true);
+                    setEdit1(false);
+                    setEdit3(true);
+                    setSaveData2({
+                      dob: new Date(student.date_of_birth)
+                        .toISOString()
+                        .split("T")[0],
+                      status: student.status,
+                      address: student.student_address,
+                      contact: student.mobile,
+                    });
+                  }}
+                  className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition duration-150 p-2 -my-2 rounded-lg hover:bg-gray-100"
+                >
+                  Edit
+                </button>
               </div>
+
               <div className="p-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+                  {/* Date of Birth */}
                   <div>
                     <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
                       Date of Birth
                     </label>
                     <p className="text-gray-900 font-medium">
-                      {student.session_timing}
+                      {new Date(student.date_of_birth).toLocaleDateString()}
                     </p>
                   </div>
+
+                  {/* Status */}
                   <div>
                     <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
                       Status
                     </label>
                     <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800 border border-green-200">
-                      {student.session_timing}
+                      {student.status}
                     </span>
                   </div>
-                  <div className="col-span-1 sm:col-span-2">
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
-                      <MapPin className="w-4 h-4 inline mr-1" />
-                      Residential Address
-                    </label>
-                    <p className="text-gray-900 leading-relaxed">
-                      {student.student_address}
-                    </p>
+
+                  {/* Contact + Address in one row */}
+                  <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+                    {/* Contact */}
+                    <div>
+                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
+                        Contact
+                      </label>
+                      <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800 border border-green-200">
+                        {student.mobile}
+                      </span>
+                    </div>
+
+                    {/* Address */}
+                    <div>
+                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
+                        <MapPin className="w-4 h-4 inline mr-1" />
+                        Residential Address
+                      </label>
+                      <p className="text-gray-900 leading-relaxed">
+                        {student.student_address}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -900,7 +1291,7 @@ const ViewStudent = () => {
                       Mobile Number
                     </label>
                     <p className="text-gray-900 font-medium">
-                      {student.session_timing}
+                      {student.parent_phone}
                     </p>
                   </div>
                   <div className="col-span-1 sm:col-span-2">
@@ -930,48 +1321,122 @@ const ViewStudent = () => {
             </button>
 
             <h2 className="text-lg font-semibold mb-4">Edit Student Details</h2>
+            {edit1 && (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Roll Number
+                  </label>
+                  <input
+                    type="text"
+                    name="roll_no"
+                    value={form1Data.roll_no}
+                    onChange={(e) => {
+                      setForm1Data({
+                        ...form1Data,
+                        roll_no: e.target.value,
+                      });
+                    }}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-gray-600">
-                  Roll Number
-                </label>
-                <input
-                  type="text"
-                  name="roll_no"
-                  value={form1Data.roll_no}
-                  onChange={(e) => {
-                    setForm1Data({
-                      ...form1Data,
-                      roll_no: e.target.value,
-                    });
-                  }}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-                />
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Gender
+                  </label>
+                  <select
+                    name="gender"
+                    value={form1Data.gender}
+                    onChange={(e) => {
+                      setForm1Data({
+                        ...form1Data,
+                        gender: e.target.value,
+                      });
+                    }}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
               </div>
+            )}
 
+            {edit3 && (
               <div>
-                <label className="text-sm font-medium text-gray-600">
-                  Gender
-                </label>
-                <select
-                  name="gender"
-                  value={form1Data.gender}
-                  onChange={(e) => {
-                    setForm1Data({
-                      ...form1Data,
-                      gender: e.target.value,
-                    });
-                  }}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                </select>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    name="dob"
+                    value={saveData2.dob}
+                    onChange={(e) => {
+                      setSaveData2({
+                        ...saveData2,
+                        dob: e.target.value,
+                      });
+                    }}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Status
+                  </label>
+                  <input
+                    type="text"
+                    name="status"
+                    value={saveData2.status}
+                    onChange={(e) => {
+                      setSaveData2({
+                        ...saveData2,
+                        status: e.target.value,
+                      });
+                    }}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={saveData2.address}
+                    onChange={(e) => {
+                      setSaveData2({
+                        ...saveData2,
+                        address: e.target.value,
+                      });
+                    }}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Contact
+                  </label>
+                  <input
+                    type="text"
+                    name="contact"
+                    value={saveData2.contact}
+                    onChange={(e) => {
+                      setSaveData2({
+                        ...saveData2,
+                        contact: e.target.value,
+                      });
+                    }}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Buttons */}
             <div className="mt-6 flex justify-end space-x-3">
@@ -986,6 +1451,130 @@ const ViewStudent = () => {
                   handleSave1(form1Data);
                 }}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {feeEdit && (
+        <div className="fixed inset-0  bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white border-2 border-black rounded-lg shadow-lg w-full max-w-sm p-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+              Edit Fee Details
+            </h2>
+
+            <div className="mb-4">
+              <label
+                htmlFor="fee"
+                className="block text-sm font-medium text-gray-600 mb-1"
+              >
+                Enter Fee Amount
+              </label>
+              <input
+                id="fee"
+                type="text"
+                name="fee"
+                placeholder="e.g. 50000"
+                value={feeValue}
+                onChange={(e) => {
+                  setFeeValue(e.target.value);
+                }}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => {
+                  setFeeEdit(false);
+                  setFeeValue(student.total_fee);
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  feeSave();
+                }}
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editModal && (
+        <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-lg mx-4">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center border-b px-6 py-4">
+              <h2 className="text-lg font-semibold text-gray-800">
+                {add ? "Add Class" : "Edit Enrolled Class"}
+              </h2>
+              <button
+                onClick={() => setEditModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="px-6 py-4 max-h-[60vh] overflow-y-auto">
+              <select
+                onChange={(e) => {
+                  setSaveData({
+                    ...saveData,
+                    classId: e.target.value,
+                  });
+                }}
+                value={saveData.classId}
+                name=""
+                id=""
+              >
+                {classes1.map((cs, ind) => (
+                  <option value={cs.id}>{cs.name}</option>
+                ))}
+              </select>
+              <select
+                onChange={(e) => {
+                  setSaveData({
+                    ...saveData,
+                    sessionId: e.target.value,
+                  });
+                }}
+                value={saveData.sessionId}
+                name=""
+                id=""
+              >
+                {sessions.map((ss, ind) => (
+                  <option value={ss.id}>{ss.timing}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="border-t px-6 py-3 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setEditModal(false);
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setEditModal(false);
+                  handleSave2(editId, saveData);
+                }}
+                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md"
               >
                 Save Changes
               </button>

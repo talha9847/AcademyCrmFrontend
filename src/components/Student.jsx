@@ -51,6 +51,7 @@ const Student = () => {
 
     formData.append("fullName", data.fullName);
     formData.append("email", data.email);
+    formData.append("mobile", data.mobile);
     formData.append("classId", data.classId);
     formData.append("sectionId", data.sectionId);
     formData.append("admissionNumber", data.admissionNumber);
@@ -343,6 +344,25 @@ const Student = () => {
                     />
                     <p className="text-red-500 text-xs">
                       {errors.email?.message}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="mobile"
+                      className="block mb-2 font-semibold text-gray-900 text-sm"
+                    >
+                      Email *
+                    </label>
+                    <input
+                      {...register("mobile", { required: "Mobile is required" })}
+                      id="mobile"
+                      name="mobile"
+                      type="mobile"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                    />
+                    <p className="text-red-500 text-xs">
+                      {errors.mobile?.message}
                     </p>
                   </div>
 

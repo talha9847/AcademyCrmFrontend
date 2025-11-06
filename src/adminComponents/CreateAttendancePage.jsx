@@ -78,7 +78,7 @@ const CreateAttendancePage = () => {
         setAtdId(result.data.data.attendanceId);
         const cleanedData = result.data.data.student.map((student) => ({
           ...student,
-          status: student.status || "",
+          status: student.status || "Present",
           remarks: student.remarks || "",
         }));
 

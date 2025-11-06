@@ -26,7 +26,7 @@ import ManageFCourses from "./adminComponents/ManageFCourses";
 import SCertificates from "./StudentComponents/SCertificates";
 import SNavbar from "./StudentComponents/SNavbar";
 import CreateAttendancePage from "./adminComponents/CreateAttendancePage";
-import AttendanceView from "./adminComponents/attendanceView";
+import AttendanceView from "./adminComponents/AttendanceView";
 import SAttendance from "./StudentComponents/SAttendance";
 import SFeePayment from "./StudentComponents/SFeePayment";
 import SStudyMaterial from "./StudentComponents/SStudyMaterial";
@@ -35,6 +35,12 @@ import Certificate from "./adminComponents/Certificate";
 import ViewCertificate from "./adminComponents/ViewCertificate";
 import Verification from "./components/Verification";
 import Test from "./adminComponents/Test";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ViewAllCourses from "./components/ViewAllCourses";
+import CourseDetails from "./components/CourseDetails";
+import ManageTestimonial from "./adminComponents/ManageTestimonial";
+import AboutManage from "./adminComponents/AboutManage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -42,6 +48,18 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-gray-100">
+        <ToastContainer
+          position="top-right" // ✅ You can change this
+          autoClose={3000} // closes after 3 seconds
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored" // "light", "dark", "colored"
+        />
         <div className="flex-grow">
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -49,6 +67,8 @@ function App() {
             <Route path="/test" element={<Dashboard />} />
             <Route path="/verify" element={<Verification />} />
             <Route path="/test2" element={<Test />} />
+            <Route path="/allcourses" element={<ViewAllCourses />} />
+            <Route path="/coursedetail" element={<CourseDetails />} />
 
             {/* Admin Routes */}
             <Route
@@ -74,6 +94,22 @@ function App() {
               element={
                 <RoleProtectedRoute role="admin">
                   <ManageCourses />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/manage/testimonials"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <ManageTestimonial />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/manage/about"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <AboutManage />
                 </RoleProtectedRoute>
               }
             />

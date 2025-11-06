@@ -1,11 +1,39 @@
-import React from 'react';
-import { Award, ArrowRight, TrendingUp, Users, Star, CheckCircle } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import {
+  Award,
+  ArrowRight,
+  TrendingUp,
+  Users,
+  Star,
+  CheckCircle,
+} from "lucide-react";
+import axios from "axios";
 
 export default function HeroSection() {
+  const [data, setData] = useState({});
+  const getData = async () => {
+    try {
+      const result = await axios.get(
+        "http://localhost:5000/api/front/getHeroData",
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        setData(result.data.data);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     // Adjusted height for better mobile viewing, ensuring content fits well.
     // min-h-[75vh] ensures it's tall enough, but allows it to grow if content is larger.
-    <section id="home" className="relative min-h-[75vh] lg:h-screen flex items-center overflow-hidden py-24 sm:py-32">
+    <section
+      id="home"
+      className="relative min-h-[75vh] lg:h-screen flex items-center overflow-hidden py-24 sm:py-32"
+    >
       {/* Full-screen background image */}
       <div className="absolute inset-0">
         <img
@@ -23,20 +51,20 @@ export default function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-6 shadow-lg animate-fade-in">
             <Award className="w-4 h-4" />
-            Trusted by 10,000+ Students
+            {data.badge_text}
           </div>
 
           {/* Main Heading */}
           <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight text-white mb-4 sm:mb-6 animate-slide-up">
-            Transform Your Future with{" "}
+            {data.heading1}{" "}
             <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Expert Training
+              {data.heading2}
             </span>
           </h1>
 
           {/* Description */}
           <p className="text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-8 sm:mb-10 animate-slide-up-delay">
-            Join industry-leading courses designed to accelerate your career. Learn from experts and master the skills that matter.
+            {data.description}
           </p>
 
           {/* CTA Buttons - Stacked on mobile, side-by-side on sm screens and up */}
@@ -57,29 +85,43 @@ export default function HeroSection() {
                 <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-2 rounded-lg group-hover:scale-110 transition-transform">
                   <TrendingUp className="w-5 h-5 text-white" />
                 </div>
-                <div className="font-bold text-2xl sm:text-3xl md:text-4xl text-white">15+</div>
+                <div className="font-bold text-2xl sm:text-3xl md:text-4xl text-white">
+                  {data.stat1_value}
+                </div>
               </div>
-              <div className="text-xs sm:text-sm text-gray-300 font-medium">Years Experience</div>
+              <div className="text-xs sm:text-sm text-gray-300 font-medium">
+                Years Experience
+              </div>
             </div>
-            
+
             <div className="group">
               <div className="flex items-center gap-3 mb-1 sm:mb-2">
                 <div className="bg-gradient-to-br from-purple-500 to-pink-600 p-2 rounded-lg group-hover:scale-110 transition-transform">
                   <Users className="w-5 h-5 text-white" />
                 </div>
-                <div className="font-bold text-2xl sm:text-3xl md:text-4xl text-white">50+</div>
+                <div className="font-bold text-2xl sm:text-3xl md:text-4xl text-white">
+                  {data.stat2_value}
+                </div>
               </div>
-              <div className="text-xs sm:text-sm text-gray-300 font-medium">Expert Trainers</div>
+              <div className="text-xs sm:text-sm text-gray-300 font-medium">
+                Expert Trainers
+              </div>
             </div>
-            
-            <div className="group col-span-2 md:col-span-1"> {/* Forces 3rd stat onto new row on xs/sm screen */}
+
+            <div className="group col-span-2 md:col-span-1">
+              {" "}
+              {/* Forces 3rd stat onto new row on xs/sm screen */}
               <div className="flex items-center gap-3 mb-1 sm:mb-2">
                 <div className="bg-gradient-to-br from-pink-500 to-orange-600 p-2 rounded-lg group-hover:scale-110 transition-transform">
                   <Star className="w-5 h-5 text-white" />
                 </div>
-                <div className="font-bold text-2xl sm:text-3xl md:text-4xl text-white">10K+</div>
+                <div className="font-bold text-2xl sm:text-3xl md:text-4xl text-white">
+                  {data.stat3_value}
+                </div>
               </div>
-              <div className="text-xs sm:text-sm text-gray-300 font-medium">Happy Students</div>
+              <div className="text-xs sm:text-sm text-gray-300 font-medium">
+                Happy Students
+              </div>
             </div>
           </div>
         </div>
@@ -93,7 +135,9 @@ export default function HeroSection() {
           </div>
           <div>
             <div className="font-bold text-2xl text-white">100%</div>
-            <div className="text-sm text-gray-300 font-medium">Job Assistance</div>
+            <div className="text-sm text-gray-300 font-medium">
+              {data.floating_card1_subtitle}
+            </div>
           </div>
         </div>
       </div>
@@ -101,14 +145,15 @@ export default function HeroSection() {
       {/* Custom animations (No changes needed) */}
       <style jsx>{`
         @keyframes float {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px);
           }
           50% {
             transform: translateY(-20px);
           }
         }
-        
+
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -117,7 +162,7 @@ export default function HeroSection() {
             opacity: 1;
           }
         }
-        
+
         @keyframes slideUp {
           from {
             opacity: 0;
@@ -128,27 +173,27 @@ export default function HeroSection() {
             transform: translateY(0);
           }
         }
-        
+
         .animate-float {
           animation: float 3s ease-in-out infinite;
         }
-        
+
         .animate-fade-in {
           animation: fadeIn 0.8s ease-out;
         }
-        
+
         .animate-fade-in-delay {
           animation: fadeIn 0.8s ease-out 0.6s both;
         }
-        
+
         .animate-slide-up {
           animation: slideUp 0.8s ease-out 0.2s both;
         }
-        
+
         .animate-slide-up-delay {
           animation: slideUp 0.8s ease-out 0.4s both;
         }
-        
+
         .animate-slide-up-delay-2 {
           animation: slideUp 0.8s ease-out 0.6s both;
         }
