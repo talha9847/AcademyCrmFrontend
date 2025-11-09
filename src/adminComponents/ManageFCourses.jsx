@@ -41,7 +41,7 @@ const ManageFCourses = () => {
 
       try {
         const result = await axios.post(
-          "http://localhost:5000/api/front/deleteCourse",
+          "https://academycrmbackend.onrender.com/api/front/deleteCourse",
           { id: id },
           { withCredentials: true }
         );
@@ -60,7 +60,7 @@ const ManageFCourses = () => {
   const getCourses = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAllCourses",
+        "https://academycrmbackend.onrender.com/api/front/getAllCourses",
         { withCredentials: true }
       );
       if (result.status === 200) {
@@ -77,7 +77,7 @@ const ManageFCourses = () => {
       console.log(data);
       if (edit) {
         const result = await axios.post(
-          "http://localhost:5000/api/front/updateCourse",
+          "https://academycrmbackend.onrender.com/api/front/updateCourse",
           data,
           { withCredentials: true }
         );
@@ -100,7 +100,7 @@ const ManageFCourses = () => {
           featured: data.featured,
         };
         const result = await axios.post(
-          "http://localhost:5000/api/front/addCourse",
+          "https://academycrmbackend.onrender.com/api/front/addCourse",
           newData,
           { withCredentials: true }
         );

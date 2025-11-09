@@ -18,7 +18,7 @@ export default function Contact() {
     console.log(data);
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/front/sendUsMessage",
+        "https://academycrmbackend.onrender.com/api/front/sendUsMessage",
         data,
         { withCredentials: true }
       );

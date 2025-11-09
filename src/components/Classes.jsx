@@ -18,7 +18,7 @@ const Classes = () => {
 
   async function getClasses() {
     const result = await axios.get(
-      "http://localhost:5000/api/extras/getClasses",
+      "https://academycrmbackend.onrender.com/api/extras/getClasses",
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -27,7 +27,7 @@ const Classes = () => {
   }
   async function getSessions() {
     const result = await axios.get(
-      "http://localhost:5000/api/extras/getSessions",
+      "https://academycrmbackend.onrender.com/api/extras/getSessions",
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -36,7 +36,7 @@ const Classes = () => {
   }
   async function getSections() {
     const result = await axios.get(
-      "http://localhost:5000/api/extras/getSections",
+      "https://academycrmbackend.onrender.com/api/extras/getSections",
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -47,7 +47,7 @@ const Classes = () => {
   const addClassHandle = async () => {
     if (edit) {
       const result = await axios.post(
-        "http://localhost:5000/api/extras/updateClass",
+        "https://academycrmbackend.onrender.com/api/extras/updateClass",
         { id: editId, name: className },
         {
           withCredentials: true,
@@ -63,7 +63,7 @@ const Classes = () => {
       }
     } else {
       const result = await axios.post(
-        "http://localhost:5000/api/extras/addClass",
+        "https://academycrmbackend.onrender.com/api/extras/addClass",
         { name: className },
         { withCredentials: true }
       );
@@ -79,7 +79,7 @@ const Classes = () => {
   const sessionHandle = async () => {
     if (edit) {
       const result = await axios.post(
-        "http://localhost:5000/api/extras/updateSession",
+        "https://academycrmbackend.onrender.com/api/extras/updateSession",
         {
           timing: className,
           id: editId,
@@ -102,7 +102,7 @@ const Classes = () => {
       }
     } else {
       const result = await axios.post(
-        "http://localhost:5000/api/extras/addSession",
+        "https://academycrmbackend.onrender.com/api/extras/addSession",
         { timing: className },
         { withCredentials: true }
       );

@@ -37,7 +37,7 @@ export default function ProfessionalAboutPage() {
   const getAboutPageSection = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAboutPageSection",
+        "https://academycrmbackend.onrender.com/api/front/getAboutPageSection",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -55,7 +55,7 @@ export default function ProfessionalAboutPage() {
   const aboutCoreVision = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/aboutCoreVision",
+        "https://academycrmbackend.onrender.com/api/front/aboutCoreVision",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -69,7 +69,7 @@ export default function ProfessionalAboutPage() {
   const aboutCoreMission = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/aboutCoreMission",
+        "https://academycrmbackend.onrender.com/api/front/aboutCoreMission",
         { withCredentials: true }
       );
       if (result.status == 200) {

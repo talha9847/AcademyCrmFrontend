@@ -65,7 +65,7 @@ const SProfile = () => {
   const getProfileData = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/student/profile",
+        "https://academycrmbackend.onrender.com/api/student/profile",
         { withCredentials: true }
       );
       if (result.status == 210) {
@@ -136,7 +136,7 @@ const SProfile = () => {
           {/* Photo & ID */}
           <div className="flex flex-col items-center">
             <img
-              src={`http://localhost:5000/uploads/${data.profile_photo}`}
+              src={`https://academycrmbackend.onrender.com/uploads/${data.profile_photo}`}
               alt={`${data.fullName}'s Profile`}
               className="w-36 h-36 object-cover rounded-full border-4 border-indigo-500 shadow-md"
             />
@@ -283,7 +283,7 @@ const SProfile = () => {
                 Official Signatures
               </h3>
               <img
-              src={`http://localhost:5000/uploads/${data.signature_photo}`}
+              src={`https://academycrmbackend.onrender.com/uploads/${data.signature_photo}`}
                 alt={`${data.fullName}'s Signature`}
                 className="w-full h-20 max-w-sm mx-auto border-2 border-gray-300 p-2 bg-white"
               />

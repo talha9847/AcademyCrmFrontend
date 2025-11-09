@@ -73,7 +73,7 @@ const Student = () => {
     formData.append("enrollments", JSON.stringify(data.enrollments));
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/user/createStudent",
+        "https://academycrmbackend.onrender.com/api/user/createStudent",
         formData,
         { withCredentials: true }
       );
@@ -101,7 +101,7 @@ const Student = () => {
   async function getStudents() {
     console.log("I am called");
     const result = await axios.get(
-      "http://localhost:5000/api/user/getAllStudents",
+      "https://academycrmbackend.onrender.com/api/user/getAllStudents",
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -113,7 +113,7 @@ const Student = () => {
   };
   async function getClasses() {
     const result = await axios.get(
-      "http://localhost:5000/api/extras/getClasses",
+      "https://academycrmbackend.onrender.com/api/extras/getClasses",
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -124,7 +124,7 @@ const Student = () => {
   async function getSectionById(classId) {
     if (classId > 0) {
       const result = await axios.get(
-        "http://localhost:5000/api/extras/getSectionById",
+        "https://academycrmbackend.onrender.com/api/extras/getSectionById",
         {
           params: { id: classId },
           withCredentials: true,
@@ -138,7 +138,7 @@ const Student = () => {
 
   async function getSession() {
     const result = await axios.get(
-      "http://localhost:5000/api/extras/getSessions",
+      "https://academycrmbackend.onrender.com/api/extras/getSessions",
       { withCredentials: true }
     );
     if (result.status == 200) {

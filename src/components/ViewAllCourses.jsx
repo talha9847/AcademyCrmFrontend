@@ -15,7 +15,7 @@ export default function ViewAllCourses() {
   const getAllCourse = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAllCourses",
+        "https://academycrmbackend.onrender.com/api/front/getAllCourses",
         { withCredentials: true }
       );
       if (result.status == 200) {

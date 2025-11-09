@@ -9,7 +9,7 @@ const ImageCell = ({ src, alt }) => (
     {src ? (
       <img
         className="w-16 h-16 object-cover border border-black rounded-sm"
-        src={`http://localhost:5000/${src}`}
+        src={`https://academycrmbackend.onrender.com/${src}`}
         alt={alt}
       />
     ) : (
@@ -22,7 +22,7 @@ const ImageCell2 = ({ src, alt }) => (
     {src ? (
       <img
         className="w-16 h-16 object-cover border border-black rounded-sm"
-        src={`http://localhost:5000/uploads/${src}`}
+        src={`https://academycrmbackend.onrender.com/uploads/${src}`}
         alt={alt}
       />
     ) : (
@@ -58,7 +58,7 @@ const ViewCertificate = () => {
     verificationCode,
   }) => {
     if (!templatePath) return alert("Error: Certificate template not found.");
-    const fullImageUrl = `http://localhost:5000/${templatePath}`;
+    const fullImageUrl = `https://academycrmbackend.onrender.com/${templatePath}`;
     const formattedDate = issueDate
       ? new Date(issueDate).toLocaleDateString("en-US")
       : "N/A";
@@ -139,7 +139,7 @@ const ViewCertificate = () => {
     setError(null);
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/student/getAllAssignedCertificates",
+        "https://academycrmbackend.onrender.com/api/student/getAllAssignedCertificates",
         { withCredentials: true }
       );
       if (result.status === 200) {

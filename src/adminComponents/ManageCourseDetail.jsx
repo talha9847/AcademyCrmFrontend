@@ -101,7 +101,7 @@ export default function ManageCourseDetail() {
     const id = courseId;
     try {
       const result = await axios.put(
-        "http://localhost:5000/api/front/updateCourseInstructor",
+        "https://academycrmbackend.onrender.com/api/front/updateCourseInstructor",
         {
           name: instructorName,
           title: instructorTitle,
@@ -123,7 +123,7 @@ export default function ManageCourseDetail() {
   const updateCourseModule = async () => {
     const id = courseId;
     const result = await axios.put(
-      "http://localhost:5000/api/front/updateCourseModule",
+      "https://academycrmbackend.onrender.com/api/front/updateCourseModule",
       { module: module, courseId: id },
       { withCredentials: true }
     );
@@ -138,7 +138,7 @@ export default function ManageCourseDetail() {
     const id = courseId;
     try {
       const result = await axios.put(
-        "http://localhost:5000/api/front/updateCourseDescription",
+        "https://academycrmbackend.onrender.com/api/front/updateCourseDescription",
         {
           long_description: lDescription,
           short_description: sDescription,
@@ -160,7 +160,7 @@ export default function ManageCourseDetail() {
     const id = courseId;
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/front/getCoursDetailById",
+        "https://academycrmbackend.onrender.com/api/front/getCoursDetailById",
         { courseId: id },
         { withCredentials: true }
       );

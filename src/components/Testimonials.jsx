@@ -9,7 +9,7 @@ export default function Testimonials() {
   const getTestimonials = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getTestimonials",
+        "https://academycrmbackend.onrender.com/api/front/getTestimonials",
         { withCredentials: true }
       );
       if (result.status == 200) {

@@ -76,7 +76,7 @@ export default function CourseDetails() {
     const id = courseId;
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/front/getCoursDetailById",
+        "https://academycrmbackend.onrender.com/api/front/getCoursDetailById",
         { courseId: id },
         { withCredentials: true }
       );

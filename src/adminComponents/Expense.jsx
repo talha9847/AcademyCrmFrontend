@@ -31,7 +31,7 @@ const Expense = () => {
   const getAllExpense = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/expense/getAllExpense",
+        "https://academycrmbackend.onrender.com/api/expense/getAllExpense",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -72,7 +72,7 @@ const Expense = () => {
   const submitForm = async (data) => {
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/expense/addExpense",
+        "https://academycrmbackend.onrender.com/api/expense/addExpense",
         data,
         { withCredentials: true }
       );

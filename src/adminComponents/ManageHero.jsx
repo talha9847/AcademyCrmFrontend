@@ -36,7 +36,7 @@ const ManageHero = () => {
   const getHeroData = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getHeroData",
+        "https://academycrmbackend.onrender.com/api/front/getHeroData",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -73,7 +73,7 @@ const ManageHero = () => {
   const handleSave = async (data) => {
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/front/updateHeroData",
+        "https://academycrmbackend.onrender.com/api/front/updateHeroData",
         data,
         { withCredentials: true }
       );

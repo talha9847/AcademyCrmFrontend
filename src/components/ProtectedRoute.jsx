@@ -8,7 +8,7 @@ const ProtectedRoute = ({ slug, children }) => {
 
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/auth/access", { slug }, { withCredentials: true })
+      .post("https://academycrmbackend.onrender.com/api/auth/access", { slug }, { withCredentials: true })
       .then(() => setAccess(true))
       .catch(() => setAccess(false))
       .finally(() => setLoading(false));

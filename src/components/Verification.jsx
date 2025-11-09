@@ -129,7 +129,7 @@ const Verification = () => {
             <div className="flex-shrink-0 w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-300">
               <img
                 className="w-full h-full object-cover"
-                src={`http://localhost:5000/uploads/${data.profile_photo}`}
+                src={`https://academycrmbackend.onrender.com/uploads/${data.profile_photo}`}
                 alt="Profile"
                 onError={(e) => {
                   e.target.onerror = null;

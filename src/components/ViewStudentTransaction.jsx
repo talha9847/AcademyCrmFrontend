@@ -356,7 +356,7 @@ export default function ViewStudentTransaction() {
 
   const getPayemnts = async (studentId) => {
     const result = await axios.post(
-      "http://localhost:5000/api/fees/getFeesPaymentById",
+      "https://academycrmbackend.onrender.com/api/fees/getFeesPaymentById",
       { studentId },
       { withCredentials: true }
     );

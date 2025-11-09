@@ -33,7 +33,7 @@ const AboutCoreMission = () => {
   const getAboutCoreMission = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAboutCoreMission",
+        "https://academycrmbackend.onrender.com/api/front/getAboutCoreMission",
         { withCredentials: true }
       );
       if (result.status === 200) {
@@ -63,7 +63,7 @@ const AboutCoreMission = () => {
     try {
       if (editing) {
         const result = await axios.post(
-          "http://localhost:5000/api/front/updateAboutCoreMission",
+          "https://academycrmbackend.onrender.com/api/front/updateAboutCoreMission",
           featureToEdit,
           { withCredentials: true }
         );
@@ -74,7 +74,7 @@ const AboutCoreMission = () => {
         }
       } else {
         const result = await axios.post(
-          "http://localhost:5000/api/front/addAboutCoreMission",
+          "https://academycrmbackend.onrender.com/api/front/addAboutCoreMission",
           featureToEdit,
           { withCredentials: true }
         );

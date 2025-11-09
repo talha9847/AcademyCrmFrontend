@@ -62,7 +62,7 @@ const Gallery = () => {
   const getGallery = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getGallery",
+        "https://academycrmbackend.onrender.com/api/front/getGallery",
         { withCredentials: true }
       );
       if (result.status == 200) {

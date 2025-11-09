@@ -30,7 +30,7 @@ const AboutCoreVision = () => {
   const getAboutCoreVision = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAllAboutCoreVision",
+        "https://academycrmbackend.onrender.com/api/front/getAllAboutCoreVision",
         { withCredentials: true }
       );
       if (result.status === 200) {
@@ -60,7 +60,7 @@ const AboutCoreVision = () => {
     try {
       if (editing) {
         const result = await axios.post(
-          "http://localhost:5000/api/front/updateAboutCoreVision",
+          "https://academycrmbackend.onrender.com/api/front/updateAboutCoreVision",
           featureToEdit,
           { withCredentials: true }
         );
@@ -71,7 +71,7 @@ const AboutCoreVision = () => {
         }
       } else {
         const result = await axios.post(
-          "http://localhost:5000/api/front/addAboutCoreVision",
+          "https://academycrmbackend.onrender.com/api/front/addAboutCoreVision",
           featureToEdit,
           { withCredentials: true }
         );

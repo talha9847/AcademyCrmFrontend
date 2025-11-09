@@ -89,7 +89,7 @@ const FullGallery = () => {
   const getAllGallery = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAllGallery",
+        "https://academycrmbackend.onrender.com/api/front/getAllGallery",
         { withCredentials: true }
       );
       setData(result.data.data);

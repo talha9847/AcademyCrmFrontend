@@ -21,7 +21,7 @@ const Fees = () => {
   } = useForm();
 
   async function fetchFees() {
-    const result = await axios.get("http://localhost:5000/api/fees/fetchFees", {
+    const result = await axios.get("https://academycrmbackend.onrender.com/api/fees/fetchFees", {
       withCredentials: true,
     });
     if (result.status == 200) {
@@ -80,7 +80,7 @@ const Fees = () => {
       status: "paid",
     };
     const result = await axios.post(
-      "http://localhost:5000/api/fees/collectFees",
+      "https://academycrmbackend.onrender.com/api/fees/collectFees",
       send,
       { withCredentials: true }
     );

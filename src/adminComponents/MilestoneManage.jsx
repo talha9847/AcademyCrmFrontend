@@ -37,7 +37,7 @@ const MilestoneManage = () => {
       if (result.isConfirmed) {
         // ✅ Perform delete logic here
         const result = await axios.post(
-          "http://localhost:5000/api/front/deleteMilestone",
+          "https://academycrmbackend.onrender.com/api/front/deleteMilestone",
           { id },
           { withCredentials: true }
         );
@@ -64,7 +64,7 @@ const MilestoneManage = () => {
       if (editing) {
         console.log(formData);
         const result = await axios.put(
-          "http://localhost:5000/api/front/updateMilestone",
+          "https://academycrmbackend.onrender.com/api/front/updateMilestone",
           formData,
           { withCredentials: true }
         );
@@ -76,7 +76,7 @@ const MilestoneManage = () => {
         }
       } else {
         const result = await axios.post(
-          "http://localhost:5000/api/front/addMilestone",
+          "https://academycrmbackend.onrender.com/api/front/addMilestone",
           formData,
           { withCredentials: true }
         );
@@ -95,7 +95,7 @@ const MilestoneManage = () => {
   const getMilestones = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getMilestones",
+        "https://academycrmbackend.onrender.com/api/front/getMilestones",
         { withCredentials: true }
       );
       if (result.status == 200) {

@@ -9,7 +9,7 @@ export default function Blog() {
   const getBlogs = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getBlogs",
+        "https://academycrmbackend.onrender.com/api/front/getBlogs",
         { withCredentials: true }
       );
       if (result.status == 200) {

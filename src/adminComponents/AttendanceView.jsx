@@ -31,7 +31,7 @@ const AttendanceView = () => {
   const getClasses = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/extras/getClasses",
+        "https://academycrmbackend.onrender.com/api/extras/getClasses",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -45,7 +45,7 @@ const AttendanceView = () => {
   const getSessions = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/extras/getSessions",
+        "https://academycrmbackend.onrender.com/api/extras/getSessions",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -60,7 +60,7 @@ const AttendanceView = () => {
     try {
       setLoadingStudent(true);
       const result = await axios.post(
-        "http://localhost:5000/api/attendance/viewStudent",
+        "https://academycrmbackend.onrender.com/api/attendance/viewStudent",
         { classId: data.classId, sessionId: data.sessionId },
         { withCredentials: true }
       );
@@ -78,7 +78,7 @@ const AttendanceView = () => {
     console.log(studentId);
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/attendance/viewAttendance",
+        "https://academycrmbackend.onrender.com/api/attendance/viewAttendance",
         { studentId: studentId },
         { withCredentials: true }
       );

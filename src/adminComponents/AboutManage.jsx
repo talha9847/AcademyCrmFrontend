@@ -55,7 +55,7 @@ const AboutManage = () => {
     try {
       setLoading(true); // Set loading to true before the fetch
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAboutPageSection",
+        "https://academycrmbackend.onrender.com/api/front/getAboutPageSection",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -92,7 +92,7 @@ const AboutManage = () => {
 
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/front/updateAboutSection",
+        "https://academycrmbackend.onrender.com/api/front/updateAboutSection",
         updatedData,
         { withCredentials: true }
       );

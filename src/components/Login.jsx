@@ -20,7 +20,7 @@ const Login = () => {
     console.log(data);
 
     const result = await axios.post(
-      "http://localhost:5000/api/auth/login",
+      "https://academycrmbackend.onrender.com/api/auth/login",
       { email: data.identifier, password: data.password },
       { withCredentials: true }
     );

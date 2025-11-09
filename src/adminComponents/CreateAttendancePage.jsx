@@ -59,7 +59,7 @@ const CreateAttendancePage = () => {
     setStudentLoad(true);
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/attendance/addAttendance",
+        "https://academycrmbackend.onrender.com/api/attendance/addAttendance",
         {
           classId: data.classId,
           date: data.date,
@@ -95,7 +95,7 @@ const CreateAttendancePage = () => {
     const students = { student: data.students, id: atdId };
     setStoreLoading(true);
     const result = await axios.post(
-      "http://localhost:5000/api/attendance/storeAttendance",
+      "https://academycrmbackend.onrender.com/api/attendance/storeAttendance",
       { students },
       { withCredentials: true }
     );
@@ -112,7 +112,7 @@ const CreateAttendancePage = () => {
   const getClasses = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/extras/getClasses",
+        "https://academycrmbackend.onrender.com/api/extras/getClasses",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -126,7 +126,7 @@ const CreateAttendancePage = () => {
   const getSessions = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/extras/getSessions",
+        "https://academycrmbackend.onrender.com/api/extras/getSessions",
         { withCredentials: true }
       );
       if (result.status == 200) {

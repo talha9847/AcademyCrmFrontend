@@ -105,7 +105,7 @@ const SAttendance = () => {
   const getAttendanceData = async () => {
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/attendance/getAttendanceByStudent",
+        "https://academycrmbackend.onrender.com/api/attendance/getAttendanceByStudent",
         {},
         { withCredentials: true }
       );
@@ -125,7 +125,7 @@ const SAttendance = () => {
   const getAttendanceDataByClass = async () => {
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/attendance/getAttendanceByStudent",
+        "https://academycrmbackend.onrender.com/api/attendance/getAttendanceByStudent",
         { classId: id },
         { withCredentials: true }
       );
@@ -143,7 +143,7 @@ const SAttendance = () => {
   const getEnrolledClass = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/attendance/getEnrolledClass",
+        "https://academycrmbackend.onrender.com/api/attendance/getEnrolledClass",
         {
           withCredentials: true,
         }

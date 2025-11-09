@@ -11,7 +11,7 @@ export default function FeaturedCourses() {
   const getCourses = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getCourses",
+        "https://academycrmbackend.onrender.com/api/front/getCourses",
         { withCredentials: true }
       );
       if (result.status == 200) {

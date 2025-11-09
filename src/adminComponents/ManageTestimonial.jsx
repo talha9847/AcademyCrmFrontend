@@ -53,7 +53,7 @@ export default function ManageTestimonial() {
     setError(null);
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAllTestimonials", // Adjusted endpoint
+        "https://academycrmbackend.onrender.com/api/front/getAllTestimonials", // Adjusted endpoint
         { withCredentials: true }
       );
       if (result.status === 200) {
@@ -121,7 +121,7 @@ export default function ManageTestimonial() {
       if (edit) {
         if (!currentTestimonialId) return;
         const result = await axios.post(
-          `http://localhost:5000/api/front/updateTestimonials`,
+          `https://academycrmbackend.onrender.com/api/front/updateTestimonials`,
           {
             name: formData.name,
             course: formData.course,
@@ -142,7 +142,7 @@ export default function ManageTestimonial() {
         }
       } else {
         const result = await axios.post(
-          "http://localhost:5000/api/front/addTestimonial",
+          "https://academycrmbackend.onrender.com/api/front/addTestimonial",
           formData,
           { withCredentials: true }
         );
@@ -188,7 +188,7 @@ export default function ManageTestimonial() {
       if (result.isConfirmed) {
         try {
           const response = await axios.post(
-            `http://localhost:5000/api/front/deleteTestimonial`,
+            `https://academycrmbackend.onrender.com/api/front/deleteTestimonial`,
             { id: testimonialId },
             { withCredentials: true }
           );
@@ -212,7 +212,7 @@ export default function ManageTestimonial() {
     const newStatus = !show; // Using 'show' property
     try {
       const result = await axios.post(
-        `http://localhost:5000/api/front/updateTestimonialToggle`,
+        `https://academycrmbackend.onrender.com/api/front/updateTestimonialToggle`,
         { show: newStatus, id: testimonialId }, // Send the new status
         { withCredentials: true }
       );

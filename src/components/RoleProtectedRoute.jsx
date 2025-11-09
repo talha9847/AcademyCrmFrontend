@@ -8,7 +8,7 @@ const RoleProtectedRoute = ({ role, children }) => {
 
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/auth/roleAccess", { role }, { withCredentials: true })
+      .post("https://academycrmbackend.onrender.com/api/auth/roleAccess", { role }, { withCredentials: true })
       .then(() => setAccess(true))
       .catch(() => setAccess(false))
       .finally(() => setLoading(false));

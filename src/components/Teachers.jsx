@@ -21,7 +21,7 @@ const Teachers = () => {
   const navigate = useNavigate();
   async function getStudents() {
     const result = await axios.get(
-      "http://localhost:5000/api/user/getAllTeachers",
+      "https://academycrmbackend.onrender.com/api/user/getAllTeachers",
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -50,7 +50,7 @@ const Teachers = () => {
 
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/user/createTeacher",
+        "https://academycrmbackend.onrender.com/api/user/createTeacher",
         data,
         { withCredentials: true }
       );

@@ -20,7 +20,7 @@ const Certificate = () => {
   const getClasses = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/extras/getClasses",
+        "https://academycrmbackend.onrender.com/api/extras/getClasses",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -33,7 +33,7 @@ const Certificate = () => {
   const getSessions = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/extras/getSessions",
+        "https://academycrmbackend.onrender.com/api/extras/getSessions",
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -51,7 +51,7 @@ const Certificate = () => {
 
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/student/getTemplates",
+        "https://academycrmbackend.onrender.com/api/student/getTemplates",
         { classId: parseInt(classId) },
         { withCredentials: true }
       );
@@ -74,7 +74,7 @@ const Certificate = () => {
 
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/student/getStudentByClassAndSession",
+        "https://academycrmbackend.onrender.com/api/student/getStudentByClassAndSession",
         {
           classId,
           sessionId,
@@ -95,7 +95,7 @@ const Certificate = () => {
     }
     try {
       const result = await axios.post(
-        "http://localhost:5000/api/student/assignCertificate",
+        "https://academycrmbackend.onrender.com/api/student/assignCertificate",
         {
           recipientId,
           title,
@@ -218,7 +218,7 @@ const Certificate = () => {
                       {/* Image Thumbnail */}
                       <img
                         className="w-20 h-20 object-cover border border-black flex-shrink-0"
-                        src={`http://localhost:5000/${val.name}`}
+                        src={`https://academycrmbackend.onrender.com/${val.name}`}
                         alt="Template Thumbnail"
                       />
 
