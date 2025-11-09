@@ -10,7 +10,7 @@ export default function Journey() {
   const getMilestones = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getMilestones",
+        "https://academycrmbackend.onrender.com/api/front/getMilestones",
         { withCredentials: true }
       );
       if (result.status == 200) {
