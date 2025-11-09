@@ -26,12 +26,15 @@ const Login = () => {
     );
     if (result.status == 200) {
       if (result.data.role == "admin") {
+        toast.success("Login successfull");
         window.location.href = "/admin/dashboard";
       }
       if (result.data.role == "teacher") {
+        toast.success("Login successfull");
         window.location.href = "teacher/dashboard";
       }
       if (result.data.role == "student") {
+        toast.success("Login successfull");
         window.location.href = "student/dashboard";
       }
     }
