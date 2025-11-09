@@ -30,7 +30,7 @@ const Verification = () => {
 
     try {
       const result = await axios.get(
-        `http://localhost:5000/api/student/verify?code=${number}`
+        `https://academycrmbackend.onrender.com/api/student/verify?code=${number}`
       );
 
       if (result.status === 200 && result.data?.data?.length > 0) {

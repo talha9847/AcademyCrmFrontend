@@ -12,6 +12,7 @@ import {
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import AdminNavbar from "./AdminNavbar";
+import { toast } from "react-toastify";
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat("en-IN", {
@@ -79,9 +80,11 @@ const Expense = () => {
         console.log("good one is added");
         reset();
         getAllExpense();
+      } else {
+        toast.error("Internal server error");
       }
     } catch (error) {
-      console.error(error);
+      toast.error("Internal server error");
     }
   };
 

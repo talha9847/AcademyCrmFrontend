@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdminNavbar from "./AdminNavbar";
-import SidebarManage from "./SidebarManage";
 import * as LucideIcons from "lucide-react";
-import IconPicker from "./IconPicker"; // ✅ Reusable picker
 import axios from "axios";
 import {
   Feather,
@@ -16,7 +13,7 @@ import {
 import { toast } from "react-toastify";
 import { time } from "framer-motion";
 
-const AboutCoreMission = () => {
+const AboutCoreVision = () => {
   // ✅ Normalize Lucide import and access specific utility icons
   const Lucide = LucideIcons.default || LucideIcons;
   const [data, setData] = useState([]);
@@ -30,10 +27,10 @@ const AboutCoreMission = () => {
     id: 0,
   }); // State to hold the data currently being edited
 
-  const getAboutCoreMission = async () => {
+  const getAboutCoreVision = async () => {
     try {
       const result = await axios.get(
-        "http://localhost:5000/api/front/getAboutCoreMission",
+        "http://localhost:5000/api/front/getAllAboutCoreVision",
         { withCredentials: true }
       );
       if (result.status === 200) {
@@ -44,7 +41,7 @@ const AboutCoreMission = () => {
   };
 
   useEffect(() => {
-    getAboutCoreMission();
+    getAboutCoreVision();
   }, []);
 
   const handleEditClick = (feature) => {
@@ -63,25 +60,25 @@ const AboutCoreMission = () => {
     try {
       if (editing) {
         const result = await axios.post(
-          "http://localhost:5000/api/front/updateAboutCoreMission",
+          "http://localhost:5000/api/front/updateAboutCoreVision",
           featureToEdit,
           { withCredentials: true }
         );
         if (result.status == 200) {
-          getAboutCoreMission();
+          getAboutCoreVision();
           setModal(false);
           toast.success("Update Done");
         }
       } else {
         const result = await axios.post(
-          "http://localhost:5000/api/front/addAboutCoreMission",
+          "http://localhost:5000/api/front/addAboutCoreVision",
           featureToEdit,
           { withCredentials: true }
         );
         if (result.status == 200) {
           toast.success("Added");
           setModal(false);
-          getAboutCoreMission();
+          getAboutCoreVision();
           setFeatureToEdit({
             title: "",
             description: "",
@@ -111,7 +108,7 @@ const AboutCoreMission = () => {
             <div className="flex justify-between items-center pb-4 border-b border-gray-200">
               <h1 className="text-3xl font-extrabold text-gray-900 flex items-center">
                 <Settings className="w-8 h-8 mr-3 text-indigo-600" />
-                Manage Core Mission Features
+                Manage Core Vision Features
               </h1>
               {/* Placeholder for Add New Feature button */}
               <button
@@ -196,7 +193,7 @@ const AboutCoreMission = () => {
                 {/* Modal Header */}
                 <div className="flex justify-between items-center p-5 border-b border-gray-200 bg-indigo-50 rounded-t-xl">
                   <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                    {editing ? "Edit Mission" : "Add Mission"}
+                    {editing ? "Edit Vision" : "Add Vision"}
                   </h2>
                   <button
                     onClick={handleCancel}
@@ -309,7 +306,7 @@ const AboutCoreMission = () => {
                     </div>
 
                     <p className="text-xs text-gray-500 mt-1 px-1">
-                      Control whether this feature appears in the mission
+                      Control whether this feature appears in the Vision
                       section of the public front page.
                     </p>
                   </div>
@@ -343,4 +340,4 @@ const AboutCoreMission = () => {
 
 // Helper component to render the Icon dynamically (required for the form)
 
-export default AboutCoreMission;
+export default AboutCoreVision;

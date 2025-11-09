@@ -1,48 +1,41 @@
-import {
-  Award,
-  GraduationCap,
-  BookOpen,
-  Globe,
-} from "lucide-react";
-import { useState } from "react";
+import { Award, GraduationCap, BookOpen, Globe } from "lucide-react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion"; // New import for animations
-
+import axios from "axios";
+import * as LucideIcons from "lucide-react";
 
 export default function Journey() {
-  const milestones = [
-    {
-      year: "2002",
-      title: "The Founding",
-      description:
-        "Mehtab Shaikh started as an English tutor, committed to delivering quality education. Successfully trained 10,000+ students, helping them achieve excellence in language skills.",
-      icon: BookOpen,
-      color: "bg-blue-600",
-    },
-    {
-      year: "2013",
-      title: "Computer Academy Launch",
-      description:
-        "We expanded our vision and laid the foundation of Mehtab Computer Academy, integrating essential computer education to empower students with technical and professional knowledge.",
-      icon: GraduationCap,
-      color: "bg-purple-600",
-    },
-    {
-      year: "2023",
-      title: "Global Certification",
-      description:
-        "Introduced globally recognized language proficiency courses such as IELTS, PTE, TOEFL, and Duolingo, ensuring our students are well-prepared for international opportunities.",
-      icon: Globe,
-      color: "bg-teal-500",
-    },
-    {
-      year: "Today",
-      title: "Benchmark of Excellence",
-      description:
-        "Mehtab Computer Academy stands as a leading, highly-rated academy in Surat, known for its unwavering commitment to excellence and a team of qualified and certified educators.",
-      icon: Award,
-      color: "bg-pink-600",
-    },
-  ];
+  const [data, setData] = useState([]);
+
+  const getMilestones = async () => {
+    try {
+      const result = await axios.get(
+        "http://localhost:5000/api/front/getMilestones",
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        setData(result.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getLucideIcon = (iconName) => {
+    if (!iconName) return null;
+
+    // Capitalize the first letter to match Lucide's exported component names
+    const formattedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+
+    const IconComponent = LucideIcons[formattedName];
+    return IconComponent ? (
+      <IconComponent className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+    ) : null; // fallback if the icon doesn't exist
+  };
+
+  useEffect(() => {
+    getMilestones();
+  });
 
   return (
     <section
@@ -70,7 +63,7 @@ export default function Journey() {
         </motion.div>
 
         <div className="max-w-5xl mx-auto">
-          {milestones.map((milestone, index) => (
+          {data.map((milestone, index) => (
             <motion.div
               key={milestone.year}
               initial={{ opacity: 0, x: index % 2 === 0 ? -70 : 70 }}
@@ -80,11 +73,11 @@ export default function Journey() {
               className="relative mb-16 sm:mb-20 last:mb-0"
             >
               {/* Timeline line (Desktop) */}
-              {index !== milestones.length - 1 && (
+              {index !== data.length - 1 && (
                 <div className="absolute left-1/2 top-4 bottom-[-4rem] w-1 bg-gray-200 -translate-x-1/2 hidden lg:block" />
               )}
               {/* Timeline line (Mobile) */}
-              {index !== milestones.length - 1 && (
+              {index !== data.length - 1 && (
                 <div className="absolute left-0 top-4 bottom-[-4rem] w-1 bg-gray-200 block lg:hidden" />
               )}
 
@@ -110,7 +103,8 @@ export default function Journey() {
                     className="bg-white rounded-2xl p-6 sm:p-8 shadow-xl transition-all duration-300 border border-gray-100"
                   >
                     <div
-                      className={`inline-block px-4 py-1.5 rounded-full ${milestone.color} text-white font-bold text-base mb-3`}
+                      style={{ backgroundColor: milestone.color }}
+                      className={`inline-block px-4 py-1.5 rounded-full  text-white font-bold text-base mb-3`}
                     >
                       {milestone.year}
                     </div>
@@ -126,10 +120,11 @@ export default function Journey() {
                 {/* Icon Circle */}
                 <div className="relative z-20 hidden lg:flex w-[10%] justify-center">
                   <motion.div
+                    style={{ backgroundColor: milestone.color }}
                     whileHover={{ scale: 1.2, rotate: 5 }}
-                    className={`w-14 h-14 rounded-full ${milestone.color} flex items-center justify-center shadow-2xl ring-4 ring-white transition-transform`}
+                    className={`w-14 h-14 rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white transition-transform`}
                   >
-                    <milestone.icon className="w-7 h-7 text-white" />
+                    {getLucideIcon(milestone.icon)}
                   </motion.div>
                 </div>
 

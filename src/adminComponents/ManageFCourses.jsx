@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Edit2, X, Check } from "lucide-react";
+import { Edit2, X, Check, Eye, Trash2 } from "lucide-react";
 import axios from "axios";
 import AdminNavbar from "./AdminNavbar";
 import SidebarManage from "./SidebarManage";
@@ -7,18 +7,55 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ManageFCourses = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [edit, setEdit] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This course will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      console.log("Nice try buddy" + id);
+
+      try {
+        const result = await axios.post(
+          "http://localhost:5000/api/front/deleteCourse",
+          { id: id },
+          { withCredentials: true }
+        );
+        if (result.status == 200) {
+          toast.error("Deleted successfully");
+          getCourses();
+        }
+      } catch (error) {}
+      // 👉 Here you can call your delete API:
+      // await deleteCourse(id);
+      // setCourses(courses.filter((c) => c.id !== id));
+      // Swal.fire("Deleted!", "Course deleted successfully.", "success");
+    }
+  };
 
   const getCourses = async () => {
     try {
@@ -169,6 +206,7 @@ const ManageFCourses = () => {
                   {course.featured ? "⭐ Featured" : "Add to Featured"}
                 </button>
               </div>
+
               <div className="p-5 flex flex-col flex-grow">
                 <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
                   {course.category}
@@ -179,6 +217,7 @@ const ManageFCourses = () => {
                 <p className="text-gray-600 text-sm mt-2 line-clamp-2">
                   {course.description}
                 </p>
+
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
                     {course.level}
@@ -187,19 +226,45 @@ const ManageFCourses = () => {
                     ${course.price}
                   </span>
                 </div>
+
                 <div className="text-xs text-gray-500 mt-3">
                   ⏱️ {course.duration}
                 </div>
-                <button
-                  onClick={() => {
-                    handleEditClick(course);
-                    setEdit(true);
-                  }}
-                  className="mt-auto w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                >
-                  <Edit2 size={16} />
-                  Edit
-                </button>
+
+                <div className="mt-auto flex space-x-2">
+                  {/* View Button */}
+                  <button
+                    onClick={() => {
+                      navigate("/admin/manage/coursedetail", {
+                        state: { courseId: course.id },
+                      });
+                    }}
+                    className="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+                  >
+                    <Eye size={16} />
+                    View
+                  </button>
+
+                  {/* Edit Button */}
+                  <button
+                    onClick={() => {
+                      handleEditClick(course);
+                    }}
+                    className="w-1/3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm shadow-md"
+                  >
+                    <Edit2 size={16} />
+                    Edit
+                  </button>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => handleDelete(course.id)}
+                    className="w-1/3 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm shadow-md"
+                  >
+                    <Trash2 size={16} />
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}

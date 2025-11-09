@@ -41,6 +41,10 @@ import ViewAllCourses from "./components/ViewAllCourses";
 import CourseDetails from "./components/CourseDetails";
 import ManageTestimonial from "./adminComponents/ManageTestimonial";
 import AboutManage from "./adminComponents/AboutManage";
+import MilestoneManage from "./adminComponents/MilestoneManage";
+import FullGallery from "./components/FullGalary";
+import { AllBlogs } from "./components/AllBlog";
+import ManageCourseDetail from "./adminComponents/ManageCourseDetail";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -69,6 +73,8 @@ function App() {
             <Route path="/test2" element={<Test />} />
             <Route path="/allcourses" element={<ViewAllCourses />} />
             <Route path="/coursedetail" element={<CourseDetails />} />
+            <Route path="/gallery" element={<FullGallery />} />
+            <Route path="/blogs" element={<AllBlogs />} />
 
             {/* Admin Routes */}
             <Route
@@ -113,6 +119,14 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
+            <Route
+              path="/admin/manage/milestone"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <MilestoneManage />
+                </RoleProtectedRoute>
+              }
+            />
 
             <Route
               path="/admin/fees/detail"
@@ -136,6 +150,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="admin">
                   <ManageFCourses />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/manage/coursedetail"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <ManageCourseDetail />
                 </RoleProtectedRoute>
               }
             />

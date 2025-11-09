@@ -30,7 +30,7 @@ const SidebarManage = () => {
       icon: Star,
     },
     { name: "About Manage", path: "/admin/manage/about", icon: Info },
-    // { name: "Journey Manage", path: "/admin/manage/journey", icon: Map },
+    { name: "Journey Manage", path: "/admin/manage/milestone", icon: Map },
     // { name: "Choose Us", path: "/admin/manage/choose-us", icon: ThumbsUp },
     // { name: "Blog Manage", path: "/admin/manage/blog", icon: BookOpen },
     { name: "Testimonials", path: "/admin/manage/testimonials", icon: MessageSquare },

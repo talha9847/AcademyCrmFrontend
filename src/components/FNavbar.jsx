@@ -86,10 +86,10 @@ export default function ProfessionalNavbar() {
             >
               Login
             </a>
-            <button className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold text-[15px] transition-all shadow-md hover:shadow-lg">
+            <HashLink key={123} smooth to={`/#contact`} className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold text-[15px] transition-all shadow-md hover:shadow-lg">
               Enroll Now
               <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </button>
+            </HashLink>
           </div>
 
           {/* Mobile Menu Button */}

@@ -52,8 +52,8 @@ const ViewStudent = () => {
   const [feeValue, setFeeValue] = useState();
 
   const [saveData, setSaveData] = useState({
-    classId: "",
-    sessionId: "",
+    classId: 1,
+    sessionId: 1,
   });
   const [saveData2, setSaveData2] = useState({
     dob: "",
@@ -171,6 +171,7 @@ const ViewStudent = () => {
   };
 
   const handleSave2 = async (id, saveData) => {
+    console.log(saveData);
     try {
       if (add) {
         const result = await axios.post(
@@ -1572,6 +1573,7 @@ const ViewStudent = () => {
               <button
                 onClick={() => {
                   setEditModal(false);
+                  setAdd(true);
                   handleSave2(editId, saveData);
                 }}
                 className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md"

@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import IconPicker from "./IconPicker";
 import AboutCoreMission from "./AboutCoreMission";
+import AboutCoreVision from "./AboutCoreVision";
 
 // Helper components for improved form structure and style
 const FormField = ({ label, name, value, onChange, type = "text", rows }) => (
@@ -269,7 +270,8 @@ const AboutManage = () => {
           </div>
         </main>
       </div>
-        <AboutCoreMission />
+      <AboutCoreMission />
+      <AboutCoreVision />
     </div>
   );
 };

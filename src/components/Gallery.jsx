@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { ZoomIn, X } from "lucide-react"; // Using lucide-react for consistency
+import React, { useEffect, useState } from "react";
+import { ZoomIn, X, ArrowRight } from "lucide-react"; // Import ArrowRight for the button
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 // Sample data (update paths to your actual images)
 const galleryItems = [
@@ -42,8 +44,10 @@ const galleryItems = [
 ];
 
 const Gallery = () => {
+  const [data, setData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const navigate = useNavigate();
 
   const openModal = (item) => {
     setSelectedImage(item);
@@ -54,6 +58,24 @@ const Gallery = () => {
     setModalOpen(false);
     setSelectedImage(null);
   };
+
+  const getGallery = async () => {
+    try {
+      const result = await axios.get(
+        "http://localhost:5000/api/front/getGallery",
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        setData(result.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getGallery();
+  }, []);
 
   return (
     <section
@@ -66,14 +88,15 @@ const Gallery = () => {
           Campus Gallery
         </span>
       </h2>
-      <p className="text-xl text-center text-gray-400 mb-16 max-w-3xl mx-auto">
+      <p className="text-xl text-center text-gray-500 mb-16 max-w-3xl mx-auto">
         Witness the dynamic environment, cutting-edge facilities, and
         collaborative energy that fuels future leaders.
       </p>
 
       {/* Gallery Grid Container */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {galleryItems.map((item) => (
+        {/* We only display a subset here if there were many, but for this example, we show all 6 */}
+        {data.map((item) => (
           <div
             key={item.id}
             className="group relative rounded-xl overflow-hidden cursor-pointer shadow-2xl transition duration-500 transform hover:scale-[1.03] hover:shadow-purple-500/50"
@@ -104,7 +127,20 @@ const Gallery = () => {
         ))}
       </div>
 
-      {/* --- Lightbox/Modal Component (Styled to match Hero Buttons) --- */}
+      {/* --- View All Images Button --- */}
+      <div className="flex justify-center mt-16">
+        <button
+          onClick={() => {
+            navigate("/gallery");
+          }}
+          className="flex items-center space-x-2 px-8 py-3 text-lg font-semibold text-white rounded-full bg-gradient-to-r from-blue-600 to-purple-600 shadow-xl shadow-purple-500/50 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 active:scale-95 ring-2 ring-transparent hover:ring-white/50"
+        >
+          <span>View All Images</span>
+          <ArrowRight className="w-5 h-5 ml-1" />
+        </button>
+      </div>
+
+      {/* --- Lightbox/Modal Component (UNCHANGED) --- */}
       {modalOpen && selectedImage && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 transition-opacity duration-300"

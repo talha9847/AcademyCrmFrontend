@@ -26,7 +26,8 @@ export default function FeaturedCourses() {
 
   const handleCourseClick = (course) => {
     // Placeholder for navigation or modal open
-    console.log("Navigating to course:", course.title);
+    console.log(course)
+    navigate("coursedetail", { state: { courseId: course.id } });
   };
 
   return (
@@ -116,7 +117,9 @@ export default function FeaturedCourses() {
         <div className="text-center">
           {/* Removed <Link> wrapping to simplify, assuming it's a button here */}
           <button
-            onClick={() => {navigate("/allcourses")}}
+            onClick={() => {
+              navigate("/allcourses");
+            }}
             className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full font-bold text-lg transition-all shadow-xl shadow-blue-300/50 hover:shadow-2xl hover:scale-[1.02] transform duration-300"
           >
             View All Courses

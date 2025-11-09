@@ -14,10 +14,10 @@ import {
 
 export default function Footer() {
   const quickLinks = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About Us" },
-    { href: "/courses", label: "Courses" },
-    { href: "/programs", label: "Programs" },
+    { href: "#home", label: "Home" },
+    { href: "#about", label: "About Us" },
+    { href: "#courses", label: "Programs" },
+    { href: "#gallery", label: "Gallery" },
   ];
 
   const courses = [
