@@ -99,7 +99,7 @@ const handleDownload = async (
   ctx.fillText(`Date: ${formattedDate}`, 1980, 110);
 
   // --- Draw QR Code ---
-  const verificationUrl = `http://localhost:5173/verify?code=${verificationCode}`; // Use actual verification link
+  const verificationUrl = `https://academy-crm-frontend.vercel.app//verify?code=${verificationCode}`; // Use actual verification link
   const qrDataUrl = await QRCode.toDataURL(verificationUrl, {
     width: 250,
     margin: 1,

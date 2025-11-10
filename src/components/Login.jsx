@@ -17,26 +17,33 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   async function formSubmit(data) {
-    console.log(data);
-
-    const result = await axios.post(
-      "https://academycrmbackend.onrender.com/api/auth/login",
-      { email: data.identifier, password: data.password },
-      { withCredentials: true }
-    );
-    if (result.status == 200) {
-      if (result.data.role == "admin") {
-        toast.success("Login successfull");
-        window.location.href = "/admin/dashboard";
+    try {
+      setLoading(true);
+      const result = await axios.post(
+        "https://academycrmbackend.onrender.com/api/auth/login",
+        { email: data.identifier, password: data.password },
+        { withCredentials: true }
+      );
+      if (result.status == 200) {
+        if (result.data.role == "admin") {
+          toast.success("Login successfull");
+          navigate("/admin/dashboard");
+        }
+        if (result.data.role == "teacher") {
+          toast.success("Login successfull");
+          navigate("/teacher/dashboard");
+        }
+        if (result.data.role == "student") {
+          toast.success("Login successfull");
+          navigate("/student/dashboard");
+        }
+      } else {
+        setLoading(false);
+        toast.error("Internal Server Error");
       }
-      if (result.data.role == "teacher") {
-        toast.success("Login successfull");
-        window.location.href = "teacher/dashboard";
-      }
-      if (result.data.role == "student") {
-        toast.success("Login successfull");
-        window.location.href = "student/dashboard";
-      }
+    } catch (error) {
+      setLoading(false);
+      toast.error("Internal Server Error");
     }
   }
 

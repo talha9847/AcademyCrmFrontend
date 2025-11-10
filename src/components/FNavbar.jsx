@@ -86,7 +86,12 @@ export default function ProfessionalNavbar() {
             >
               Login
             </a>
-            <HashLink key={123} smooth to={`/#contact`} className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold text-[15px] transition-all shadow-md hover:shadow-lg">
+            <HashLink
+              key={123}
+              smooth
+              to={`/#contact`}
+              className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold text-[15px] transition-all shadow-md hover:shadow-lg"
+            >
               Enroll Now
               <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </HashLink>
@@ -107,30 +112,33 @@ export default function ProfessionalNavbar() {
           <div className="lg:hidden py-2 border-t border-gray-100">
             <div className="flex flex-col space-y-1">
               {navLinks.map((link) => (
-                <a
+                <HashLink
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
                   className="text-gray-700 hover:text-blue-600 hover:bg-gray-50 font-medium py-3 px-4 rounded-lg transition-colors"
                 >
                   {link.label}
-                </a>
+                </HashLink>
               ))}
               <div className="pt-4 space-y-2">
-                <a
-                  href="/login"
+                <Link
+                  to="/login"
                   onClick={() => setIsOpen(false)}
                   className="block text-center text-gray-700 hover:bg-gray-50 font-semibold py-3 px-4 rounded-lg transition-colors border border-gray-200"
                 >
                   Login
-                </a>
-                <button
+                </Link>
+                <HashLink
+                  key={123}
+                  smooth
+                  to={`/#contact`}
                   onClick={() => setIsOpen(false)}
                   className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold shadow-md"
                 >
                   Enroll Now
                   <ChevronRight className="w-4 h-4" />
-                </button>
+                </HashLink>
               </div>
             </div>
           </div>
