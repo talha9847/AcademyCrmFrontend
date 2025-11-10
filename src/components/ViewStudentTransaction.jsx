@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 const printReceipt = (transaction, studentInfo, totalFees) => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const receiptNumber = `REC-${transaction.id}-${new Date().getTime().toString().slice(-6)}`;
   const currentDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -356,7 +357,7 @@ export default function ViewStudentTransaction() {
 
   const getPayemnts = async (studentId) => {
     const result = await axios.post(
-      "https://academycrmbackend.onrender.com/api/fees/getFeesPaymentById",
+      `${BASE_URL}/api/fees/getFeesPaymentById`,
       { studentId },
       { withCredentials: true }
     );

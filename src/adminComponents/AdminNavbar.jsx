@@ -23,6 +23,7 @@ import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
 
 const AdminNavbar = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(3);
   const [dbNavItems, setDbNavItems] = useState([]);
@@ -50,11 +51,13 @@ const AdminNavbar = () => {
   };
 
   async function getSlugs() {
-    const result = await axios.get("https://academycrmbackend.onrender.com/api/user/getSlugs", {
+    const result = await axios.get(`${BASE_URL}/api/user/getSlugs`, {
       withCredentials: true,
     });
 
     if (result.status == 200) {
+      console.log(result.data.data);
+
       const items = result.data.data.map((item) => ({
         name: item.name,
         href: "/" + item.slug,

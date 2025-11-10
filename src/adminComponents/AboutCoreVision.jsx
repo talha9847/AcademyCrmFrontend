@@ -15,6 +15,7 @@ import { time } from "framer-motion";
 
 const AboutCoreVision = () => {
   // ✅ Normalize Lucide import and access specific utility icons
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const Lucide = LucideIcons.default || LucideIcons;
   const [data, setData] = useState([]);
   const [modal, setModal] = useState(false);
@@ -30,7 +31,7 @@ const AboutCoreVision = () => {
   const getAboutCoreVision = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAllAboutCoreVision",
+        `${BASE_URL}/api/front/getAllAboutCoreVision`,
         { withCredentials: true }
       );
       if (result.status === 200) {
@@ -60,7 +61,7 @@ const AboutCoreVision = () => {
     try {
       if (editing) {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/updateAboutCoreVision",
+          `${BASE_URL}/api/front/updateAboutCoreVision`,
           featureToEdit,
           { withCredentials: true }
         );
@@ -71,7 +72,7 @@ const AboutCoreVision = () => {
         }
       } else {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/addAboutCoreVision",
+          `${BASE_URL}/api/front/addAboutCoreVision`,
           featureToEdit,
           { withCredentials: true }
         );
@@ -306,8 +307,8 @@ const AboutCoreVision = () => {
                     </div>
 
                     <p className="text-xs text-gray-500 mt-1 px-1">
-                      Control whether this feature appears in the Vision
-                      section of the public front page.
+                      Control whether this feature appears in the Vision section
+                      of the public front page.
                     </p>
                   </div>
                 </div>

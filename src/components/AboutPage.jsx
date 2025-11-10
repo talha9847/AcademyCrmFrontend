@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 // NOTE: Since the file structure requires a single file, the OurMission component logic is integrated directly below.
 
 export default function ProfessionalAboutPage() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [data, setData] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -37,7 +38,7 @@ export default function ProfessionalAboutPage() {
   const getAboutPageSection = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAboutPageSection",
+        `${BASE_URL}/api/front/getAboutPageSection`,
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -54,10 +55,9 @@ export default function ProfessionalAboutPage() {
 
   const aboutCoreVision = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/aboutCoreVision",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/aboutCoreVision`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setData2(result.data.data);
       }
@@ -68,10 +68,9 @@ export default function ProfessionalAboutPage() {
 
   const aboutCoreMission = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/aboutCoreMission",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/aboutCoreMission`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setData3(result.data.data);
       }

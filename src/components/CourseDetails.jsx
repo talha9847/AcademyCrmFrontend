@@ -13,58 +13,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { HashLink } from "react-router-hash-link";
 
-// --- Static Course Data (UPDATED to match new PostgreSQL schema fields) ---
-const staticCourse = {
-  id: 5,
-  title: "Advanced PostgreSQL and Data Warehousing",
-  slug: "advanced-postgres-data-warehousing",
-  tagline:
-    "Master SQL performance, replication, and data modeling for large-scale applications.",
-
-  // 💡 NEW FIELD MATCH: This maps to 'short_description'
-  short_description:
-    "Dive deep into PostgreSQL features beyond basic CRUD operations. This course covers advanced indexing, partitioning, writing efficient stored procedures, and implementing high-availability setups for enterprise-level data solutions.",
-
-  // 💡 NEW FIELD MATCH: This maps to 'long_description' (JSONB array of strings)
-  long_description: [
-    "Learn to optimize slow queries using execution plans and custom indexes.",
-    "Implement data partitioning for massive tables to improve read/write performance.",
-    "Understand various replication strategies (Streaming, Logical) for high availability.",
-    "Design robust schemas for complex analytical and transactional requirements.",
-  ],
-
-  // 💡 NEW FIELD MATCH: This maps to 'curriculum' (JSONB array of strings)
-  curriculum: [
-    "Module 1: Advanced Indexing and Query Optimization",
-    "Module 2: Stored Procedures, Functions, and Triggers",
-    "Module 3: Table Partitioning and Inheritance",
-    "Module 4: Replication, Failover, and High Availability (HA)",
-    "Module 5: Data Modeling for OLAP/OLTP Systems",
-    "Module 6: Security and Auditing in PostgreSQL",
-  ],
-
-  // 💡 NEW FIELD MATCH: Instructor details
-  instructor_name: "Sarah Chen",
-  instructor_title: "Database Architect & Senior Trainer",
-  instructor_bio:
-    "15+ years of experience designing and managing PostgreSQL databases for Fortune 500 companies. Dedicated to sharing performance tuning secrets.",
-  instructor_image_url:
-    "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-
-  category: "Databases & SQL",
-  level: "Advanced",
-
-  // 💡 NEW FIELD MATCH: Renamed/Consolidated from 'image' to 'image_url'
-  image_url:
-    "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-
-  price: 699.0, // Numeric type
-  duration: "8 Weeks",
-  modules: 6,
-  featured: true, // Existing boolean field
-};
-
 export default function CourseDetails() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const navigate = useNavigate();
   const [course, setCourse] = useState([]);
 
@@ -76,7 +26,7 @@ export default function CourseDetails() {
     const id = courseId;
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/front/getCoursDetailById",
+        `${BASE_URL}/api/front/getCoursDetailById`,
         { courseId: id },
         { withCredentials: true }
       );

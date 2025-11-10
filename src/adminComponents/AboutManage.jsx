@@ -37,6 +37,7 @@ const FormField = ({ label, name, value, onChange, type = "text", rows }) => (
 );
 
 const AboutManage = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false); // Using 'updating' from the original button comment for style
   const [data, setData] = useState({
@@ -55,7 +56,7 @@ const AboutManage = () => {
     try {
       setLoading(true); // Set loading to true before the fetch
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAboutPageSection",
+        `${BASE_URL}/api/front/getAboutPageSection`,
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -92,7 +93,7 @@ const AboutManage = () => {
 
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/front/updateAboutSection",
+        `${BASE_URL}/api/front/updateAboutSection`,
         updatedData,
         { withCredentials: true }
       );

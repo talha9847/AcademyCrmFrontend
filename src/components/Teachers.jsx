@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Teachers = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [showModal, setShowModal] = useState(false);
   const [teachers, setTeachers] = useState([]);
   const {
@@ -21,7 +22,7 @@ const Teachers = () => {
   const navigate = useNavigate();
   async function getStudents() {
     const result = await axios.get(
-      "https://academycrmbackend.onrender.com/api/user/getAllTeachers",
+      `${BASE_URL}/api/user/getAllTeachers`,
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -50,7 +51,7 @@ const Teachers = () => {
 
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/user/createTeacher",
+        `${BASE_URL}/api/user/createTeacher`,
         data,
         { withCredentials: true }
       );

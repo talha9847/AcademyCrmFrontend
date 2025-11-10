@@ -22,6 +22,7 @@ const formatCurrency = (amount) => {
 };
 
 const Expense = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const {
     register,
     handleSubmit,
@@ -31,7 +32,7 @@ const Expense = () => {
   const getAllExpense = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/expense/getAllExpense",
+        `${BASE_URL}/api/expense/getAllExpense`,
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -72,7 +73,7 @@ const Expense = () => {
   const submitForm = async (data) => {
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/expense/addExpense",
+        `${BASE_URL}/api/expense/addExpense`,
         data,
         { withCredentials: true }
       );

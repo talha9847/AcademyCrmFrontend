@@ -6,11 +6,12 @@ import * as LucideIcons from "lucide-react";
 
 export default function Journey() {
   const [data, setData] = useState([]);
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const getMilestones = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getMilestones",
+        `${BASE_URL}/api/front/getMilestones`,
         { withCredentials: true }
       );
       if (result.status == 200) {

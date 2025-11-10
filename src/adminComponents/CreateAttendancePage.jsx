@@ -8,6 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreateAttendancePage = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const navigate = useNavigate();
   const {
     register,
@@ -59,7 +60,7 @@ const CreateAttendancePage = () => {
     setStudentLoad(true);
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/attendance/addAttendance",
+        `${BASE_URL}/api/attendance/addAttendance`,
         {
           classId: data.classId,
           date: data.date,
@@ -95,7 +96,7 @@ const CreateAttendancePage = () => {
     const students = { student: data.students, id: atdId };
     setStoreLoading(true);
     const result = await axios.post(
-      "https://academycrmbackend.onrender.com/api/attendance/storeAttendance",
+      `${BASE_URL}/api/attendance/storeAttendance`,
       { students },
       { withCredentials: true }
     );
@@ -111,10 +112,9 @@ const CreateAttendancePage = () => {
 
   const getClasses = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/extras/getClasses",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/extras/getClasses`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setClasses(result.data.data);
       }
@@ -125,10 +125,9 @@ const CreateAttendancePage = () => {
 
   const getSessions = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/extras/getSessions",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/extras/getSessions`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setSessions(result.data.data);
       }

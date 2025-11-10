@@ -5,13 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function Blog() {
   const [data, setData] = useState([]);
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const getBlogs = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getBlogs",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/getBlogs`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setData(result.data.data);
         console.log(result.data.data);

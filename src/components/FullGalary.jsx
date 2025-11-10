@@ -6,65 +6,8 @@ import { useNavigate } from "react-router-dom";
 import FNavbar from "./FNavbar";
 import axios from "axios";
 
-// Extended Sample data for the full gallery
-const fullGalleryItems = [
-  {
-    id: 1,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea3d706319d.jpg",
-    alt: "Students collaborating in a modern classroom",
-    caption: "Interactive Learning Session",
-  },
-  {
-    id: 2,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea3d8f0db2c.jpg",
-    alt: "Professor lecturing in a large hall",
-    caption: "Main Lecture Hall Facility",
-  },
-  {
-    id: 3,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea3dd42b66e.jpg",
-    alt: "Students cheering during graduation",
-    caption: "Celebrating Success: Graduation",
-  },
-  {
-    id: 4,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea433e19b12.jpg",
-    alt: "Practical workshop in a computer lab",
-    caption: "Hands-on Lab Training",
-  },
-  {
-    id: 5,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea448e156a5.jpeg",
-    alt: "Students relaxing in the campus courtyard",
-    caption: "Vibrant Campus Life",
-  },
-  {
-    id: 6,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea47584273e.jpg",
-    alt: "A bright, quiet academy library",
-    caption: "Quiet Study Zone",
-  },
-  {
-    id: 7,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea3df1ed54d.jpg",
-    alt: "Students working on group project",
-    caption: "Collaborative Study Hub",
-  },
-  {
-    id: 8,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea3e09c52fb.jpg",
-    alt: "Sports field with students playing soccer",
-    caption: "Outdoor Recreation",
-  },
-  {
-    id: 9,
-    src: "https://partner.digitalclassworld.com/storage/homepage/gallary/68ea448e156a5.jpeg",
-    alt: "Dining hall during lunch time",
-    caption: "Modern Dining Facilities",
-  },
-];
-
 const FullGallery = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [data, setData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -89,7 +32,7 @@ const FullGallery = () => {
   const getAllGallery = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAllGallery",
+        `${BASE_URL}/api/front/getAllGallery`,
         { withCredentials: true }
       );
       setData(result.data.data);

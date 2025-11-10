@@ -60,7 +60,7 @@ const handleDownload = async (
   sign
 ) => {
   if (!templatePath) return alert("Error: Certificate template not found.");
-  const fullImageUrl = `https://academycrmbackend.onrender.com/${templatePath}`;
+  const fullImageUrl = `${BASE_URL}/${templatePath}`;
   const formattedDate = issueDate
     ? new Date(issueDate).toLocaleDateString("en-US")
     : "N/A";
@@ -110,11 +110,11 @@ const handleDownload = async (
 
   const profileImage = new Image();
   profileImage.crossOrigin = "anonymous";
-  profileImage.src = `https://academycrmbackend.onrender.com/uploads/${profile}`;
+  profileImage.src = `${BASE_URL}/uploads/${profile}`;
 
   const signatureImage = new Image();
   signatureImage.crossOrigin = "anonymous";
-  signatureImage.src = `https://academycrmbackend.onrender.com/uploads/${sign}`;
+  signatureImage.src = `${BASE_URL}/uploads/${sign}`;
 
   await new Promise((resolve, reject) => {
     qrImg.onload = resolve;
@@ -202,7 +202,7 @@ const SCertificates = () => {
   const getCertificates = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/student/getCertificatesByStudent",
+        `${BASE_URL}/api/student/getCertificatesByStudent`,
         { withCredentials: true }
       );
       if (result.status == 240) {
@@ -238,7 +238,7 @@ const SCertificates = () => {
               <div
                 className="absolute inset-0 bg-cover bg-center opacity-20  z-0" // opacity and blur for subtlety
                 style={{
-                  backgroundImage: `url(https://academycrmbackend.onrender.com/${cert.name})`,
+                  backgroundImage: `url(${BASE_URL}/${cert.name})`,
                 }} // Use cert.name for the image URL
               ></div>
               {console.log(cert)}

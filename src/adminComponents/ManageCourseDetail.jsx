@@ -71,6 +71,8 @@ const staticCourse = {
 };
 
 export default function ManageCourseDetail() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const location = useLocation();
   const courseId = location.state?.courseId; // safely access it
   const [course, setCourse] = useState([]);
@@ -101,7 +103,7 @@ export default function ManageCourseDetail() {
     const id = courseId;
     try {
       const result = await axios.put(
-        "https://academycrmbackend.onrender.com/api/front/updateCourseInstructor",
+        `${BASE_URL}/api/front/updateCourseInstructor`,
         {
           name: instructorName,
           title: instructorTitle,
@@ -123,7 +125,7 @@ export default function ManageCourseDetail() {
   const updateCourseModule = async () => {
     const id = courseId;
     const result = await axios.put(
-      "https://academycrmbackend.onrender.com/api/front/updateCourseModule",
+    `${BASE_URL}/api/front/updateCourseModule`,
       { module: module, courseId: id },
       { withCredentials: true }
     );
@@ -138,7 +140,7 @@ export default function ManageCourseDetail() {
     const id = courseId;
     try {
       const result = await axios.put(
-        "https://academycrmbackend.onrender.com/api/front/updateCourseDescription",
+        `${BASE_URL}/api/front/updateCourseDescription`,
         {
           long_description: lDescription,
           short_description: sDescription,
@@ -160,7 +162,7 @@ export default function ManageCourseDetail() {
     const id = courseId;
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/front/getCoursDetailById",
+        `${BASE_URL}/api/front/getCoursDetailById`,
         { courseId: id },
         { withCredentials: true }
       );

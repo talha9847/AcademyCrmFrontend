@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ManageHero = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const {
     register,
     handleSubmit,
@@ -35,10 +36,9 @@ const ManageHero = () => {
 
   const getHeroData = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getHeroData",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/getHeroData`, {
+        withCredentials: true,
+      });
       if (result.status === 200) {
         const data = result.data.data;
 
@@ -73,7 +73,7 @@ const ManageHero = () => {
   const handleSave = async (data) => {
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/front/updateHeroData",
+        `${BASE_URL}/api/front/updateHeroData`,
         data,
         { withCredentials: true }
       );
@@ -117,7 +117,10 @@ const ManageHero = () => {
           <form onSubmit={handleSubmit(handleSave)} className="space-y-6">
             {/* Badge Text */}
             <div>
-              <label className="block font-semibold mb-1 text-gray-700" htmlFor="badgeText">
+              <label
+                className="block font-semibold mb-1 text-gray-700"
+                htmlFor="badgeText"
+              >
                 Badge Text
               </label>
               <input
@@ -131,7 +134,10 @@ const ManageHero = () => {
 
             {/* Headings */}
             <div>
-              <label className="block font-semibold mb-1 text-gray-700" htmlFor="heading1">
+              <label
+                className="block font-semibold mb-1 text-gray-700"
+                htmlFor="heading1"
+              >
                 Heading Part 1
               </label>
               <input
@@ -144,7 +150,10 @@ const ManageHero = () => {
             </div>
 
             <div>
-              <label className="block font-semibold mb-1 text-gray-700" htmlFor="heading2">
+              <label
+                className="block font-semibold mb-1 text-gray-700"
+                htmlFor="heading2"
+              >
                 Heading Part 2
               </label>
               <input
@@ -158,7 +167,10 @@ const ManageHero = () => {
 
             {/* Description */}
             <div>
-              <label className="block font-semibold mb-1 text-gray-700" htmlFor="description">
+              <label
+                className="block font-semibold mb-1 text-gray-700"
+                htmlFor="description"
+              >
                 Description
               </label>
               <textarea
@@ -175,7 +187,10 @@ const ManageHero = () => {
             <h3 className="text-lg font-bold pt-4 text-gray-800">Statistics</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block font-semibold mb-1 text-gray-700" htmlFor="stat1Value">
+                <label
+                  className="block font-semibold mb-1 text-gray-700"
+                  htmlFor="stat1Value"
+                >
                   Stat 1 Value
                 </label>
                 <input
@@ -188,7 +203,10 @@ const ManageHero = () => {
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-gray-700" htmlFor="stat2Value">
+                <label
+                  className="block font-semibold mb-1 text-gray-700"
+                  htmlFor="stat2Value"
+                >
                   Stat 2 Value
                 </label>
                 <input
@@ -201,7 +219,10 @@ const ManageHero = () => {
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-gray-700" htmlFor="stat3Value">
+                <label
+                  className="block font-semibold mb-1 text-gray-700"
+                  htmlFor="stat3Value"
+                >
                   Stat 3 Value
                 </label>
                 <input
@@ -217,7 +238,10 @@ const ManageHero = () => {
             {/* Image URL */}
             <h3 className="text-lg font-bold pt-4 text-gray-800">Media</h3>
             <div>
-              <label className="block font-semibold mb-1 text-gray-700" htmlFor="imageUrl">
+              <label
+                className="block font-semibold mb-1 text-gray-700"
+                htmlFor="imageUrl"
+              >
                 Image URL
               </label>
               <input
@@ -230,7 +254,9 @@ const ManageHero = () => {
             </div>
 
             {/* Floating Cards */}
-            <h3 className="text-lg font-bold pt-4 text-gray-800">Floating Cards</h3>
+            <h3 className="text-lg font-bold pt-4 text-gray-800">
+              Floating Cards
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Card 1 Title */}
               <div>
@@ -302,65 +328,79 @@ const ManageHero = () => {
                 />
               </div>
             </div>
-            
-            {/* Action Buttons - Moved here to separate from cards and avoid confusion */}
-            <h3 className="text-lg font-bold pt-4 text-gray-800">Action Buttons</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Button 1 Text */}
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="button1Text">
-                    Button 1 Text
-                  </label>
-                  <input
-                    {...register("button1Text")}
-                    id="button1Text"
-                    name="button1Text"
-                    placeholder="Get Started"
-                    className="w-full rounded border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-                
-                {/* Button 1 Link */}
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="button1Link">
-                    Button 1 Link
-                  </label>
-                  <input
-                    {...register("button1Link")}
-                    id="button1Link"
-                    name="button1Link"
-                    placeholder="/courses"
-                    className="w-full rounded border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
 
-                {/* Button 2 Text */}
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="button2Text">
-                    Button 2 Text
-                  </label>
-                  <input
-                    {...register("button2Text")}
-                    id="button2Text"
-                    name="button2Text"
-                    placeholder="Contact Us"
-                    className="w-full rounded border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-                
-                {/* Button 2 Link */}
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-700" htmlFor="button2Link">
-                    Button 2 Link
-                  </label>
-                  <input
-                    {...register("button2Link")}
-                    id="button2Link"
-                    name="button2Link"
-                    placeholder="/contact"
-                    className="w-full rounded border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
+            {/* Action Buttons - Moved here to separate from cards and avoid confusion */}
+            <h3 className="text-lg font-bold pt-4 text-gray-800">
+              Action Buttons
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Button 1 Text */}
+              <div>
+                <label
+                  className="block font-semibold mb-1 text-gray-700"
+                  htmlFor="button1Text"
+                >
+                  Button 1 Text
+                </label>
+                <input
+                  {...register("button1Text")}
+                  id="button1Text"
+                  name="button1Text"
+                  placeholder="Get Started"
+                  className="w-full rounded border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              {/* Button 1 Link */}
+              <div>
+                <label
+                  className="block font-semibold mb-1 text-gray-700"
+                  htmlFor="button1Link"
+                >
+                  Button 1 Link
+                </label>
+                <input
+                  {...register("button1Link")}
+                  id="button1Link"
+                  name="button1Link"
+                  placeholder="/courses"
+                  className="w-full rounded border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              {/* Button 2 Text */}
+              <div>
+                <label
+                  className="block font-semibold mb-1 text-gray-700"
+                  htmlFor="button2Text"
+                >
+                  Button 2 Text
+                </label>
+                <input
+                  {...register("button2Text")}
+                  id="button2Text"
+                  name="button2Text"
+                  placeholder="Contact Us"
+                  className="w-full rounded border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              {/* Button 2 Link */}
+              <div>
+                <label
+                  className="block font-semibold mb-1 text-gray-700"
+                  htmlFor="button2Link"
+                >
+                  Button 2 Link
+                </label>
+                <input
+                  {...register("button2Link")}
+                  id="button2Link"
+                  name="button2Link"
+                  placeholder="/contact"
+                  className="w-full rounded border border-gray-300 p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
             </div>
 
             {/* Save Button */}

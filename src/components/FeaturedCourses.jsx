@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function FeaturedCourses() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const navigate = useNavigate();
   const [data, setData] = useState([]);
 
   const getCourses = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getCourses",
+        `${BASE_URL}/api/front/getCourses`,
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -26,7 +27,7 @@ export default function FeaturedCourses() {
 
   const handleCourseClick = (course) => {
     // Placeholder for navigation or modal open
-    console.log(course)
+    console.log(course);
     navigate("coursedetail", { state: { courseId: course.id } });
   };
 

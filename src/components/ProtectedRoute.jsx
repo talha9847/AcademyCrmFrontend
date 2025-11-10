@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+import AdminNavbar from "../adminComponents/AdminNavbar";
 
 const ProtectedRoute = ({ slug, children }) => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [access, setAccess] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
-      .post(
-        "https://academycrmbackend.onrender.com/api/auth/access",
-        { slug },
-        { withCredentials: true }
-      )
+      .post(`${BASE_URL}/api/auth/access`, { slug }, { withCredentials: true })
       .then(() => setAccess(true))
       .catch(() => setAccess(false))
       .finally(() => setLoading(false));

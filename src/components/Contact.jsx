@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Contact() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const {
     register,
     handleSubmit,
@@ -18,7 +19,7 @@ export default function Contact() {
     console.log(data);
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/front/sendUsMessage",
+        `${BASE_URL}/api/front/sendUsMessage`,
         data,
         { withCredentials: true }
       );

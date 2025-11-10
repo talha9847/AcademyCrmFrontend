@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 
 const ViewStudent = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const location = useLocation();
   const { studentId } = location.state || {};
   const [student, setStudent] = useState(null);
@@ -86,7 +87,7 @@ const ViewStudent = () => {
 
     if (result.isConfirmed) {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/student/statusUpdate",
+        `${BASE_URL}/api/student/statusUpdate`,
         {
           status: !student.is_active,
           userId: studentId,
@@ -112,7 +113,7 @@ const ViewStudent = () => {
       formData.append("email", email);
       formData.append("userId", studentId);
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/student/updateStudentSignature",
+        `${BASE_URL}/api/student/updateStudentSignature`,
         formData,
         { withCredentials: true }
       );
@@ -133,7 +134,7 @@ const ViewStudent = () => {
 
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/student/updateFee",
+        `${BASE_URL}/api/student/updateFee`,
         { fee: feeValue, userId: studentId },
         { withCredentials: true }
       );
@@ -156,7 +157,7 @@ const ViewStudent = () => {
     formData.append("userId", studentId);
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/student/updateStudentProfile",
+        `${BASE_URL}/api/student/updateStudentProfile`,
         formData,
         { withCredentials: true }
       );
@@ -175,7 +176,7 @@ const ViewStudent = () => {
     try {
       if (add) {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/student/addEnrolledClasses",
+          `${BASE_URL}/api/student/addEnrolledClasses`,
           {
             userId: studentId,
             classId: saveData.classId,
@@ -189,7 +190,7 @@ const ViewStudent = () => {
         }
       } else {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/student/updateEnrolledClasses",
+          `${BASE_URL}/api/student/updateEnrolledClasses`,
           { eId: id, classId: saveData.classId, sessionId: saveData.sessionId },
           { withCredentials: true }
         );
@@ -204,7 +205,7 @@ const ViewStudent = () => {
   const handleDelete = async (id) => {
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/student/deleteEnrolledClasses",
+        `${BASE_URL}/api/student/deleteEnrolledClasses`,
         { id: id },
         { withCredentials: true }
       );
@@ -221,7 +222,7 @@ const ViewStudent = () => {
     try {
       if (edit1) {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/student/updateStudentRollAndGender",
+          `${BASE_URL}/api/student/updateStudentRollAndGender`,
           { rollNo: form1Data.roll_no, studentId, gender: form1Data.gender },
           { withCredentials: true }
         );
@@ -234,7 +235,7 @@ const ViewStudent = () => {
       }
       if (edit3) {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/student/updatePI",
+          `${BASE_URL}/api/student/updatePI`,
           {
             dob: saveData2.dob,
             userId: studentId,
@@ -259,7 +260,7 @@ const ViewStudent = () => {
     try {
       setLoading(true);
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/user/getStudentDetail",
+        `${BASE_URL}/api/user/getStudentDetail`,
         {
           withCredentials: true,
           params: {
@@ -282,7 +283,7 @@ const ViewStudent = () => {
   const getClasses = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/extras/getClasses",
+        `${BASE_URL}/api/extras/getClasses`,
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -294,7 +295,7 @@ const ViewStudent = () => {
   const getSessions = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/extras/getSessions",
+        `${BASE_URL}/api/extras/getSessions`,
         { withCredentials: true }
       );
       if (result.status == 200) {
@@ -314,10 +315,10 @@ const ViewStudent = () => {
 
     const printWindow = window.open("", "_blank");
     const profilePhotoUrl = student.profile_photo
-      ? `https://academycrmbackend.onrender.com/uploads/${student.profile_photo}`
+      ? `${BASE_URL}/uploads/${student.profile_photo}`
       : "";
     const signatureUrl = student.signature_photo
-      ? `https://academycrmbackend.onrender.com/uploads/${student.signature_photo}`
+      ? `${BASE_URL}/uploads/${student.signature_photo}`
       : "";
 
     const printContent = `
@@ -562,7 +563,7 @@ const ViewStudent = () => {
 
     const printWindow = window.open("", "_blank");
     const profilePhotoUrl = student.profile_photo
-      ? `https://academycrmbackend.onrender.com/uploads/${student.profile_photo}`
+      ? `${BASE_URL}/uploads/${student.profile_photo}`
       : "";
 
     const printContent = `
@@ -913,7 +914,7 @@ const ViewStudent = () => {
                 <div className="relative w-32 h-32 mx-auto rounded-lg overflow-hidden mb-4 border-2 border-gray-200 group">
                   {student.profile_photo ? (
                     <img
-                      src={`https://academycrmbackend.onrender.com/uploads/${student.profile_photo}`}
+                      src={`${BASE_URL}/uploads/${student.profile_photo}`}
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
@@ -1006,7 +1007,7 @@ const ViewStudent = () => {
                   <div className="relative w-full h-24 border-2 border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center group">
                     {student.signature_photo ? (
                       <img
-                        src={`https://academycrmbackend.onrender.com/uploads/${student.signature_photo}`}
+                        src={`${BASE_URL}/uploads/${student.signature_photo}`}
                         alt="Signature"
                         className="max-w-full max-h-full object-contain p-2"
                       />

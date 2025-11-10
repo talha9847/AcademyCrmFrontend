@@ -82,9 +82,10 @@ export function AllBlogs() {
   const [data, setData] = useState([]);
 
   const getAllBlogs = async () => {
+    const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAllBlogs",
+        `${BASE_URL}/api/front/getAllBlogs`,
         { withCredentials: true }
       );
       if (result.status == 200) {

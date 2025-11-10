@@ -11,6 +11,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ManageFCourses = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -41,7 +43,7 @@ const ManageFCourses = () => {
 
       try {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/deleteCourse",
+          `${BASE_URL}/api/front/deleteCourse`,
           { id: id },
           { withCredentials: true }
         );
@@ -59,10 +61,9 @@ const ManageFCourses = () => {
 
   const getCourses = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAllCourses",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/getAllCourses`, {
+        withCredentials: true,
+      });
       if (result.status === 200) {
         console.log(result.data.data);
         setCourses(result.data.data);
@@ -77,7 +78,7 @@ const ManageFCourses = () => {
       console.log(data);
       if (edit) {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/updateCourse",
+          `${BASE_URL}/api/front/updateCourse`,
           data,
           { withCredentials: true }
         );
@@ -100,7 +101,7 @@ const ManageFCourses = () => {
           featured: data.featured,
         };
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/addCourse",
+          `${BASE_URL}/api/front/addCourse`,
           newData,
           { withCredentials: true }
         );

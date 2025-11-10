@@ -87,6 +87,7 @@ const getMonthName = (monthIndex) =>
   ][monthIndex];
 
 const SAttendance = () => {
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
   const [attendanceData, setAttendanceData] = useState([]);
   const [userInfo, setUser] = useState({});
   const [id, setId] = useState(null);
@@ -105,7 +106,7 @@ const SAttendance = () => {
   const getAttendanceData = async () => {
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/attendance/getAttendanceByStudent",
+        `${BASE_URL}/api/attendance/getAttendanceByStudent`,
         {},
         { withCredentials: true }
       );
@@ -125,7 +126,7 @@ const SAttendance = () => {
   const getAttendanceDataByClass = async () => {
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/attendance/getAttendanceByStudent",
+        `${BASE_URL}/api/attendance/getAttendanceByStudent`,
         { classId: id },
         { withCredentials: true }
       );
@@ -143,7 +144,7 @@ const SAttendance = () => {
   const getEnrolledClass = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/attendance/getEnrolledClass",
+        `${BASE_URL}/api/attendance/getEnrolledClass`,
         {
           withCredentials: true,
         }

@@ -50,7 +50,7 @@ const SNavbar = () => {
   };
 
   async function getSlugs() {
-    const result = await axios.get("https://academycrmbackend.onrender.com/api/user/getSlugs", {
+    const result = await axios.get(`${BASE_URL}/api/user/getSlugs`, {
       withCredentials: true,
     });
 

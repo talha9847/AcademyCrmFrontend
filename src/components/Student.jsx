@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 // Mock AdminNavbar component
 
 const Student = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [showModal, setShowModal] = useState(false);
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
@@ -73,7 +74,7 @@ const Student = () => {
     formData.append("enrollments", JSON.stringify(data.enrollments));
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/user/createStudent",
+        `${BASE_URL}/api/user/createStudent`,
         formData,
         { withCredentials: true }
       );
@@ -101,7 +102,7 @@ const Student = () => {
   async function getStudents() {
     console.log("I am called");
     const result = await axios.get(
-      "https://academycrmbackend.onrender.com/api/user/getAllStudents",
+      `${BASE_URL}/api/user/getAllStudents`,
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -113,7 +114,7 @@ const Student = () => {
   };
   async function getClasses() {
     const result = await axios.get(
-      "https://academycrmbackend.onrender.com/api/extras/getClasses",
+      `${BASE_URL}/api/extras/getClasses`,
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -124,7 +125,7 @@ const Student = () => {
   async function getSectionById(classId) {
     if (classId > 0) {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/extras/getSectionById",
+        `${BASE_URL}/api/extras/getSectionById`,
         {
           params: { id: classId },
           withCredentials: true,
@@ -138,7 +139,7 @@ const Student = () => {
 
   async function getSession() {
     const result = await axios.get(
-      "https://academycrmbackend.onrender.com/api/extras/getSessions",
+      `${BASE_URL}/api/extras/getSessions`,
       { withCredentials: true }
     );
     if (result.status == 200) {

@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Classes = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [classes, setClasses] = useState([]);
   const [classModal, setClassModal] = useState(false);
   const [sessions, setSessions] = useState([]);
@@ -18,7 +19,7 @@ const Classes = () => {
 
   async function getClasses() {
     const result = await axios.get(
-      "https://academycrmbackend.onrender.com/api/extras/getClasses",
+      `${BASE_URL}/api/extras/getClasses`,
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -27,7 +28,7 @@ const Classes = () => {
   }
   async function getSessions() {
     const result = await axios.get(
-      "https://academycrmbackend.onrender.com/api/extras/getSessions",
+      `${BASE_URL}/api/extras/getSessions`,
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -36,7 +37,7 @@ const Classes = () => {
   }
   async function getSections() {
     const result = await axios.get(
-      "https://academycrmbackend.onrender.com/api/extras/getSections",
+      `${BASE_URL}/api/extras/getSections`,
       { withCredentials: true }
     );
     if (result.status == 200) {
@@ -47,7 +48,7 @@ const Classes = () => {
   const addClassHandle = async () => {
     if (edit) {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/extras/updateClass",
+        `${BASE_URL}/api/extras/updateClass`,
         { id: editId, name: className },
         {
           withCredentials: true,
@@ -63,7 +64,7 @@ const Classes = () => {
       }
     } else {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/extras/addClass",
+        `${BASE_URL}/api/extras/addClass`,
         { name: className },
         { withCredentials: true }
       );
@@ -79,7 +80,7 @@ const Classes = () => {
   const sessionHandle = async () => {
     if (edit) {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/extras/updateSession",
+        `${BASE_URL}/api/extras/updateSession`,
         {
           timing: className,
           id: editId,
@@ -102,7 +103,7 @@ const Classes = () => {
       }
     } else {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/extras/addSession",
+        `${BASE_URL}/api/extras/addSession`,
         { timing: className },
         { withCredentials: true }
       );

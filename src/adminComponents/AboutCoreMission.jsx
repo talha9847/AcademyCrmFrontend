@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { time } from "framer-motion";
 
 const AboutCoreMission = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   // ✅ Normalize Lucide import and access specific utility icons
   const Lucide = LucideIcons.default || LucideIcons;
   const [data, setData] = useState([]);
@@ -33,7 +34,7 @@ const AboutCoreMission = () => {
   const getAboutCoreMission = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAboutCoreMission",
+        `${BASE_URL}/api/front/getAboutCoreMission`,
         { withCredentials: true }
       );
       if (result.status === 200) {
@@ -63,7 +64,7 @@ const AboutCoreMission = () => {
     try {
       if (editing) {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/updateAboutCoreMission",
+          `${BASE_URL}/api/front/updateAboutCoreMission`,
           featureToEdit,
           { withCredentials: true }
         );
@@ -74,7 +75,7 @@ const AboutCoreMission = () => {
         }
       } else {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/addAboutCoreMission",
+          `${BASE_URL}/api/front/addAboutCoreMission`,
           featureToEdit,
           { withCredentials: true }
         );

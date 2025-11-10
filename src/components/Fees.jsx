@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 const Fees = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const navigate = useNavigate();
   const [fees, setFees] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -21,7 +22,7 @@ const Fees = () => {
   } = useForm();
 
   async function fetchFees() {
-    const result = await axios.get("https://academycrmbackend.onrender.com/api/fees/fetchFees", {
+    const result = await axios.get(`${BASE_URL}/api/fees/fetchFees`, {
       withCredentials: true,
     });
     if (result.status == 200) {
@@ -80,7 +81,7 @@ const Fees = () => {
       status: "paid",
     };
     const result = await axios.post(
-      "https://academycrmbackend.onrender.com/api/fees/collectFees",
+      `${BASE_URL}/api/fees/collectFees`,
       send,
       { withCredentials: true }
     );

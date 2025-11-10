@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const MilestoneManage = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [data, setData] = useState([]);
   const [editing, setEditing] = useState(false);
   const [modal, setModal] = useState(false);
@@ -37,7 +38,7 @@ const MilestoneManage = () => {
       if (result.isConfirmed) {
         // ✅ Perform delete logic here
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/deleteMilestone",
+          `${BASE_URL}/api/front/deleteMilestone`,
           { id },
           { withCredentials: true }
         );
@@ -64,7 +65,7 @@ const MilestoneManage = () => {
       if (editing) {
         console.log(formData);
         const result = await axios.put(
-          "https://academycrmbackend.onrender.com/api/front/updateMilestone",
+          `${BASE_URL}/api/front/updateMilestone`,
           formData,
           { withCredentials: true }
         );
@@ -76,7 +77,7 @@ const MilestoneManage = () => {
         }
       } else {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/addMilestone",
+          `${BASE_URL}/api/front/addMilestone`,
           formData,
           { withCredentials: true }
         );
@@ -94,10 +95,9 @@ const MilestoneManage = () => {
 
   const getMilestones = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getMilestones",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/getMilestones`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setData(result.data.data);
       }
@@ -123,15 +123,16 @@ const MilestoneManage = () => {
   }, []);
 
   // --- Start of UI/UX Improvements ---
-  
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col"> {/* Lighter background */}
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {" "}
+      {/* Lighter background */}
       <AdminNavbar />
       <div className="flex flex-1">
         <SidebarManage />
         {/* Adjusted padding for responsiveness and a cleaner look */}
         <main className="flex-1 p-4 sm:p-8 lg:p-10 lg:ml-64 transition-all duration-300">
-          
           {/* Header and Add Button Section */}
           <div className="flex justify-between items-center mb-8 sm:mb-10">
             <h1 className="text-3xl font-extrabold text-gray-900">
@@ -156,15 +157,16 @@ const MilestoneManage = () => {
               <span>Add New Milestone</span>
             </button>
           </div>
-          
+
           {/* Milestone Timeline/List Container */}
           <div className="max-w-6xl w-full mx-auto bg-white rounded-3xl shadow-2xl p-6 sm:p-10 border border-gray-100">
-            
             {data.length === 0 ? (
               <div className="text-center p-12 text-gray-500">
                 <LucideIcons.CalendarOff className="w-12 h-12 mx-auto mb-4" />
                 <p className="text-lg font-medium">No milestones found.</p>
-                <p>Click 'Add New Milestone' to start building your timeline.</p>
+                <p>
+                  Click 'Add New Milestone' to start building your timeline.
+                </p>
               </div>
             ) : (
               data.map((milestone, index) => (
@@ -186,14 +188,15 @@ const MilestoneManage = () => {
                       index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
                     }`}
                   >
-                    
                     {/* Spacer for alignment on alternating sides (Desktop) */}
                     <div className="flex-1 hidden lg:block lg:max-w-[45%]" />
 
                     {/* Icon Circle (Desktop) */}
                     <div className="relative z-20 hidden lg:flex w-[10%] justify-center items-start pt-1">
                       <div
-                        style={{ backgroundColor: milestone.color || '#4f46e5' }} // Fallback color added
+                        style={{
+                          backgroundColor: milestone.color || "#4f46e5",
+                        }} // Fallback color added
                         className={`w-16 h-16 rounded-full flex items-center justify-center shadow-xl ring-8 ring-white transition-all duration-300 transform hover:scale-105`}
                       >
                         {getLucideIcon(milestone.icon)}
@@ -213,20 +216,24 @@ const MilestoneManage = () => {
                       >
                         {/* Mobile Icon Marker (Left aligned) */}
                         <div className="relative z-20 flex lg:hidden -translate-x-[3.3rem] sm:-translate-x-[4.3rem] absolute left-0 top-0 mt-1">
-                            <div
-                                style={{ backgroundColor: milestone.color || '#4f46e5' }}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white transition-all duration-300`}
-                            >
-                                {/* The original logic for Mobile icon was using milestone.icon as a component, which is risky.
+                          <div
+                            style={{
+                              backgroundColor: milestone.color || "#4f46e5",
+                            }}
+                            className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white transition-all duration-300`}
+                          >
+                            {/* The original logic for Mobile icon was using milestone.icon as a component, which is risky.
                                     Reverting to use the safer `getLucideIcon` function for consistency and robustness. */}
-                                {getLucideIcon(milestone.icon)} 
-                            </div>
+                            {getLucideIcon(milestone.icon)}
+                          </div>
                         </div>
 
                         {/* Year and Action Buttons Container */}
                         <div className="flex flex-wrap justify-between items-start mb-4 gap-2">
                           <div
-                            style={{ backgroundColor: milestone.color || '#4f46e5' }}
+                            style={{
+                              backgroundColor: milestone.color || "#4f46e5",
+                            }}
                             className={`inline-block px-4 py-1.5 rounded-full text-white font-bold text-sm tracking-wide shadow-md`}
                           >
                             {milestone.year}
@@ -281,13 +288,10 @@ const MilestoneManage = () => {
           </div>
         </main>
       </div>
-      
       {/* Modal / Dialog */}
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4  bg-opacity-40 backdrop-blur-sm transition-opacity duration-300">
-          
           <div className="flex flex-col w-full max-w-lg bg-white rounded-2xl shadow-2xl transition-all duration-300 transform scale-100 opacity-100 overflow-hidden">
-            
             {/* Modal Header */}
             <div className="px-6 sm:px-8 pt-6 sm:pt-8 pb-4 border-b">
               <h2 className="text-2xl font-bold text-gray-800 flex items-center space-x-2">
@@ -295,10 +299,9 @@ const MilestoneManage = () => {
                 <span>{editing ? "Edit Milestone" : "Add New Milestone"}</span>
               </h2>
             </div>
-            
+
             {/* Modal Body / Form Inputs */}
             <div className="p-6 sm:p-8 space-y-5 overflow-y-auto max-h-[80vh]">
-              
               {/* Title Input */}
               <div className="space-y-1">
                 <label
@@ -402,7 +405,7 @@ const MilestoneManage = () => {
                     id="color"
                     type="color"
                     name="color"
-                    value={formData.color || "#4f46e5"} 
+                    value={formData.color || "#4f46e5"}
                     onChange={handleChange}
                     className="w-14 h-14 p-1 border-2 border-gray-300 rounded-lg cursor-pointer transition-colors hover:border-indigo-500"
                   />

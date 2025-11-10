@@ -6,6 +6,7 @@ import { useState } from "react";
 import axios from "axios";
 
 const Login = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const navigate = useNavigate();
   const {
     register,
@@ -20,7 +21,7 @@ const Login = () => {
     try {
       setLoading(true);
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/auth/login",
+        `${BASE_URL}/api/auth/login`,
         { email: data.identifier, password: data.password },
         { withCredentials: true }
       );

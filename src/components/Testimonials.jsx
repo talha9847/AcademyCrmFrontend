@@ -5,11 +5,12 @@ import { Star, Quote } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Testimonials() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [data, setData] = useState([]);
   const getTestimonials = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getTestimonials",
+        `${BASE_URL}/api/front/getTestimonials`,
         { withCredentials: true }
       );
       if (result.status == 200) {

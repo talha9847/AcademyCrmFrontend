@@ -27,6 +27,7 @@ const RatingDisplay = ({ rating }) => (
 // --- Main Admin Component ---
 
 export default function ManageTestimonial() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,7 +54,7 @@ export default function ManageTestimonial() {
     setError(null);
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAllTestimonials", // Adjusted endpoint
+        `${BASE_URL}/api/front/getAllTestimonials`, // Adjusted endpoint
         { withCredentials: true }
       );
       if (result.status === 200) {
@@ -121,7 +122,7 @@ export default function ManageTestimonial() {
       if (edit) {
         if (!currentTestimonialId) return;
         const result = await axios.post(
-          `https://academycrmbackend.onrender.com/api/front/updateTestimonials`,
+          `${BASE_URL}/api/front/updateTestimonials`,
           {
             name: formData.name,
             course: formData.course,
@@ -142,7 +143,7 @@ export default function ManageTestimonial() {
         }
       } else {
         const result = await axios.post(
-          "https://academycrmbackend.onrender.com/api/front/addTestimonial",
+          `${BASE_URL}/api/front/addTestimonial`,
           formData,
           { withCredentials: true }
         );
@@ -188,7 +189,7 @@ export default function ManageTestimonial() {
       if (result.isConfirmed) {
         try {
           const response = await axios.post(
-            `https://academycrmbackend.onrender.com/api/front/deleteTestimonial`,
+            `${BASE_URL}/api/front/deleteTestimonial`,
             { id: testimonialId },
             { withCredentials: true }
           );
@@ -212,7 +213,7 @@ export default function ManageTestimonial() {
     const newStatus = !show; // Using 'show' property
     try {
       const result = await axios.post(
-        `https://academycrmbackend.onrender.com/api/front/updateTestimonialToggle`,
+        `${BASE_URL}/api/front/updateTestimonialToggle`,
         { show: newStatus, id: testimonialId }, // Send the new status
         { withCredentials: true }
       );

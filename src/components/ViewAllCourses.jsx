@@ -10,12 +10,13 @@ import { useNavigate } from "react-router-dom";
 // --- End Static Data ---
 
 export default function ViewAllCourses() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const getAllCourse = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getAllCourses",
+        `${BASE_URL}/api/front/getAllCourses`,
         { withCredentials: true }
       );
       if (result.status == 200) {

@@ -11,11 +11,12 @@ import axios from "axios";
 import { HashLink } from "react-router-hash-link";
 
 export default function HeroSection() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [data, setData] = useState({});
   const getData = async () => {
     try {
       const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/front/getHeroData",
+        `${BASE_URL}/api/front/getHeroData`,
         { withCredentials: true }
       );
       if (result.status == 200) {

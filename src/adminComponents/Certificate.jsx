@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 const Certificate = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [classes, setClasses] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [classId, setClassId] = useState("");
@@ -19,10 +20,9 @@ const Certificate = () => {
 
   const getClasses = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/extras/getClasses",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/extras/getClasses`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setClasses(result.data.data);
       }
@@ -32,10 +32,9 @@ const Certificate = () => {
   };
   const getSessions = async () => {
     try {
-      const result = await axios.get(
-        "https://academycrmbackend.onrender.com/api/extras/getSessions",
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/extras/getSessions`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setSessions(result.data.data);
       }
@@ -51,7 +50,7 @@ const Certificate = () => {
 
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/student/getTemplates",
+        `${BASE_URL}/api/student/getTemplates`,
         { classId: parseInt(classId) },
         { withCredentials: true }
       );
@@ -74,7 +73,7 @@ const Certificate = () => {
 
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/student/getStudentByClassAndSession",
+        `${BASE_URL}/api/student/getStudentByClassAndSession`,
         {
           classId,
           sessionId,
@@ -95,7 +94,7 @@ const Certificate = () => {
     }
     try {
       const result = await axios.post(
-        "https://academycrmbackend.onrender.com/api/student/assignCertificate",
+        `${BASE_URL}/api/student/assignCertificate`,
         {
           recipientId,
           title,
@@ -218,7 +217,7 @@ const Certificate = () => {
                       {/* Image Thumbnail */}
                       <img
                         className="w-20 h-20 object-cover border border-black flex-shrink-0"
-                        src={`https://academycrmbackend.onrender.com/${val.name}`}
+                        src={`${BASE_URL}/${val.name}`}
                         alt="Template Thumbnail"
                       />
 

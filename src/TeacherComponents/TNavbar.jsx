@@ -44,7 +44,7 @@ const TNavbar = () => {
   };
 
   async function getSlugs() {
-    const result = await axios.get("https://academycrmbackend.onrender.com/api/user/getSlugs", {
+    const result = await axios.get(`https://academycrmbackend.onrender.com/api/user/getSlugs`, {
       withCredentials: true,
     });
 
