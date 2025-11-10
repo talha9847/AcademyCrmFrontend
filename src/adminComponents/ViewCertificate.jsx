@@ -46,6 +46,7 @@ const StatusPill = ({ isRevoked }) => (
 
 const ViewCertificate = () => {
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const [Certificates, setCertificates] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
