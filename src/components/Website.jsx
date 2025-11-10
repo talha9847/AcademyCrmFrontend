@@ -15,7 +15,7 @@ import Gallery from "./Gallery";
 
 const Website = () => {
   return (
-    <div className="px-6">
+    <div className="overflow-x-hidden px-2">
       <FNavbar />
       <Hero />
       <Stats />
@@ -24,7 +24,7 @@ const Website = () => {
       <Journey />
       <ChooseUs />
       <Blog />
-      <Gallery/>
+      <Gallery />
       <Testimonials />
       <Contact />
       <CtaSection />
