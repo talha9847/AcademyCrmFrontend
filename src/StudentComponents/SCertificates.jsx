@@ -59,6 +59,7 @@ const handleDownload = async (
   profile,
   sign
 ) => {
+  console.log(templatePath);
   if (!templatePath) return alert("Error: Certificate template not found.");
   const fullImageUrl = `${BASE_URL}/${templatePath}`;
   const formattedDate = issueDate
@@ -191,6 +192,8 @@ const getStatusBadge = (status) => {
 };
 
 const SCertificates = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const navigate = useNavigate();
   const [cData, setCData] = useState([]);
 

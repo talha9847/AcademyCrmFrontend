@@ -51,13 +51,15 @@ const ViewCertificate = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const certificatePrint = async ({
+  const certificatePrint = async (
     name,
     issueDate,
     certNumber,
     templatePath,
     verificationCode,
-  }) => {
+    profile,
+    sign
+  ) => {
     if (!templatePath) return alert("Error: Certificate template not found.");
     const fullImageUrl = `${BASE_URL}/${templatePath}`;
     const formattedDate = issueDate
@@ -98,7 +100,7 @@ const ViewCertificate = () => {
     ctx.fillText(`Date: ${formattedDate}`, 1980, 110);
 
     // --- Draw QR Code ---
-    const verificationUrl = `http://localhost:5173/verify?code=${verificationCode}`; // Use actual verification link
+    const verificationUrl = `https://academy-crm-frontend.vercel.app//verify?code=${verificationCode}`; // Use actual verification link
     const qrDataUrl = await QRCode.toDataURL(verificationUrl, {
       width: 250,
       margin: 1,
@@ -107,10 +109,40 @@ const ViewCertificate = () => {
     const qrImg = new Image();
     qrImg.src = qrDataUrl;
 
+    const profileImage = new Image();
+    profileImage.crossOrigin = "anonymous";
+    profileImage.src = `${BASE_URL}/uploads/${profile}`;
+
+    const signatureImage = new Image();
+    signatureImage.crossOrigin = "anonymous";
+    signatureImage.src = `${BASE_URL}/uploads/${sign}`;
+
     await new Promise((resolve, reject) => {
       qrImg.onload = resolve;
       qrImg.onerror = reject;
     });
+
+    await new Promise((resolve, reject) => {
+      profileImage.onload = resolve;
+      profileImage.onerror = reject;
+    });
+
+    await new Promise((resolve, reject) => {
+      signatureImage.onload = resolve;
+      signatureImage.onerror = reject;
+    });
+
+    const profileImageSize = 250;
+    ctx.drawImage(profileImage, 1500, 200, profileImageSize, profileImageSize);
+
+    const signatureImageSize = 125;
+    ctx.drawImage(
+      signatureImage,
+      1500,
+      460,
+      signatureImageSize * 2,
+      signatureImageSize
+    );
 
     // Draw QR code (Bottom Left Area - adjust X/Y)
     const qrSize = 250;
@@ -120,18 +152,18 @@ const ViewCertificate = () => {
     const dataUrl = canvas.toDataURL("image/png", 0.95); // Use JPEG for smaller size
     const printWindow = window.open("about:blank", "_blank");
     printWindow.document.write(`
-  <html>
-    <head><title>${name} Certificate</title></head>
-    <body style="margin:0;display:flex;justify-content:center;align-items:center;">
-      <img src="${dataUrl}" width="100%" />
-      <script>
-        window.onload = function() {
-          window.print();
-        };
-      </script>
-    </body>
-  </html>
-`);
+    <html>
+      <head><title>${name} Certificate</title></head>
+      <body style="margin:0;display:flex;justify-content:center;align-items:center;">
+        <img src="${dataUrl}" width="100%" />
+        <script>
+          window.onload = function() {
+            window.print();
+          };
+        </script>
+      </body>
+    </html>
+  `);
     printWindow.document.close();
   };
 
@@ -144,7 +176,6 @@ const ViewCertificate = () => {
         { withCredentials: true }
       );
       if (result.status === 200) {
-        console.log(result.data.data);
         setCertificates(result.data.data || []);
       }
     } catch (err) {
@@ -177,7 +208,6 @@ const ViewCertificate = () => {
    * --- Action Handlers (Stubs) ---
    */
   const handleEdit = (certificateId) => {
-    console.log(`Editing certificate with ID: ${certificateId}`);
     alert(
       `Editing Certificate ID: ${certificateId}. (Implement actual navigation/modal here)`
     );
@@ -260,7 +290,6 @@ const ViewCertificate = () => {
                       key={ind}
                       className={`${ROW_HOVER} transition duration-100 ease-in-out`}
                     >
-                      {console.log(val.profile_photo)}
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {ind + 1}
                       </td>
@@ -295,15 +324,17 @@ const ViewCertificate = () => {
                             Edit
                           </button>
                           <button
-                            onClick={() =>
-                              certificatePrint({
-                                name: val.title,
-                                issueDate: val.issue_date,
-                                certNumber: val.certificate_number,
-                                templatePath: val.template,
-                                verificationCode: val.verification_code,
-                              })
-                            }
+                            onClick={() => {
+                              certificatePrint(
+                                val.title,
+                                val.issue_date,
+                                val.certificate_number,
+                                val.template,
+                                val.verification_code,
+                                val.profile_photo,
+                                val.signature_photo
+                              );
+                            }}
                             className="text-sm font-semibold bg-white text-black px-3 py-1 border border-black hover:bg-gray-200 transition duration-150"
                           >
                             Print
