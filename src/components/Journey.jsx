@@ -1,6 +1,6 @@
 import { Award, GraduationCap, BookOpen, Globe } from "lucide-react";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion"; // New import for animations
+import { motion } from "framer-motion";
 import axios from "axios";
 import * as LucideIcons from "lucide-react";
 
@@ -23,24 +23,30 @@ export default function Journey() {
 
   const getLucideIcon = (iconName) => {
     if (!iconName) return null;
-
-    // Capitalize the first letter to match Lucide's exported component names
     const formattedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
-
     const IconComponent = LucideIcons[formattedName];
     return IconComponent ? (
       <IconComponent className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-    ) : null; // fallback if the icon doesn't exist
+    ) : null;
+  };
+
+  const getLucideIcon2 = (iconName) => {
+    if (!iconName) return null;
+    const formattedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+    const IconComponent = LucideIcons[formattedName];
+    return IconComponent ? (
+      <IconComponent className="w-5 h-5 sm:w-8 sm:h-8 text-white" />
+    ) : null;
   };
 
   useEffect(() => {
     getMilestones();
-  });
+  }, []);
 
   return (
     <section
       id="journey"
-      className="py-16 sm:py-20 lg:py-28 bg-gradient-to-b from-gray-50 to-white"
+      className="py-12 sm:py-20 lg:py-28 bg-gradient-to-b from-gray-50 to-white"
     >
       <div className="container mx-auto px-4 sm:px-6">
         <motion.div
@@ -48,7 +54,7 @@ export default function Journey() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16 sm:mb-20"
+          className="text-center mb-12 sm:mb-20"
         >
           <span className="text-pink-600 font-bold text-sm uppercase tracking-widest">
             Our History
@@ -70,28 +76,55 @@ export default function Journey() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="relative mb-16 sm:mb-20 last:mb-0"
+              className="relative mb-16 sm:mb-20 last:mb-0" 
             >
               {/* Timeline line (Desktop) */}
               {index !== data.length - 1 && (
                 <div className="absolute left-1/2 top-4 bottom-[-4rem] w-1 bg-gray-200 -translate-x-1/2 hidden lg:block" />
               )}
-              {/* Timeline line (Mobile) */}
-              {index !== data.length - 1 && (
-                <div className="absolute left-0 top-4 bottom-[-4rem] w-1 bg-gray-200 block lg:hidden" />
-              )}
-
+              
               <div
-                className={`flex flex-col lg:flex-row items-start lg:gap-8 ${
-                  index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
-                }`}
+                // Forces a consistent left-to-right flex layout
+                className="flex flex-row items-start lg:gap-8" 
               >
+                {/* 🌟 NEW: Mobile Visual Column (Line and Icon) 🌟 */}
+                <div className="relative w-12 hidden flex-col items-center pt-1 lg:flex w-[10%] justify-center lg:w-[10%]">
+                    {/* Desktop Icon Circle (w-[10%] is used, but this column is hidden on mobile) */}
+                    <div className="relative z-20 hidden lg:flex justify-center w-full">
+                        <motion.div
+                            style={{ backgroundColor: milestone.color }}
+                            whileHover={{ scale: 1.2, rotate: 5 }}
+                            className={`w-14 h-14 rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white transition-transform`}
+                        >
+                            {getLucideIcon(milestone.icon)}
+                        </motion.div>
+                    </div>
+                </div>
+
+                {/* 🌟 NEW: Mobile Visual Column (Line and Icon) 🌟 */}
+                {/* This column is present ONLY on mobile and ensures alignment */}
+                <div className="relative w-12 flex flex-col items-center pt-1 lg:hidden">
+                    {/* Mobile Icon Marker */}
+                    <motion.div
+                        style={{ backgroundColor: milestone.color }}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white z-10`}
+                    >
+                        {getLucideIcon2(milestone.icon)}
+                    </motion.div>
+                    
+                    {/* Timeline line (Mobile) - Positioned relative to this column */}
+                    {index !== data.length - 1 && (
+                        <div className="absolute top-0 bottom-[-4rem] w-1 bg-gray-200" />
+                    )}
+                </div>
+
                 {/* Content */}
                 <div
-                  className={`flex-1 lg:max-w-[45%] ${
+                  // Content takes remaining space, always aligned left on mobile
+                  className={`flex-1 ${
                     index % 2 === 0
-                      ? "lg:text-right lg:ml-0 ml-6"
-                      : "lg:text-left lg:mr-0 mr-6"
+                      ? "lg:max-w-[45%] lg:text-right" 
+                      : "lg:max-w-[45%] lg:text-left"
                   }`}
                 >
                   <motion.div
@@ -104,11 +137,11 @@ export default function Journey() {
                   >
                     <div
                       style={{ backgroundColor: milestone.color }}
-                      className={`inline-block px-4 py-1.5 rounded-full  text-white font-bold text-base mb-3`}
+                      className={`inline-block px-4 py-1.5 rounded-full text-white font-bold text-base mb-3`}
                     >
                       {milestone.year}
                     </div>
-                    <h3 className="text-2xl font-extrabold text-gray-900 mb-2">
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 mb-2">
                       {milestone.title}
                     </h3>
                     <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
@@ -117,27 +150,7 @@ export default function Journey() {
                   </motion.div>
                 </div>
 
-                {/* Icon Circle */}
-                <div className="relative z-20 hidden lg:flex w-[10%] justify-center">
-                  <motion.div
-                    style={{ backgroundColor: milestone.color }}
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    className={`w-14 h-14 rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white transition-transform`}
-                  >
-                    {getLucideIcon(milestone.icon)}
-                  </motion.div>
-                </div>
-
-                {/* Mobile Icon Marker (Left aligned) */}
-                <div className="relative z-20 flex lg:hidden -translate-x-1/2 absolute left-0 top-0">
-                  <motion.div
-                    className={`w-8 h-8 rounded-full ${milestone.color} flex items-center justify-center shadow-lg ring-2 ring-white`}
-                  >
-                    <milestone.icon className="w-4 h-4 text-white" />
-                  </motion.div>
-                </div>
-
-                {/* Spacer for alignment */}
+                {/* Spacer for alignment (Desktop only) */}
                 <div className="flex-1 hidden lg:block" />
               </div>
             </motion.div>
@@ -150,7 +163,7 @@ export default function Journey() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center mt-16 sm:mt-20"
+          className="text-center mt-12 sm:mt-20"
         >
           <div className="inline-block bg-gradient-to-r from-blue-600 to-purple-500 text-white px-8 py-4 rounded-full font-extrabold text-lg shadow-xl tracking-wider">
             20+ Years of Educational Excellence

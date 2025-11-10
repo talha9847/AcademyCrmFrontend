@@ -8,6 +8,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import axios from "axios";
+import { HashLink } from "react-router-hash-link";
 
 export default function HeroSection() {
   const [data, setData] = useState({});
@@ -69,13 +70,15 @@ export default function HeroSection() {
 
           {/* CTA Buttons - Stacked on mobile, side-by-side on sm screens and up */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 sm:mb-16 animate-slide-up-delay-2">
-            <button className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-2xl hover:scale-[1.02]">
-              Get Started Free
+            <HashLink
+              key={123}
+              smooth
+              to={`/#contact`}
+              className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-2xl hover:scale-[1.02]"
+            >
+              Get Started
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md border-2 border-white/30 hover:bg-white/20 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold transition-all hover:shadow-xl">
-              Watch Demo
-            </button>
+            </HashLink>
           </div>
 
           {/* Stats - Changed to a 2-column grid on mobile to prevent overcrowding */}
