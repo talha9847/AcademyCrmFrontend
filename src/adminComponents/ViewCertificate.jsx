@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import AdminNavbar from "./AdminNavbar";
 import axios from "axios";
 import QRCode from "qrcode";
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
 // Helper component for clearer image presentation
 const ImageCell = ({ src, alt }) => (
@@ -45,8 +46,6 @@ const StatusPill = ({ isRevoked }) => (
 );
 
 const ViewCertificate = () => {
-  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
-
   const [Certificates, setCertificates] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
