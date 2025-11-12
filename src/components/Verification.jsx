@@ -11,6 +11,8 @@ import {
 import { BookOpen, Calendar, CheckCircle, Key, Mail, User } from "lucide-react";
 
 const Verification = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const [searchParams] = useSearchParams();
   const [certNumber, setCertNumber] = useState(searchParams.get("code") || "");
   const [data, setData] = useState(null);
@@ -30,8 +32,11 @@ const Verification = () => {
 
     try {
       const result = await axios.get(
-        `https://academycrmbackend.onrender.com/api/student/verify?code=${number}`
+        `http://localhost:5000/api/student/verify?code=${number}`
       );
+      // const result = await axios.get(
+      //   `https://academycrmbackend.onrender.com/api/student/verify?code=${number}`
+      // );
 
       if (result.status === 200 && result.data?.data?.length > 0) {
         setData(result.data.data[0]);
@@ -45,9 +50,38 @@ const Verification = () => {
     }
   };
 
+  const [photoLoading, setPhotoLoading] = useState(true);
+  const [photoUrl, setPhotoUrl] = useState("");
+
   useEffect(() => {
     if (certNumber) verifyCertificate(certNumber);
   }, []);
+
+  const getProfilePhotos = async (fileName) => {
+    setPhotoLoading(true);
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/api/user/getCertiPhoto/${fileName}`,
+        {
+          responseType: "blob",
+          withCredentials: true,
+        }
+      );
+      const url = URL.createObjectURL(res.data);
+      setPhotoUrl(url);
+      setPhotoLoading(false);
+    } catch (err) {
+      console.error("Failed to load photo:", err);
+      setPhotoLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (data?.profile_photo) {
+      console.log(data.profile_photo);
+      getProfilePhotos(data.profile_photo);
+    }
+  }, [data]);
 
   return (
     <div className="max-w-2xl mx-auto mt-20 p-6 border rounded-2xl shadow-lg bg-white relative overflow-hidden">
@@ -129,7 +163,7 @@ const Verification = () => {
             <div className="flex-shrink-0 w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-300">
               <img
                 className="w-full h-full object-cover"
-                src={`https://academycrmbackend.onrender.com/uploads/${data.profile_photo}`}
+                src={photoUrl}
                 alt="Profile"
                 onError={(e) => {
                   e.target.onerror = null;
