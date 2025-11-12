@@ -75,7 +75,13 @@ export default function Blog() {
                     </span>
                     <div className="flex items-center gap-1.5 font-medium">
                       <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-gray-500 text-sm">{post.date}</span>
+                      <span className="text-gray-500 text-sm">
+                        {new Date(post.date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
                     </div>
                   </div>
 
@@ -109,7 +115,7 @@ export default function Blog() {
         <div className="text-center mt-10 md:mt-12">
           <Link
             to="/blogs"
-            className="inline-flex items-center gap-3 bg-indigo-600 text-white px-6 py-3 rounded-full font-bold text-base transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
           >
             Explore All Insights
             <ArrowRight className="w-4 h-4" />

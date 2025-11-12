@@ -22,10 +22,9 @@ const Gallery = () => {
 
   const getGallery = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL}/api/front/getGallery`,
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/getGallery`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setData(result.data.data);
       }
@@ -94,7 +93,7 @@ const Gallery = () => {
           onClick={() => {
             navigate("/gallery");
           }}
-          className="flex items-center space-x-2 px-8 py-3 text-lg font-semibold text-white rounded-full bg-gradient-to-r from-blue-600 to-purple-600 shadow-xl shadow-purple-500/50 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 active:scale-95 ring-2 ring-transparent hover:ring-white/50"
+          className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
         >
           <span>View All Images</span>
           <ArrowRight className="w-5 h-5 ml-1" />

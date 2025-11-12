@@ -16,6 +16,9 @@ const Certificate = () => {
   const [templateId, setTemplateId] = useState(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
 
+  const [photoLoading, setPhotoLoading] = useState(true);
+  const [photoUrl, setPhotoUrl] = useState({});
+
   const navigate = useNavigate();
 
   const getClasses = async () => {
@@ -127,9 +130,34 @@ const Certificate = () => {
     getClasses();
     getSessions();
   }, []);
+
   useEffect(() => {
     getTemplates(classId);
   }, [classId]);
+
+  const fetchPhoto = async (id, fileName) => {
+    setPhotoLoading(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/api/user/getCerti/${fileName}`, {
+        responseType: "blob",
+        withCredentials: true,
+      });
+      const url = URL.createObjectURL(res.data);
+      setPhotoUrl((prev) => ({ ...prev, [id]: url }));
+      setPhotoLoading(false);
+    } catch (err) {
+      console.error("Failed to load photo:", err);
+      setPhotoLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (templates.length > 0) {
+      templates.map((val, ind) => {
+        fetchPhoto(val.id, val.name);
+      });
+    }
+  }, [templates]);
 
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
@@ -217,7 +245,8 @@ const Certificate = () => {
                       {/* Image Thumbnail */}
                       <img
                         className="w-20 h-20 object-cover border border-black flex-shrink-0"
-                        src={`${BASE_URL}/${val.name}`}
+                        // src={`${BASE_URL}/${val.name}`}
+                        src={photoUrl[val.id]}
                         alt="Template Thumbnail"
                       />
 

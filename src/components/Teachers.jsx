@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "../adminComponents/AdminNavbar";
 import axios from "axios";
-import { Eye, Plus, Search, X } from "lucide-react";
+import { Eye, Loader2, Plus, Search, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,13 +18,13 @@ const Teachers = () => {
     formState: { errors },
     reset,
   } = useForm();
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   async function getStudents() {
-    const result = await axios.get(
-      `${BASE_URL}/api/user/getAllTeachers`,
-      { withCredentials: true }
-    );
+    const result = await axios.get(`${BASE_URL}/api/user/getAllTeachers`, {
+      withCredentials: true,
+    });
     if (result.status == 200) {
       console.log(result.data.data);
       setTeachers(result.data.data);
@@ -47,27 +47,43 @@ const Teachers = () => {
   );
 
   const onSubmit = async (data) => {
+    setLoading(true);
+    console.log(data);
+    const formData = new FormData();
+    formData.append("address", data.address);
+    formData.append("birthdate", data.birthday);
+    formData.append("department", data.department);
+    formData.append("designation", data.designation);
+    formData.append("email", data.email);
+    formData.append("fullName", data.fullName);
+    formData.append("gender", data.gender);
+    formData.append("hireDate", data.hireDate);
+    formData.append("mobile", data.mobile);
+    formData.append("profilePhoto", data.profilePhoto[0]);
+
     if (!data.sectionId) data.sectionId = 1;
 
     try {
       const result = await axios.post(
         `${BASE_URL}/api/user/createTeacher`,
-        data,
+        formData,
         { withCredentials: true }
       );
 
-      if (result.status === 201 && result.data.success) {
+      if (result.status === 200 && result.data.success) {
         toast.success("🎓 Teacher added successfully!");
 
         await getStudents();
 
         reset();
+        setLoading(false);
         setShowModal(false);
       } else {
         toast.error(result.data.message || "Something went wrong!");
+        setLoading(false);
       }
     } catch (error) {
-      console.error("Error submitting student:", error);
+      setLoading(false);
       toast.error(
         error.response?.data?.message || "Server error. Please try again."
       );
@@ -194,25 +210,46 @@ const Teachers = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto border-2 border-black">
-            {/* Modal Header */}
-            <div className="sticky top-0 bg-black text-white px-6 py-4 flex justify-between items-center z-10">
-              <h2 className="text-2xl font-bold">Add New Teacher</h2>
+        <div className="fixed inset-0 bg-opacity-60 flex justify-center items-center z-50 p-4">
+          {/* Modal Container */}
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto border-4 border-black">
+            {/* Modal Header - STICKY TOP */}
+            <div className="sticky top-0 bg-black text-white px-6 py-4 flex justify-between items-center shadow-lg z-10">
+              <h2 className="text-2xl font-bold tracking-tight">
+                Add New Teacher
+              </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="hover:bg-gray-800 p-2 rounded-full transition-colors"
+                className="p-2 rounded-full transition-colors hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
+                aria-label="Close modal"
               >
-                <X className="w-6 h-6" />
+                {/* Assuming X is an icon component */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} action="" className="p-6">
-              <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4 pb-2 border-b-2 border-black">
-                  Student Information
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Form Content */}
+            <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-8">
+              <fieldset className="space-y-6">
+                <legend className="text-xl font-bold mb-6 pb-2 border-b-2 border-gray-300">
+                  Teacher Details
+                </legend>
+
+                {/* Row 1: Full Name, Email, Birthday, Hire Date */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {/* Full Name */}
                   <div>
                     <label
                       htmlFor="fullName"
@@ -227,15 +264,17 @@ const Teachers = () => {
                       id="fullName"
                       name="fullName"
                       type="text"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors"
                     />
-                    <p className="text-red-500 text-xs">
+                    <p className="text-red-600 text-xs mt-1">
                       {errors.fullName?.message}
                     </p>
                   </div>
+
+                  {/* Email */}
                   <div>
                     <label
-                      htmlFor="fullName"
+                      htmlFor="email"
                       className="block mb-2 font-semibold text-gray-900 text-sm"
                     >
                       Email *
@@ -251,13 +290,36 @@ const Teachers = () => {
                       id="email"
                       name="email"
                       type="email"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors"
                     />
-                    <p className="text-red-500 text-xs">
+                    <p className="text-red-600 text-xs mt-1">
                       {errors.email?.message}
                     </p>
                   </div>
 
+                  {/* Birthday - NEW FIELD */}
+                  <div>
+                    <label
+                      htmlFor="birthday"
+                      className="block mb-2 font-semibold text-gray-900 text-sm"
+                    >
+                      Birthday *
+                    </label>
+                    <input
+                      {...register("birthday", {
+                        required: "Birthday is required",
+                      })}
+                      id="birthday"
+                      name="birthday"
+                      type="date"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors"
+                    />
+                    <p className="text-red-600 text-xs mt-1">
+                      {errors.birthday?.message}
+                    </p>
+                  </div>
+
+                  {/* Hire Date */}
                   <div>
                     <label
                       htmlFor="hireDate"
@@ -272,15 +334,17 @@ const Teachers = () => {
                       id="hireDate"
                       name="hireDate"
                       type="date"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors"
                     />
-                    <p className="text-red-500 text-xs">
+                    <p className="text-red-600 text-xs mt-1">
                       {errors.hireDate?.message}
                     </p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Row 2: Department, Gender, Designation, Mobile */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {/* Department */}
                   <div>
                     <label
                       htmlFor="department"
@@ -295,12 +359,14 @@ const Teachers = () => {
                       id="department"
                       name="department"
                       type="text"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors"
                     />
-                    <p className="text-red-500 text-xs">
+                    <p className="text-red-600 text-xs mt-1">
                       {errors.department?.message}
                     </p>
                   </div>
+
+                  {/* Gender */}
                   <div>
                     <label
                       htmlFor="gender"
@@ -314,33 +380,140 @@ const Teachers = () => {
                       })}
                       id="gender"
                       name="gender"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors"
                     >
+                      <option value="">Select Gender</option>
                       <option value="male">Male</option>
                       <option value="female">Female</option>
+                      <option value="other">Other</option>
                     </select>
-                    <p className="text-red-500 text-xs">
+                    <p className="text-red-600 text-xs mt-1">
                       {errors.gender?.message}
+                    </p>
+                  </div>
+
+                  {/* Designation */}
+                  <div>
+                    <label
+                      htmlFor="designation"
+                      className="block mb-2 font-semibold text-gray-900 text-sm"
+                    >
+                      Designation *
+                    </label>
+                    <input
+                      {...register("designation", {
+                        required: "Designation is required",
+                      })}
+                      id="designation"
+                      name="designation"
+                      type="text"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors"
+                    />
+                    <p className="text-red-600 text-xs mt-1">
+                      {errors.designation?.message}
+                    </p>
+                  </div>
+
+                  {/* Mobile */}
+                  <div>
+                    <label
+                      htmlFor="mobile"
+                      className="block mb-2 font-semibold text-gray-900 text-sm"
+                    >
+                      Mobile *
+                    </label>
+                    <input
+                      {...register("mobile", {
+                        required: "Mobile number is required",
+                        pattern: {
+                          value: /^\d{10,}$/,
+                          message: "Please enter a valid mobile number",
+                        },
+                      })}
+                      id="mobile"
+                      name="mobile"
+                      type="text"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors"
+                    />
+                    <p className="text-red-600 text-xs mt-1">
+                      {errors.mobile?.message}
                     </p>
                   </div>
                 </div>
 
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t-2 border-gray-200">
-                  <button
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                    className="px-6 py-3 border-2 border-black text-black rounded-lg hover:bg-gray-100 transition-colors font-semibold"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold"
-                  >
-                    Submit
-                  </button>
+                {/* Row 3: Address & Digital Signature */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Address */}
+                  <div>
+                    <label
+                      htmlFor="address"
+                      className="block mb-2 font-semibold text-gray-900 text-sm"
+                    >
+                      Address *
+                    </label>
+                    {/* Using textarea for address */}
+                    <textarea
+                      {...register("address", {
+                        required: "Address is required",
+                      })}
+                      id="address"
+                      name="address"
+                      rows="2"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-colors resize-none"
+                    ></textarea>
+                    <p className="text-red-600 text-xs mt-1">
+                      {errors.address?.message}
+                    </p>
+                  </div>
+
+                  {/* Digital Signature - Styled as a simple, modern input */}
+                  <div>
+                    <label
+                      htmlFor="profilePhoto"
+                      className="block mb-2 font-semibold text-gray-900 text-sm"
+                    >
+                      Profile Photo *
+                    </label>
+                    <input
+                      {...register("profilePhoto", {
+                        required: "Profile Photo  is required",
+                      })}
+                      id="profilePhoto"
+                      name="profilePhoto"
+                      type="file"
+                      accept="image/*"
+                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-black hover:file:bg-gray-200 transition-colors cursor-pointer focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                    />
+                    <p className="text-red-600 text-xs mt-1">
+                      {errors.profilePhoto?.message}
+                    </p>
+                  </div>
                 </div>
+              </fieldset>
+
+              {/* Buttons - Separated by a thin divider */}
+              <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6 border-t-2 border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="px-6 py-3 border-2 border-black text-black rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Adding...</span>
+                    </>
+                  ) : (
+                    <span>Submit</span>
+                  )}
+                </button>
               </div>
             </form>
           </div>

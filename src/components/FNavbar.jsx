@@ -90,7 +90,7 @@ export default function ProfessionalNavbar() {
               key={123}
               smooth
               to={`/#contact`}
-              className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold text-[15px] transition-all shadow-md hover:shadow-lg"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
             >
               Enroll Now
               <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -134,7 +134,7 @@ export default function ProfessionalNavbar() {
                   smooth
                   to={`/#contact`}
                   onClick={() => setIsOpen(false)}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold shadow-md"
+                  className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
                 >
                   Enroll Now
                   <ChevronRight className="w-4 h-4" />

@@ -15,10 +15,9 @@ export default function HeroSection() {
   const [data, setData] = useState({});
   const getData = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL}/api/front/getHeroData`,
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/getHeroData`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setData(result.data.data);
       }
@@ -75,7 +74,7 @@ export default function HeroSection() {
               key={123}
               smooth
               to={`/#contact`}
-              className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-2xl hover:scale-[1.02]"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
             >
               Get Started
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

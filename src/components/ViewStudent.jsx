@@ -63,6 +63,11 @@ const ViewStudent = () => {
     contact: "",
   });
 
+  const [photoLoading, setPhotoLoading] = useState(true);
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [signLoading, setSignLoading] = useState(true);
+  const [signUrl, setSignUrl] = useState("");
+
   const edit1Click = async (rollNo, gender) => {
     setForm1Data({
       roll_no: rollNo,
@@ -259,15 +264,12 @@ const ViewStudent = () => {
   async function studentDetails(studentId) {
     try {
       setLoading(true);
-      const result = await axios.get(
-        `${BASE_URL}/api/user/getStudentDetail`,
-        {
-          withCredentials: true,
-          params: {
-            id: studentId,
-          },
-        }
-      );
+      const result = await axios.get(`${BASE_URL}/api/user/getStudentDetail`, {
+        withCredentials: true,
+        params: {
+          id: studentId,
+        },
+      });
 
       if (result.status == 200) {
         setClasses(result.data.data.enrolledClasses);
@@ -282,10 +284,9 @@ const ViewStudent = () => {
 
   const getClasses = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL}/api/extras/getClasses`,
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/extras/getClasses`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setClasses1(result.data.data);
       }
@@ -294,14 +295,44 @@ const ViewStudent = () => {
 
   const getSessions = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL}/api/extras/getSessions`,
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/extras/getSessions`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setSessions(result.data.data);
       }
     } catch (error) {}
+  };
+
+  const studentPhoto = async (fileName) => {
+    setPhotoLoading(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/api/user/getPhoto/${fileName}`, {
+        responseType: "blob",
+        withCredentials: true,
+      });
+      const url = URL.createObjectURL(res.data);
+      setPhotoUrl(url);
+      setPhotoLoading(false);
+    } catch (err) {
+      console.error("Failed to load photo:", err);
+      setPhotoLoading(false);
+    }
+  };
+  const signaturePhoto = async (fileName) => {
+    setSignLoading(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/api/user/getPhoto/${fileName}`, {
+        responseType: "blob",
+        withCredentials: true,
+      });
+      const url = URL.createObjectURL(res.data);
+      setSignUrl(url);
+      setSignLoading(false);
+    } catch (err) {
+      console.error("Failed to load photo:", err);
+      setSignLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -309,6 +340,15 @@ const ViewStudent = () => {
     getClasses();
     getSessions();
   }, []);
+
+  useEffect(() => {
+    if (student?.profile_photo) {
+      studentPhoto(student.profile_photo);
+    }
+    if (student?.signature_photo) {
+      signaturePhoto(student.signature_photo);
+    }
+  }, [student]);
 
   const handlePrint = () => {
     if (!student) return;
@@ -458,14 +498,14 @@ const ViewStudent = () => {
             <div class="photo-box">
               ${
                 profilePhotoUrl
-                  ? '<img src="' + profilePhotoUrl + '" alt="Student Photo" />'
+                  ? '<img src="' + photoUrl + '" alt="Student Photo" />'
                   : "<div>PHOTO</div>"
               }
             </div>
             <div class="signature-box">
               ${
                 signatureUrl
-                  ? '<img src="' + signatureUrl + '" alt="Signature" />'
+                  ? '<img src="' + signUrl + '" alt="Signature" />'
                   : '<div style="font-size: 12px;">SIGNATURE</div>'
               }
             </div>
@@ -746,7 +786,7 @@ const ViewStudent = () => {
                   <div class="id-photo">
                     ${
                       profilePhotoUrl
-                        ? '<img src="' + profilePhotoUrl + '" alt="Student" />'
+                        ? '<img src="' + photoUrl + '" alt="Student" />'
                         : '<div style="font-size: 10px; color: #999;">PHOTO</div>'
                     }
                   </div>
@@ -914,7 +954,8 @@ const ViewStudent = () => {
                 <div className="relative w-32 h-32 mx-auto rounded-lg overflow-hidden mb-4 border-2 border-gray-200 group">
                   {student.profile_photo ? (
                     <img
-                      src={`${BASE_URL}/uploads/${student.profile_photo}`}
+                      // src={`${BASE_URL}/uploads/${student.profile_photo}`}
+                      src={photoUrl}
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
@@ -1007,7 +1048,8 @@ const ViewStudent = () => {
                   <div className="relative w-full h-24 border-2 border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center group">
                     {student.signature_photo ? (
                       <img
-                        src={`${BASE_URL}/uploads/${student.signature_photo}`}
+                        // src={`${BASE_URL}/uploads/${student.signature_photo}`}
+                        src={signUrl}
                         alt="Signature"
                         className="max-w-full max-h-full object-contain p-2"
                       />
@@ -1390,19 +1432,22 @@ const ViewStudent = () => {
                   <label className="text-sm font-medium text-gray-600">
                     Status
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="status"
                     value={saveData2.status}
-                    onChange={(e) => {
+                    onChange={(e) =>
                       setSaveData2({
                         ...saveData2,
                         status: e.target.value,
-                      });
-                    }}
+                      })
+                    }
                     className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-                  />
+                  >
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="DONE">DONE</option>
+                  </select>
                 </div>
+
                 <div>
                   <label className="text-sm font-medium text-gray-600">
                     Address

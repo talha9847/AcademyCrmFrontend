@@ -31,10 +31,9 @@ const FullGallery = () => {
 
   const getAllGallery = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL}/api/front/getAllGallery`,
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/getAllGallery`, {
+        withCredentials: true,
+      });
       setData(result.data.data);
     } catch (error) {
       console.log(error);
@@ -61,7 +60,7 @@ const FullGallery = () => {
           </h2>
           <button
             onClick={handleBack}
-            className="flex items-center space-x-2 px-5 py-2 text-md font-semibold text-gray-200 border border-gray-700 rounded-full hover:bg-gray-800 transition-all duration-300"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Back to Home</span>

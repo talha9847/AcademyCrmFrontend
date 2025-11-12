@@ -11,10 +11,9 @@ export default function FeaturedCourses() {
 
   const getCourses = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL}/api/front/getCourses`,
-        { withCredentials: true }
-      );
+      const result = await axios.get(`${BASE_URL}/api/front/getCourses`, {
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setData(result.data.data);
       }
@@ -121,7 +120,7 @@ export default function FeaturedCourses() {
             onClick={() => {
               navigate("/allcourses");
             }}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full font-bold text-lg transition-all shadow-xl shadow-blue-300/50 hover:shadow-2xl hover:scale-[1.02] transform duration-300"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
           >
             View All Courses
             <ArrowRight className="w-5 h-5" />

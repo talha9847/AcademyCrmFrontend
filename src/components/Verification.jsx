@@ -178,7 +178,14 @@ const Verification = () => {
                 <span className="font-bold text-gray-700 block text-sm uppercase tracking-wider">
                   Issue Date
                 </span>
-                <span className="text-lg font-medium">{data.issue_date}</span>
+                <span className="text-lg font-medium">
+                  {" "}
+                  {new Date(data.issue_date).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
               </div>
             </div>
 

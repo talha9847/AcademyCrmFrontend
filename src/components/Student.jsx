@@ -101,10 +101,9 @@ const Student = () => {
 
   async function getStudents() {
     console.log("I am called");
-    const result = await axios.get(
-      `${BASE_URL}/api/user/getAllStudents`,
-      { withCredentials: true }
-    );
+    const result = await axios.get(`${BASE_URL}/api/user/getAllStudents`, {
+      withCredentials: true,
+    });
     if (result.status == 200) {
       setStudents(result.data.result);
     }
@@ -113,10 +112,9 @@ const Student = () => {
     navigate("/student/detail", { state: { studentId: id } });
   };
   async function getClasses() {
-    const result = await axios.get(
-      `${BASE_URL}/api/extras/getClasses`,
-      { withCredentials: true }
-    );
+    const result = await axios.get(`${BASE_URL}/api/extras/getClasses`, {
+      withCredentials: true,
+    });
     if (result.status == 200) {
       setClasses(result.data.data);
     }
@@ -124,13 +122,10 @@ const Student = () => {
 
   async function getSectionById(classId) {
     if (classId > 0) {
-      const result = await axios.get(
-        `${BASE_URL}/api/extras/getSectionById`,
-        {
-          params: { id: classId },
-          withCredentials: true,
-        }
-      );
+      const result = await axios.get(`${BASE_URL}/api/extras/getSectionById`, {
+        params: { id: classId },
+        withCredentials: true,
+      });
       if (result.status == 200) {
         setSections(result.data.data);
       }
@@ -138,10 +133,9 @@ const Student = () => {
   }
 
   async function getSession() {
-    const result = await axios.get(
-      `${BASE_URL}/api/extras/getSessions`,
-      { withCredentials: true }
-    );
+    const result = await axios.get(`${BASE_URL}/api/extras/getSessions`, {
+      withCredentials: true,
+    });
     if (result.status == 200) {
       setSessions(result.data.data);
     }
@@ -230,6 +224,9 @@ const Student = () => {
                     Gender
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -258,6 +255,18 @@ const Student = () => {
                           {row.gender === null ? "Not Found" : row.gender}
                         </span>
                       </td>
+                      <td className="px-6 py-4 text-sm">
+                        {row.status === "ACTIVE" ? (
+                          <span className="px-2 py-1 rounded-full text-white bg-green-500 font-medium">
+                            ACTIVE
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 rounded-full text-white bg-gray-500 font-medium">
+                            DONE
+                          </span>
+                        )}
+                      </td>
+
                       <td className="px-6 py-4 text-sm">
                         <button
                           onClick={() => handleViewButton(row.id)}
@@ -356,7 +365,9 @@ const Student = () => {
                       Email *
                     </label>
                     <input
-                      {...register("mobile", { required: "Mobile is required" })}
+                      {...register("mobile", {
+                        required: "Mobile is required",
+                      })}
                       id="mobile"
                       name="mobile"
                       type="mobile"
