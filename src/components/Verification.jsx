@@ -31,12 +31,10 @@ const Verification = () => {
     setData(null);
 
     try {
+     
       const result = await axios.get(
-        `http://localhost:5000/api/student/verify?code=${number}`
+        `https://academycrmbackend.onrender.com/api/student/verify?code=${number}`
       );
-      // const result = await axios.get(
-      //   `https://academycrmbackend.onrender.com/api/student/verify?code=${number}`
-      // );
 
       if (result.status === 200 && result.data?.data?.length > 0) {
         setData(result.data.data[0]);
