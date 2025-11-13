@@ -14,11 +14,14 @@ import {
   X,
   Wallet,
   icons,
+  User,
 } from "lucide-react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
 
 const TNavbar = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(3);
   const [slugs, setSlugs] = useState([]);
@@ -27,7 +30,7 @@ const TNavbar = () => {
   const fixedNavItems = [
     { name: "Dashboard", icon: Home, href: "/teacher/dashboard" },
     { name: "Classes", icon: Home, href: "/admin/classes" },
-    { name: "Settings", icon: Settings, href: "/settings" },
+    { name: "Profile", icon: User, href: "/teacher/profile" },
   ];
 
   const location = useLocation();
@@ -44,7 +47,7 @@ const TNavbar = () => {
   };
 
   async function getSlugs() {
-    const result = await axios.get(`https://academycrmbackend.onrender.com/api/user/getSlugs`, {
+    const result = await axios.get(`${BASE_URL}/api/user/getSlugs`, {
       withCredentials: true,
     });
 

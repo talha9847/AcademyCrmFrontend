@@ -27,9 +27,19 @@ import {
   X,
   Plus,
   Camera,
+  Lock,
 } from "lucide-react";
+import { useForm } from "react-hook-form";
 
 const ViewStudent = () => {
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const location = useLocation();
   const { studentId } = location.state || {};
@@ -43,6 +53,7 @@ const ViewStudent = () => {
     roll_no: "",
     gender: "",
   });
+  const [editLoading, setEditLoading] = useState(false);
   const navigate = useNavigate();
   const [edit3, setEdit3] = useState(false);
   const [add, setAdd] = useState(false);
@@ -64,15 +75,90 @@ const ViewStudent = () => {
   });
 
   const [photoLoading, setPhotoLoading] = useState(true);
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoUrl, setPhotoUrl] = useState(null);
   const [signLoading, setSignLoading] = useState(true);
-  const [signUrl, setSignUrl] = useState("");
+  const [signUrl, setSignUrl] = useState(null);
+  const [passwordModal, setPasswordModal] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   const edit1Click = async (rollNo, gender) => {
     setForm1Data({
       roll_no: rollNo,
       gender: gender,
     });
+  };
+
+  const newPassword = watch("newPassword");
+
+  const changePassword = async (data) => {
+    console.log(data);
+  };
+
+  const deleteStudent = async () => {
+    // 1. Get Input from the user (e.g., student ID or confirmation text)
+    const { value: inputIdentifier } = await Swal.fire({
+      title: "Enter Student Roll Number to Confirm Deletion",
+      input: "text",
+      inputLabel: "Roll Number",
+      inputPlaceholder: "abc123@gmail.com",
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) {
+          return "You need to enter the Roll Number to proceed!";
+        }
+      },
+    });
+
+    // Check if the user provided input and didn't cancel the first prompt
+    if (inputIdentifier) {
+      // 2. Confirmation Dialog using the received input
+      const result = await Swal.fire({
+        title: "Are you absolutely sure?",
+        text: `You are about to delete the student with Email: ${inputIdentifier}. This action is irreversible.`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33", // Changed color to red for deletion
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, permanently delete!",
+      });
+
+      // 3. Process Deletion if confirmed
+      if (result.isConfirmed) {
+        // --- Actual Deletion Logic (API call) would go here ---
+        // try {
+        //   await axios.delete(`/api/student/${inputIdentifier}`);
+        // --------------------------------------------------------
+
+        // 4. Success Dialog
+        Swal.fire({
+          title: "Deleted!",
+          text: `Student ${inputIdentifier} has been permanently removed.`,
+          icon: "success",
+        });
+
+        // } catch (error) {
+        //   Swal.fire(
+        //     'Error!',
+        //     'There was an error deleting the student on the server.',
+        //     'error'
+        //   );
+        // }
+      } else {
+        // Confirmation cancelled
+        Swal.fire(
+          "Action Cancelled",
+          "The deletion process was stopped by the user.",
+          "info"
+        );
+      }
+    } else {
+      // Input prompt cancelled
+      Swal.fire(
+        "Input Required",
+        "Deletion requires entering the student identifier.",
+        "info"
+      );
+    }
   };
 
   const handleStatusClick = async () => {
@@ -133,6 +219,7 @@ const ViewStudent = () => {
   };
 
   const feeSave = async () => {
+    setEditLoading(true);
     if (feeValue == "" || feeValue == null) {
       toast.error("Fee is required");
     }
@@ -145,10 +232,13 @@ const ViewStudent = () => {
       );
       if (result.status == 200) {
         setFeeEdit(false);
-        studentDetails(studentId);
         toast.success("fee updated successfully");
+        studentDetails(studentId);
+        setEditLoading(false);
       }
-    } catch (error) {}
+    } catch (error) {
+      setEditLoading(false);
+    }
   };
 
   const handleProfilePhotoChange = async (e, email) => {
@@ -167,8 +257,8 @@ const ViewStudent = () => {
         { withCredentials: true }
       );
       if (result.status == 200) {
-        studentDetails(studentId);
         toast.success("Profile picture changed kindly refresh");
+        studentDetails(studentId);
       }
     } catch (error) {
       console.log(error);
@@ -190,8 +280,8 @@ const ViewStudent = () => {
           { withCredentials: true }
         );
         if (result.status == 200) {
-          studentDetails(studentId);
           toast.success("Added successfully");
+          studentDetails(studentId);
         }
       } else {
         const result = await axios.post(
@@ -200,8 +290,8 @@ const ViewStudent = () => {
           { withCredentials: true }
         );
         if (result.status == 200) {
-          studentDetails(studentId);
           toast.success("Updated successfully");
+          studentDetails(studentId);
         }
       }
     } catch (error) {}
@@ -224,6 +314,7 @@ const ViewStudent = () => {
   };
 
   const handleSave1 = async (form1Data) => {
+    setEditLoading(true);
     try {
       if (edit1) {
         const result = await axios.post(
@@ -232,10 +323,11 @@ const ViewStudent = () => {
           { withCredentials: true }
         );
         if (result.status == 200) {
+          toast.success("Details updated successfully");
           studentDetails(studentId);
           setIsModalOpen(false);
           setEdit1(false);
-          toast.success("Details updated successfully");
+          setEditLoading(false);
         }
       }
       if (edit3) {
@@ -253,12 +345,14 @@ const ViewStudent = () => {
         if (result.status == 200) {
           setIsModalOpen(false);
           setEdit1(false);
-          studentDetails(studentId);
           toast.success("Details updated successfully");
+          studentDetails(studentId);
+          setEditLoading(false);
         }
       }
     } catch (error) {
       console.log(error);
+      setEditLoading(false);
     }
   };
   async function studentDetails(studentId) {
@@ -1079,6 +1173,35 @@ const ViewStudent = () => {
                   </div>
                 </div>
 
+                <div className="mt-4 p-4 border border-blue-200 rounded-lg bg-blue-50">
+                  {/* Header: Title and Icon (No change needed, it's already stacked) */}
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-semibold text-blue-700 uppercase flex items-center">
+                      {/* Assuming 'Lock' is a React component for the icon */}
+                      <Lock className="w-4 h-4 mr-2" />
+                      Manage Password
+                    </h3>
+                  </div>
+
+                  {/* Content: Description and Button - Improved for Responsiveness */}
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-2">
+                    {/* Description Text: Takes full width on small screens, stays above the button */}
+                    <p className="text-xs text-gray-600 mb-2 sm:mb-0">
+                      Reset or update the student's login credentials.
+                    </p>
+
+                    {/* Button: Stacks below the text on small screens, then moves to the side on 'sm' and up */}
+                    <button
+                      onClick={() => {
+                        setPasswordModal(true);
+                      }}
+                      className="w-full sm:w-auto px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-all shadow-sm"
+                    >
+                      Update Password
+                    </button>
+                  </div>
+                </div>
+
                 {/* Fee Details Section */}
                 <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
                   <div className="flex justify-between items-center mb-2">
@@ -1120,7 +1243,12 @@ const ViewStudent = () => {
                       </p>
                     </div>
 
-                    <button className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none">
+                    <button
+                      onClick={() => {
+                        deleteStudent();
+                      }}
+                      className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none"
+                    >
                       Delete Student
                     </button>
                   </div>
@@ -1499,7 +1627,7 @@ const ViewStudent = () => {
                 }}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
-                Save Changes
+                {editLoading ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>
@@ -1549,7 +1677,7 @@ const ViewStudent = () => {
                 }}
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
               >
-                Save
+                {editLoading ? "Saving...." : "Save"}{" "}
               </button>
             </div>
           </div>
@@ -1627,6 +1755,112 @@ const ViewStudent = () => {
                 Save Changes
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {passwordModal && (
+        <div className="fixed inset-0 bg-opacity-70 z-50 flex justify-center items-center">
+          {/* Modal Content - Changed to Grayscale Theme */}
+          <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md border border-gray-300 transform transition-all duration-300 ease-out scale-100">
+            <div className="flex justify-between items-center mb-6 border-b pb-3">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                <Lock className="w-5 h-5 mr-2 text-gray-700" /> Change Password
+              </h2>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  reset();
+                }}
+                className="text-gray-500 hover:text-gray-800 transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit(changePassword)}>
+              <div className="mb-4">
+                <label
+                  htmlFor="new-password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  New Password
+                </label>
+                <input
+                  {...register("newPassword", {
+                    required: "This field is required",
+                    pattern: {
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/,
+                      message:
+                        "Password must be at least 6 characters, with one uppercase, one lowercase, one number, and can include special characters",
+                    },
+                  })}
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+                  placeholder="Enter new password"
+                />
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.newPassword?.message}
+                </p>
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Confirm New Password
+                </label>
+                <input
+                  {...register("confirmPassword", {
+                    required: "This field is required",
+                    validate: (value) =>
+                      value === newPassword || "Passwords do not match",
+                  })}
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+                  placeholder="Confirm new password"
+                />
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.confirmPassword?.message}
+                </p>
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    reset();
+                  }}
+                  className="px-4 py-2 text-sm font-medium border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={updating}
+                  className={`px-4 py-2 text-sm font-medium text-white rounded-md transition shadow-md flex items-center justify-center gap-2
+                    ${
+                      updating
+                        ? "bg-gray-600 cursor-not-allowed"
+                        : "bg-gray-800 hover:bg-gray-700"
+                    }`}
+                >
+                  {updating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

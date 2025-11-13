@@ -45,6 +45,7 @@ import MilestoneManage from "./adminComponents/MilestoneManage";
 import FullGallery from "./components/FullGalary";
 import { AllBlogs } from "./components/AllBlog";
 import ManageCourseDetail from "./adminComponents/ManageCourseDetail";
+import TProfile from "./TeacherComponents/TProfile";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -208,6 +209,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="teacher">
                   <TDashboard />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/teacher/profile"
+              element={
+                <RoleProtectedRoute role="teacher">
+                  <TProfile />
                 </RoleProtectedRoute>
               }
             />

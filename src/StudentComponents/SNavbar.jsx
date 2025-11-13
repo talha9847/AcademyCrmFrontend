@@ -23,6 +23,8 @@ import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
 
 const SNavbar = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(3);
   const [slugs, setSlugs] = useState([]);
