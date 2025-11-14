@@ -2,10 +2,22 @@ import axios from "axios";
 import React from "react";
 
 const TestingResult = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const endPoint = [
-    "041", "042", "043", "044", "045",
-    "046", "047", "048", "049", "0410",
-    "0411", "0412", "0413",
+    "041",
+    "042",
+    "043",
+    "044",
+    "045",
+    "046",
+    "047",
+    "048",
+    "049",
+    "0410",
+    "0411",
+    "0412",
+    "0413",
   ];
 
   const data = {
@@ -174,7 +186,7 @@ const TestingResult = () => {
             onClick={async () => {
               try {
                 const result = await axios.get(
-                  `http://localhost:5000/api/auth/fetchData/${val}`
+                  `${BASE_URL}/api/auth/fetchData/${val}`
                 );
 
                 if (result.data.contests) {
