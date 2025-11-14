@@ -31,7 +31,6 @@ const Verification = () => {
     setData(null);
 
     try {
-     
       const result = await axios.get(
         `https://academycrmbackend.onrender.com/api/student/verify?code=${number}`
       );

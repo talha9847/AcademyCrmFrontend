@@ -4,6 +4,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  XCircle,
+} from "lucide-react";
 
 const getStatusClasses = (status) => {
   switch (status) {
@@ -87,7 +94,7 @@ const getMonthName = (monthIndex) =>
   ][monthIndex];
 
 const SAttendance = () => {
-  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [attendanceData, setAttendanceData] = useState([]);
   const [userInfo, setUser] = useState({});
   const [id, setId] = useState(null);
@@ -96,7 +103,6 @@ const SAttendance = () => {
   const navigate = useNavigate();
 
   const checkId = async (id) => {
-    console.log(id);
     if (id == null || id == "") {
       setClassError("Please select class");
     } else {
@@ -116,7 +122,6 @@ const SAttendance = () => {
       if (result.status === 200) {
         setAttendanceData(result.data.data);
         setUser(result.data.user);
-        console.log(result.data.data);
       }
     } catch (error) {
       console.error(error);
@@ -214,7 +219,7 @@ const SAttendance = () => {
     currentMonthAttendance
   );
   const currentSummary = getAttendanceSummary(currentMonthAttendance);
-  console.log(currentSummary);
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -255,7 +260,7 @@ const SAttendance = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-between bg-white shadow-md p-4 rounded-lg border border-gray-200 gap-4">
           <div className="w-full sm:w-auto">
-            {enrolled.length > 1 && (
+            {enrolled?.length > 1 && (
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                 <select
                   onChange={(e) => {
@@ -283,7 +288,6 @@ const SAttendance = () => {
           <div className="w-full sm:w-auto">
             <button
               onClick={() => {
-                console.log("get clicked");
                 checkId(id);
                 getAttendanceDataByClass();
               }}
@@ -295,100 +299,94 @@ const SAttendance = () => {
         </div>
 
         {/* --- Calendar View --- */}
-        <div className="bg-white p-6 rounded-lg shadow-xl">
-          {/* Calendar Navigation (Month/Year Selector) */}
-          <div className="flex justify-between items-center mb-6">
+        <div className="bg-white border border-gray-100 p-4 sm:p-6 rounded-xl shadow-2xl">
+          {/* --- Calendar Navigation (Month/Year Selector) --- */}
+          <div className="flex justify-between items-center pb-4 mb-4 border-b border-gray-100">
             <button
               onClick={() => handleMonthChange(-1)}
-              className="flex items-center p-2 bg-indigo-500 text-white rounded-full hover:bg-indigo-600 transition duration-150 disabled:opacity-50"
-              // Optional: Disable button if no data exists for the previous month key
+              className="flex items-center p-2 text-indigo-700 bg-indigo-50 rounded-full hover:bg-indigo-100 transition duration-150 disabled:opacity-50"
+              aria-label="Previous Month"
             >
-              <svg
-                className="w-5 h-5 mr-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 19l-7-7 7-7"
-                ></path>
-              </svg>
-              Previous
+              <ChevronLeft className="w-5 h-5" />
+              <span className="hidden sm:inline ml-1 text-sm font-medium">
+                Previous
+              </span>
             </button>
-            <h3 className="text-2xl font-bold text-gray-800">
-              {getMonthName(currentMonthIndex)} {currentMonthYear}
+
+            <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">
+              {getMonthName(currentMonthIndex)}{" "}
+              <span className="text-indigo-600">{currentMonthYear}</span>
             </h3>
+
             <button
               onClick={() => handleMonthChange(1)}
-              className="flex items-center p-2 bg-indigo-500 text-white rounded-full hover:bg-indigo-600 transition duration-150 disabled:opacity-50"
-              // Optional: Disable button if no data exists for the next month key
+              className="flex items-center p-2 text-indigo-700 bg-indigo-50 rounded-full hover:bg-indigo-100 transition duration-150 disabled:opacity-50"
+              aria-label="Next Month"
             >
-              Next
-              <svg
-                className="w-5 h-5 ml-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                ></path>
-              </svg>
+              <span className="hidden sm:inline mr-1 text-sm font-medium">
+                Next
+              </span>
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Calendar Grid Header (Days of Week) */}
-          <div className="grid grid-cols-7 text-center font-semibold text-gray-600 border-b pb-2 mb-2">
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-              <div key={day} className="text-sm uppercase">
+          {/* --- Calendar Grid Header (Days of Week) --- */}
+          <div className="grid grid-cols-7 text-center font-bold text-gray-500 mb-2">
+            {daysOfWeek.map((day) => (
+              <div key={day} className="text-xs sm:text-sm uppercase py-2">
                 {day}
               </div>
             ))}
           </div>
 
-          {/* Calendar Grid Body (Dates) */}
-          <div className="grid grid-cols-7 gap-1">
+          {/* --- Calendar Grid Body (Dates) --- */}
+          <div className="grid grid-cols-7 gap-1 sm:gap-2">
             {currentCalendarDays.map((day, index) => (
               <div
                 key={index}
                 className={`
-                  p-2 h-20 rounded-lg text-center relative transition duration-150 border
-                  ${
-                    day.day
-                      ? "border-gray-200"
-                      : "bg-transparent border-transparent"
-                  } 
-                  ${
-                    day.status !== "Empty" && day.day
-                      ? getStatusClasses(day.status)
-                      : ""
-                  }
-                  ${
-                    day.status === "None" && day.day
-                      ? "bg-gray-100 hover:bg-gray-200"
-                      : ""
-                  }
-                `}
+                                p-1 sm:p-2 h-16 sm:h-24 rounded-lg text-center relative transition duration-200 cursor-default
+                                ${day.day ? "border" : "border-transparent"}
+                                ${getStatusClasses(day.status)}
+                            `}
                 // Tooltip shows Status and Remarks on hover
                 title={
                   day.day
-                    ? `Status: ${day.status}\nRemarks: ${day.remarks}`
+                    ? `Date: ${day.day}\nStatus: ${day.status}\nRemarks: ${
+                        day.remarks || "N/A"
+                      }`
                     : ""
                 }
               >
                 {day.day && (
                   <>
-                    <span className="font-bold text-lg">{day.day}</span>
-                    <p className="text-xs mt-1 truncate opacity-90 font-medium">
-                      {day.status !== "None" ? day.status : ""}
+                    <span
+                      className={`block font-extrabold text-lg sm:text-xl leading-none 
+                                            ${
+                                              day.status === "Empty" ||
+                                              day.status === "None"
+                                                ? "text-gray-800"
+                                                : ""
+                                            }`}
+                    >
+                      {day.day}
+                    </span>
+
+                    {/* Status Indicator */}
+                    <p className="text-xs mt-1 sm:mt-2 truncate font-medium flex justify-center items-center h-4">
+                      {day.status === "Present" && (
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                      )}
+                      {day.status === "Absent" && (
+                        <XCircle className="w-4 h-4 mr-1" />
+                      )}
+                      {day.status === "Late" && (
+                        <Clock className="w-4 h-4 mr-1" />
+                      )}
+
+                      {day.status !== "None" && day.status !== "Empty"
+                        ? day.status
+                        : ""}
                     </p>
                   </>
                 )}
@@ -396,23 +394,27 @@ const SAttendance = () => {
             ))}
           </div>
 
-          {/* Legend */}
-          <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm">
-            <span className="flex items-center">
+          {/* --- Legend --- */}
+          <div className="mt-8 pt-4 border-t border-gray-100 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm">
+            <span className="flex items-center text-gray-700">
               <span className="w-3 h-3 bg-green-500 rounded-full mr-2 shadow"></span>{" "}
               **Present**
             </span>
-            <span className="flex items-center">
+            <span className="flex items-center text-gray-700">
               <span className="w-3 h-3 bg-red-500 rounded-full mr-2 shadow"></span>{" "}
               **Absent**
             </span>
-            <span className="flex items-center">
+            <span className="flex items-center text-gray-700">
               <span className="w-3 h-3 bg-yellow-500 rounded-full mr-2 shadow"></span>{" "}
               **Late**
             </span>
-            <span className="flex items-center">
+            <span className="flex items-center text-gray-700">
               <span className="w-3 h-3 bg-gray-100 border border-gray-300 rounded-full mr-2"></span>{" "}
-              No Class
+              No Class/Unmarked
+            </span>
+            <span className="flex items-center text-gray-700">
+              <span className="w-3 h-3 bg-gray-300 rounded-full mr-2 shadow"></span>{" "}
+              Holiday
             </span>
           </div>
         </div>

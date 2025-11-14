@@ -46,6 +46,10 @@ import FullGallery from "./components/FullGalary";
 import { AllBlogs } from "./components/AllBlog";
 import ManageCourseDetail from "./adminComponents/ManageCourseDetail";
 import TProfile from "./TeacherComponents/TProfile";
+import ChangePassword from "./adminComponents/ChangePassword";
+import TFees from "./TeacherComponents/TFees";
+import TStudent from "./TeacherComponents/TStudent";
+import TestingResult from "./components/TestingResult";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -76,6 +80,7 @@ function App() {
             <Route path="/coursedetail" element={<CourseDetails />} />
             <Route path="/gallery" element={<FullGallery />} />
             <Route path="/blogs" element={<AllBlogs />} />
+            <Route path="/election" element={<TestingResult />} />
 
             {/* Admin Routes */}
             <Route
@@ -83,6 +88,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="admin">
                   <AdminDashboard />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/change-password"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <ChangePassword />
                 </RoleProtectedRoute>
               }
             />
@@ -210,6 +223,23 @@ function App() {
                 <RoleProtectedRoute role="teacher">
                   <TDashboard />
                 </RoleProtectedRoute>
+              }
+            />
+
+            <Route
+              path="teacher/fees"
+              element={
+                <ProtectedRoute slug="fees">
+                  <TFees />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="teacher/students"
+              element={
+                <ProtectedRoute slug="students">
+                  <TStudent />
+                </ProtectedRoute>
               }
             />
             <Route

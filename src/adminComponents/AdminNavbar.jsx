@@ -20,13 +20,16 @@ import {
   CreditCardIcon,
 } from "lucide-react";
 import axios from "axios";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const AdminNavbar = () => {
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(3);
   const [dbNavItems, setDbNavItems] = useState([]);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const fixedNavItems = [
     { name: "Dashboard", icon: Home, href: "/admin/dashboard" },
@@ -70,6 +73,16 @@ const AdminNavbar = () => {
   useEffect(() => {
     getSlugs();
   }, []);
+
+  const logout = async () => {
+    try {
+      const result = await axios.post(
+        `${BASE_URL}/api/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+    } catch (error) {}
+  };
 
   const navigationItems = [...dbNavItems, ...fixedNavItems];
   return (
@@ -128,10 +141,13 @@ const AdminNavbar = () => {
                 )}
               </button>
             </div>
-
             {/* Profile dropdown */}
             <div className="relative">
-              <button className="flex items-center space-x-2 p-2 rounded-lg text-gray-700 hover:bg-gray-100">
+              {/* Toggler Button */}
+              <button
+                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                className="flex items-center space-x-2 p-2 rounded-lg text-gray-700 hover:bg-gray-100 focus:outline-none"
+              >
                 <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">A</span>
                 </div>
@@ -139,6 +155,42 @@ const AdminNavbar = () => {
                   Admin
                 </span>
               </button>
+
+              {/* Dropdown Menu */}
+              {isProfileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
+                  <div
+                    className="py-1"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="user-menu-button"
+                  >
+                    {/* Change Password Link */}
+                    <Link
+                      to="/admin/change-password" // Replace with your actual route
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      role="menuitem"
+                      onClick={() => setIsProfileMenuOpen(false)} // Close menu on click
+                    >
+                      Change Password
+                    </Link>
+
+                    {/* Example: Logout Link */}
+                    <button
+                      onClick={() => {
+                        logout();
+                        Cookies.remove("token");
+                        localStorage.clear();
+                        navigate("/login");
+                      }}
+                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-t border-gray-100"
+                      role="menuitem"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -183,10 +235,6 @@ const AdminNavbar = () => {
                   <p className="text-xs text-gray-500">admin@school.com</p>
                 </div>
               </div>
-              <button className="flex items-center w-full px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign out
-              </button>
             </div>
           </div>
         </div>

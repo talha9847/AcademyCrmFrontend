@@ -91,7 +91,31 @@ const ViewStudent = () => {
   const newPassword = watch("newPassword");
 
   const changePassword = async (data) => {
-    console.log(data);
+    setUpdating(true);
+    const newData = { ...data, id: studentId };
+    try {
+      const result = await axios.post(
+        `${BASE_URL}/api/student/changePasswordByAdmin`,
+        newData,
+        { withCredentials: true }
+      );
+      console.log(result.status);
+      if (result.status == 233) {
+        setUpdating(false);
+        toast.warn("Password can't be same previous one");
+        setPasswordModal(false);
+      }
+      if (result.status == 200) {
+        toast.success("Password updated Successfully");
+        setUpdating(false);
+        setPasswordModal(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setUpdating(false);
+      setPasswordModal(false);
+      toast.error("Error in updating password");
+    }
   };
 
   const deleteStudent = async () => {
@@ -1769,7 +1793,7 @@ const ViewStudent = () => {
               </h2>
               <button
                 onClick={() => {
-                  setIsModalOpen(false);
+                  setPasswordModal(false);
                   reset();
                 }}
                 className="text-gray-500 hover:text-gray-800 transition"
@@ -1833,7 +1857,7 @@ const ViewStudent = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setIsModalOpen(false);
+                    setPasswordModal(false);
                     reset();
                   }}
                   className="px-4 py-2 text-sm font-medium border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition"

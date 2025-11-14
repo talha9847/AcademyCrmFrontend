@@ -28,9 +28,9 @@ const TNavbar = () => {
   const [dbNavItems, setDbNavItems] = useState([]);
 
   const fixedNavItems = [
-    { name: "Dashboard", icon: Home, href: "/teacher/dashboard" },
-    { name: "Classes", icon: Home, href: "/admin/classes" },
-    { name: "Profile", icon: User, href: "/teacher/profile" },
+    { name: "Dashboard", icon: Home, href: "dashboard" },
+    { name: "Classes", icon: Home, href: "classes" },
+    { name: "Profile", icon: User, href: "profile" },
   ];
 
   const location = useLocation();
@@ -54,7 +54,7 @@ const TNavbar = () => {
     if (result.status == 200) {
       const items = result.data.data.map((item) => ({
         name: item.name,
-        href: "/" + item.slug,
+        href: "/teacher/" + item.slug,
         icon: iconMap[item.name],
       }));
       setDbNavItems(items);

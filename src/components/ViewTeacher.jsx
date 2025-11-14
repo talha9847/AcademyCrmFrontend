@@ -20,7 +20,9 @@ import {
   Loader2,
   Save,
   Edit,
-  X, // For salary
+  X,
+  Key,
+  Lock, // For salary
 } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -263,88 +265,65 @@ const ViewTeacher = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header with Actions */}
-        <div className="mb-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex items-center space-x-4">
+        <div className="mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="flex items-center space-x-6">
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+                className="flex items-center text-black hover:text-white transition-all duration-300 group"
               >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                <span className="hidden sm:inline">Back</span>
+                <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:bg-white/10 transition-all duration-300">
+                  <ArrowLeft className="w-5 h-5" />
+                </div>
+                <span className="hidden sm:inline ml-3 font-medium">Back</span>
               </button>
-              <div className="h-8 w-px bg-gray-300 hidden sm:block"></div>
+              <div className="h-12 w-px bg-white/10 hidden sm:block"></div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  Teacher Details
+                <h1 className="text-2xl sm:text-3xl font-bold text-black tracking-tight">
+                  Teacher Profile
                 </h1>
-                <p className="text-xs sm:text-sm text-gray-500">
-                  View and manage staff information
+                <p className="text-sm text-gray-400 mt-1">
+                  Comprehensive staff information management
                 </p>
               </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <button
-                onClick={handleIDCardPrint}
-                className="px-3 sm:px-4 py-2 text-sm text-white bg-blue-600 border border-blue-700 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-              >
-                <CreditCard className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">ID Card</span>
-              </button>
-              <button
-                onClick={handlePrint}
-                className="px-3 sm:px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center"
-              >
-                <Printer className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Print Form</span>
-              </button>
             </div>
           </div>
         </div>
 
-        {/* --- Main Content Grid --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 1. Left Sidebar - Teacher Overview (Similar to Student Card) */}
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Sidebar - Teacher Overview */}
           <div className="lg:col-span-1">
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden relative">
-              {/* Edit Button */}
-              <button
-                onClick={() => {}}
-                className="absolute top-4 right-4 text-gray-600 hover:text-blue-600"
-              >
-                <Edit3 className="w-5 h-5" />
-              </button>
+            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden relative shadow-2xl">
+              {/* Decorative gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
 
               {/* Teacher Image and Name */}
-              <div className="p-6 text-center border-b border-gray-200">
-                <div className="relative w-32 h-32 mx-auto rounded-lg overflow-hidden mb-4 border-2 border-gray-200 group">
+              <div className="p-8 text-center relative z-10">
+                <div className="relative w-40 h-40 mx-auto rounded-2xl overflow-hidden mb-6 border-2 border-white/20 group shadow-2xl">
                   {teacher.profile_photo ? (
                     <img
-                      // src={`${BASE_URL}/uploads/${student.profile_photo}`}
                       src={photoUrl}
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                      <User className="w-16 h-16 text-gray-400" />
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-white/10 to-white/5">
+                      <User className="w-20 h-20 text-white/30" />
                     </div>
                   )}
 
-                  {/* Edit button overlay (appears on hover) */}
+                  {/* Edit button overlay */}
                   <label
                     htmlFor="profilePhotoInput"
-                    className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer backdrop-blur-sm"
                   >
-                    <Camera className="w-6 h-6 mb-1" />
-                    Change Photo
+                    <Camera className="w-8 h-8 mb-2" />
+                    <span className="font-semibold">Change Photo</span>
                   </label>
 
-                  {/* Hidden file input */}
                   <input
                     id="profilePhotoInput"
                     type="file"
@@ -355,19 +334,19 @@ const ViewTeacher = () => {
                 </div>
 
                 {/* Teacher Info */}
-                <h2 className="text-xl font-bold text-gray-900 mb-1">
+                <h2 className="text-2xl font-bold text-black mb-2 tracking-tight">
                   {teacher.full_name}
                 </h2>
-                <p className="text-sm text-gray-500 mb-3">
+                <p className="text-sm text-gray-400 mb-4 font-medium">
                   {teacher.designation}
                 </p>
 
                 <span
                   onClick={handleStatusClick}
-                  className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full border cursor-pointer ${
+                  className={`inline-flex px-4 py-2 text-xs font-bold rounded-full border-2 cursor-pointer transition-all duration-300 uppercase tracking-wider ${
                     teacher.is_active
-                      ? "bg-green-100 text-green-800 border-green-200"
-                      : "bg-red-100 text-red-800 border-red-200"
+                      ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30"
+                      : "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30"
                   }`}
                 >
                   {teacher.is_active ? "Active" : "Terminated"}
@@ -375,11 +354,11 @@ const ViewTeacher = () => {
               </div>
 
               {/* Quick Info */}
-              <div className="relative bg-white rounded-lg shadow-md p-6 space-y-4">
-                {/* --- Edit Button --- */}
+              <div className="relative bg-white/[0.03] backdrop-blur-sm rounded-2xl p-6 space-y-6 border-t border-white/10 m-6">
+                {/* Edit Button */}
                 <button
                   type="button"
-                  className="absolute top-4 right-4 flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-md hover:bg-indigo-100 transition shadow-sm"
+                  className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20 shadow-lg backdrop-blur-sm"
                   onClick={() => {
                     setEdit1Modal(true);
                     setEdit1Data({
@@ -391,56 +370,68 @@ const ViewTeacher = () => {
                   }}
                 >
                   <Edit3 className="w-4 h-4" />
-                  Edit
+                  <span>Edit</span>
                 </button>
 
-                {/* --- Staff Details --- */}
-                <div className="flex items-center">
-                  <Hash className="w-5 h-5 text-gray-400 mr-3" />
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-0.5">
+                {/* Staff Details */}
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <Hash className="w-5 h-5 text-black" />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
                       Staff ID
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-black font-semibold text-lg">
                       {teacher.staff_id}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center">
-                  <Calendar className="w-5 h-5 text-gray-400 mr-3" />
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-0.5">
+                <div className="h-px bg-white/5"></div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <Calendar className="w-5 h-5 text-black" />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
                       Date of Birth
                     </label>
-                    <p className="text-gray-900 font-medium">
+                    <p className="text-gray-900 font-semibold">
                       {new Date(teacher.birthdate).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center">
-                  <Phone className="w-5 h-5 text-gray-400 mr-3" />
-                  <div>
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-0.5">
+                <div className="h-px bg-white/5"></div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <Phone className="w-5 h-5 text-black" />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
                       Contact Number
                     </label>
-                    <p className="text-gray-900 font-medium">
-                      {teacher.mobile}
-                    </p>
+                    <p className="text-black font-semibold">{teacher.mobile}</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* 2. Right Content - Detailed Information */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* --- Personal & Contact Information --- */}
-            <div className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-gray-900 flex items-center">
-                  <User className="w-5 h-5 mr-2 text-blue-600" />
+          {/* Right Content - Detailed Information */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Personal & Contact Information */}
+            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
+
+              <div className="flex justify-between items-center mb-6 relative z-10">
+                <h3 className="text-xl font-bold text-black flex items-center">
+                  <div className="p-2 rounded-lg bg-white/10 border border-white/20 mr-3">
+                    <User className="w-5 h-5 text-black" />
+                  </div>
                   Personal Information
                 </h3>
                 <button
@@ -451,43 +442,54 @@ const ViewTeacher = () => {
                       address: teacher.address,
                     });
                   }}
-                  className="text-sm text-blue-600 hover:text-blue-700 flex items-center font-medium"
+                  className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
                 >
-                  <Edit3 className="w-4 h-4 mr-1" /> Edit
+                  <Edit3 className="w-4 h-4 mr-2" /> Edit
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <p>
-                  <span className="font-semibold text-gray-600 block">
-                    Email:
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm relative z-10">
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+                  <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
+                    Email Address
                   </span>
-                  <span className="text-gray-800">{teacher.email}</span>
-                </p>
-                <p>
-                  <span className="font-semibold text-gray-600 block">
-                    Gender:
+                  <span className="text-black font-semibold">
+                    {teacher.email}
                   </span>
-                  <span className="text-gray-800">{teacher.gender}</span>
-                </p>
-                <div className="md:col-span-2">
+                </div>
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+                  <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
+                    Gender
+                  </span>
+                  <span className="text-black font-semibold">
+                    {teacher.gender}
+                  </span>
+                </div>
+                <div className="md:col-span-2 p-4 rounded-xl bg-white/[0.03] border border-white/10">
                   <div className="flex items-start">
-                    <MapPin className="w-4 h-4 text-gray-500 mr-2 mt-1 flex-shrink-0" />
-                    <div>
-                      <span className="font-semibold text-gray-600 block">
-                        Address:
+                    <MapPin className="w-5 h-5 text-gray-400 mr-3 mt-1 flex-shrink-0" />
+                    <div className="flex-1">
+                      <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
+                        Address
                       </span>
-                      <span className="text-gray-800">{teacher.address}</span>
+                      <span className="text-black font-medium leading-relaxed">
+                        {teacher.address}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* --- Employment & Academic Information --- */}
-            <div className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-gray-900 flex items-center">
-                  <Briefcase className="w-5 h-5 mr-2 text-purple-600" />
+            {/* Employment & Academic Information */}
+            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
+
+              <div className="flex justify-between items-center mb-6 relative z-10">
+                <h3 className="text-xl font-bold text-black flex items-center">
+                  <div className="p-2 rounded-lg bg-white/10 border border-white/20 mr-3">
+                    <Briefcase className="w-5 h-5 text-black" />
+                  </div>
                   Employment Details
                 </h3>
                 <button
@@ -501,25 +503,52 @@ const ViewTeacher = () => {
                       designation: teacher.designation,
                     });
                   }}
+                  className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
                 >
-                  <Edit />
+                  <Edit className="w-4 h-4 mr-2" /> Edit
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <p>
-                  <span className="font-semibold text-gray-600 block">
-                    Joining Date:
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm relative z-10">
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+                  <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
+                    Joining Date
                   </span>
-                  <span className="text-gray-800">
+                  <span className="text-black font-semibold">
                     {new Date(teacher.hire_date).toLocaleDateString()}
                   </span>
-                </p>
-                <p>
-                  <span className="font-semibold text-gray-600 block">
-                    Designation:
+                </div>
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+                  <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
+                    Designation
                   </span>
-                  <span className="text-gray-800">{teacher.designation}</span>
-                </p>
+                  <span className="text-black font-semibold">
+                    {teacher.designation}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Update Password Section - Admin Only */}
+            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
+
+              <div className="flex justify-between items-center relative z-10">
+                <h3 className="text-xl font-bold text-black flex items-center">
+                  <div className="p-2 rounded-lg bg-white/10 border border-white/20 mr-3">
+                    <Lock className="w-5 h-5 text-black" />
+                  </div>
+                  Security Settings
+                </h3>
+                <button
+                  onClick={() => {
+                    // Function to be implemented later
+                    console.log("Update password clicked");
+                  }}
+                  className="text-sm text-white bg-black flex items-center font-bold px-6 py-3 rounded-lg transition-all duration-300 border border-blue-400/50 shadow-lg hover:shadow-xl"
+                >
+                  <Key className="w-4 h-4 mr-2" /> Update Password
+                </button>
               </div>
             </div>
           </div>
@@ -544,7 +573,7 @@ const ViewTeacher = () => {
             </button>
 
             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <Edit className="w-5 h-5 mr-2 text-indigo-600" />
+              <Edit className="w-5 h-5 mr-2 text-black" />
               Edit Teacher Info
             </h2>
 
@@ -604,9 +633,9 @@ const ViewTeacher = () => {
                 onClick={() => {
                   updateDobAndContactOfTeacher();
                 }}
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md flex items-center gap-2"
+                className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
               >
-                <Save className="w-4 h-4" />
+                <Save className="w-4 h-4 mr-2" />
                 Save Changes
               </button>
             </div>
@@ -631,7 +660,7 @@ const ViewTeacher = () => {
             </button>
 
             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <Edit className="w-5 h-5 mr-2 text-indigo-600" />
+              <Edit className="w-5 h-5 mr-2 text-black" />
               Edit Teacher Info
             </h2>
 
@@ -695,9 +724,9 @@ const ViewTeacher = () => {
                 onClick={() => {
                   updateGenderAndAddressOfTeacher();
                 }}
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md flex items-center gap-2"
+                className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
               >
-                <Save className="w-4 h-4" />
+                <Save className="w-4 h-4 mr-2" />
                 Save Changes
               </button>
             </div>
@@ -722,7 +751,7 @@ const ViewTeacher = () => {
             </button>
 
             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <Edit className="w-5 h-5 mr-2 text-indigo-600" />
+              <Edit className="w-5 h-5 mr-2 text-black" />
               Edit Teacher Info
             </h2>
 
@@ -782,9 +811,9 @@ const ViewTeacher = () => {
                 onClick={() => {
                   updateHireDateAndDesignationOfTeacher();
                 }}
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md flex items-center gap-2"
+                className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
               >
-                <Save className="w-4 h-4" />
+                <Save className="w-4 h-4 mr-2" />
                 Save Changes
               </button>
             </div>
