@@ -27,24 +27,40 @@ const Login = () => {
       );
       if (result.status == 200) {
         if (result.data.role == "admin") {
-          toast.success("Login successfull");
-          navigate("/admin/dashboard");
+          setLoading(false);
+          toast.success("Login successfull", {
+            onClose: () => {
+              navigate("/admin/dashboard");
+            },
+          });
         }
         if (result.data.role == "teacher") {
-          toast.success("Login successfull");
-          navigate("/teacher/dashboard");
+          setLoading(false);
+          toast.success("Login successfull", {
+            onClose: () => {
+              navigate("/teacher/dashboard");
+            },
+          });
         }
         if (result.data.role == "student") {
-          toast.success("Login successfull");
-          navigate("/student/dashboard");
+          setLoading(false);
+          toast.success("Login successfull", {
+            onClose: () => {
+              navigate("/student/dashboard");
+            },
+          });
         }
       } else {
         setLoading(false);
-        toast.error("Internal Server Error");
+        toast.error("Invalid Credentials");
       }
     } catch (error) {
       setLoading(false);
-      toast.error("Internal Server Error");
+      if (error.response.status == 401) {
+        toast.error("Invalid credentials");
+      } else {
+        toast.error("Internal Server Error");
+      }
     }
   }
 

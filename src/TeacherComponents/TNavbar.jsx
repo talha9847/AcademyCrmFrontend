@@ -15,6 +15,8 @@ import {
   Wallet,
   icons,
   User,
+  CheckIcon,
+  CalendarCheck2,
 } from "lucide-react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
@@ -28,9 +30,9 @@ const TNavbar = () => {
   const [dbNavItems, setDbNavItems] = useState([]);
 
   const fixedNavItems = [
-    { name: "Dashboard", icon: Home, href: "dashboard" },
-    { name: "Classes", icon: Home, href: "classes" },
-    { name: "Profile", icon: User, href: "profile" },
+    { name: "Dashboard", icon: Home, href: "/teacher/dashboard" },
+    { name: "Attendance", icon: CalendarCheck2, href: "/teacher/attendance" },
+    { name: "Profile", icon: User, href: "/teacher/profile" },
   ];
 
   const location = useLocation();
@@ -39,7 +41,7 @@ const TNavbar = () => {
     Dashboard: Home,
     Students: Users,
     Teachers: GraduationCap,
-    Classes: BookOpen,
+    Classes: CheckIcon,
     Finances: CreditCard,
     Analytics: BarChart3,
     Settings: Settings,

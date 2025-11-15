@@ -110,7 +110,7 @@ const TStudent = () => {
     }
   }
   const handleViewButton = (id) => {
-    navigate("/student/detail", { state: { studentId: id } });
+    navigate("/teacher/student/detail", { state: { studentId: id } });
   };
   async function getClasses() {
     const result = await axios.get(`${BASE_URL}/api/extras/getClasses`, {

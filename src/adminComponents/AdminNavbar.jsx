@@ -18,6 +18,7 @@ import {
   CalendarCheck,
   WalletCardsIcon,
   CreditCardIcon,
+  ActivitySquareIcon,
 } from "lucide-react";
 import axios from "axios";
 import { useLocation, Link, useNavigate } from "react-router-dom";
@@ -36,6 +37,7 @@ const AdminNavbar = () => {
     { name: "Classes", icon: Home, href: "/admin/classes" },
     { name: "Manage", icon: Network, href: "/admin/manage" },
     { name: "Attendance", icon: CalendarCheck, href: "/admin/attendance" },
+    { name: "Slug", icon: ActivitySquareIcon, href: "/admin/slug" },
     { name: "Expense", icon: WalletCardsIcon, href: "/admin/expense" },
     { name: "Certificate", icon: CreditCardIcon, href: "/admin/certificate" },
   ];

@@ -27,25 +27,20 @@ import {
 import axios from "axios";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 
 // --- DUMMY TEACHER DATA (Replace with API call logic later) ---
-const DUMMY_TEACHER = {
-  full_name: "Dr. Evelyn Reed",
-  email: "evelyn.reed@school.edu",
-  staff_id: "TCH84920",
-  designation: "Head of Science Department",
-  gender: "Female",
-  birthdate: "1985-05-15",
-  hire_date: "2010-08-20",
-  mobile: "+91 98765 43210",
-  address: "45-A, Green Acres Colony, City, State - 560001",
-  is_active: true, // true or false for status
-  current_salary: 85000,
-  subjects_taught: ["Physics", "Chemistry", "Mathematics"],
-  profile_photo: "teacher_evelyn.jpg", // Placeholder name
-};
 
 const ViewTeacher = () => {
+  const {
+    reset,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    register,
+  } = useForm();
+  const newPassword = watch("newPassword");
+
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const location = useLocation();
@@ -56,6 +51,8 @@ const ViewTeacher = () => {
   const [photoLoading, setPhotoLoading] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
   const [edit1Modal, setEdit1Modal] = useState(false);
+  const [passwordModal, setPasswordModal] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const [edit1Data, setEdit1Data] = useState({
     dob: "",
     contact: "",
@@ -70,6 +67,35 @@ const ViewTeacher = () => {
     hireDate: "",
     designation: "",
   });
+  const [updateLoading, setUpdateLoading] = useState(false);
+
+  const changePassword = async (data) => {
+    setUpdating(true);
+    const newData = { ...data, id: teacherId };
+    try {
+      const result = await axios.post(
+        `${BASE_URL}/api/student/changePasswordByAdmin`,
+        newData,
+        { withCredentials: true }
+      );
+      console.log(result.status);
+      if (result.status == 233) {
+        setUpdating(false);
+        toast.warn("Password can't be same previous one");
+        setPasswordModal(false);
+      }
+      if (result.status == 200) {
+        toast.success("Password updated Successfully");
+        setUpdating(false);
+        setPasswordModal(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setUpdating(false);
+      setPasswordModal(false);
+      toast.error("Error in updating password");
+    }
+  };
 
   const handleStatusClick = async () => {
     const action = teacher.is_active ? "disable" : "enable";
@@ -132,6 +158,7 @@ const ViewTeacher = () => {
   };
 
   const updateGenderAndAddressOfTeacher = async () => {
+    setUpdateLoading(true);
     const id = teacherId;
     try {
       console.log(edit2Data);
@@ -145,14 +172,17 @@ const ViewTeacher = () => {
       if (result.status === 200) {
         getTeacherDetail(teacherId);
         setEdit2Modal(false);
+        setUpdateLoading(false);
         toast.success("updated successfully");
       }
     } catch (error) {
       console.log(error);
+      setUpdateLoading(false);
       toast.error("Unexpected error occured");
     }
   };
   const updateHireDateAndDesignationOfTeacher = async () => {
+    setUpdateLoading(true);
     const id = teacherId;
     try {
       console.log(edit3Data);
@@ -169,17 +199,21 @@ const ViewTeacher = () => {
       );
       if (result.status === 200) {
         getTeacherDetail(teacherId);
-        setEdit2Modal(false);
+        setEdit3Modal(false);
+        setUpdateLoading(false);
         toast.success("updated successfully");
       }
     } catch (error) {
       console.log(error);
+      setUpdateLoading(false);
+      setEdit3Modal(false);
       toast.error("Unexpected error occured");
     }
   };
 
   const updateDobAndContactOfTeacher = async () => {
     const id = teacherId;
+    setUpdateLoading(true);
     try {
       console.log(edit1Data);
       const result = await axios.put(
@@ -192,10 +226,13 @@ const ViewTeacher = () => {
       if (result.status === 200) {
         getTeacherDetail(teacherId);
         setEdit1Modal(false);
+        setUpdateLoading(false);
         toast.success("updated successfully");
       }
     } catch (error) {
       console.log(error);
+      setUpdateLoading(false);
+      setEdit1Modal(false);
       toast.error("Unexpected error occured");
     }
   };
@@ -269,7 +306,7 @@ const ViewTeacher = () => {
         {/* Header with Actions */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4 sm:space-x-6">
               <button
                 onClick={() => navigate(-1)}
                 className="flex items-center text-black hover:text-white transition-all duration-300 group"
@@ -289,20 +326,21 @@ const ViewTeacher = () => {
                 </p>
               </div>
             </div>
+            {/* Placeholder for any LG-only header actions if they existed - already covered by flex-col/lg:flex-row */}
           </div>
         </div>
 
-        {/* Main Content Grid */}
+        {/* Main Content Grid: Stacks on mobile, 1:2 ratio on large screens */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Sidebar - Teacher Overview */}
+          {/* Left Sidebar - Teacher Overview (Full width on mobile, 1/3 on large) */}
           <div className="lg:col-span-1">
             <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden relative shadow-2xl">
               {/* Decorative gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
 
               {/* Teacher Image and Name */}
-              <div className="p-8 text-center relative z-10">
-                <div className="relative w-40 h-40 mx-auto rounded-2xl overflow-hidden mb-6 border-2 border-white/20 group shadow-2xl">
+              <div className="p-6 sm:p-8 text-center relative z-10">
+                <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-2xl overflow-hidden mb-6 border-2 border-white/20 group shadow-2xl">
                   {teacher.profile_photo ? (
                     <img
                       src={photoUrl}
@@ -311,7 +349,7 @@ const ViewTeacher = () => {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-white/10 to-white/5">
-                      <User className="w-20 h-20 text-white/30" />
+                      <User className="w-16 h-16 sm:w-20 sm:h-20 text-white/30" />
                     </div>
                   )}
 
@@ -320,7 +358,7 @@ const ViewTeacher = () => {
                     htmlFor="profilePhotoInput"
                     className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer backdrop-blur-sm"
                   >
-                    <Camera className="w-8 h-8 mb-2" />
+                    <Camera className="w-6 h-6 sm:w-8 sm:h-8 mb-2" />
                     <span className="font-semibold">Change Photo</span>
                   </label>
 
@@ -334,7 +372,7 @@ const ViewTeacher = () => {
                 </div>
 
                 {/* Teacher Info */}
-                <h2 className="text-2xl font-bold text-black mb-2 tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-bold text-black mb-2 tracking-tight">
                   {teacher.full_name}
                 </h2>
                 <p className="text-sm text-gray-400 mb-4 font-medium">
@@ -354,11 +392,11 @@ const ViewTeacher = () => {
               </div>
 
               {/* Quick Info */}
-              <div className="relative bg-white/[0.03] backdrop-blur-sm rounded-2xl p-6 space-y-6 border-t border-white/10 m-6">
+              <div className="relative bg-white/[0.03] backdrop-blur-sm rounded-2xl p-4 sm:p-6 space-y-6 border-t border-white/10 m-4 sm:m-6">
                 {/* Edit Button */}
                 <button
                   type="button"
-                  className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20 shadow-lg backdrop-blur-sm"
+                  className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold text-white bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20 shadow-lg backdrop-blur-sm"
                   onClick={() => {
                     setEdit1Modal(true);
                     setEdit1Data({
@@ -369,12 +407,14 @@ const ViewTeacher = () => {
                     });
                   }}
                 >
-                  <Edit3 className="w-4 h-4" />
-                  <span>Edit</span>
+                  <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Edit</span>
                 </button>
 
                 {/* Staff Details */}
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-4 pt-8 sm:pt-0">
+                  {" "}
+                  {/* Adjusted padding for edit button position */}
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                     <Hash className="w-5 h-5 text-black" />
                   </div>
@@ -382,7 +422,7 @@ const ViewTeacher = () => {
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
                       Staff ID
                     </label>
-                    <p className="text-black font-semibold text-lg">
+                    <p className="text-black font-semibold text-base sm:text-lg">
                       {teacher.staff_id}
                     </p>
                   </div>
@@ -398,7 +438,7 @@ const ViewTeacher = () => {
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
                       Date of Birth
                     </label>
-                    <p className="text-gray-900 font-semibold">
+                    <p className="text-gray-900 font-semibold text-base">
                       {new Date(teacher.birthdate).toLocaleDateString()}
                     </p>
                   </div>
@@ -414,21 +454,23 @@ const ViewTeacher = () => {
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
                       Contact Number
                     </label>
-                    <p className="text-black font-semibold">{teacher.mobile}</p>
+                    <p className="text-black font-semibold text-base">
+                      {teacher.mobile}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Content - Detailed Information */}
+          {/* Right Content - Detailed Information (Full width on mobile, 2/3 on large) */}
           <div className="lg:col-span-2 space-y-8">
             {/* Personal & Contact Information */}
-            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-6 sm:p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
 
               <div className="flex justify-between items-center mb-6 relative z-10">
-                <h3 className="text-xl font-bold text-black flex items-center">
+                <h3 className="text-lg sm:text-xl font-bold text-black flex items-center">
                   <div className="p-2 rounded-lg bg-white/10 border border-white/20 mr-3">
                     <User className="w-5 h-5 text-black" />
                   </div>
@@ -442,9 +484,10 @@ const ViewTeacher = () => {
                       address: teacher.address,
                     });
                   }}
-                  className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
+                  className="text-xs sm:text-sm text-white hover:text-white/80 flex items-center font-bold px-3 py-1.5 sm:px-4 sm:py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
                 >
-                  <Edit3 className="w-4 h-4 mr-2" /> Edit
+                  <Edit3 className="w-4 h-4 mr-1 sm:mr-2" />{" "}
+                  <span className="hidden sm:inline">Edit</span>
                 </button>
               </div>
 
@@ -453,7 +496,7 @@ const ViewTeacher = () => {
                   <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
                     Email Address
                   </span>
-                  <span className="text-black font-semibold">
+                  <span className="text-black font-semibold text-base break-all">
                     {teacher.email}
                   </span>
                 </div>
@@ -461,7 +504,7 @@ const ViewTeacher = () => {
                   <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
                     Gender
                   </span>
-                  <span className="text-black font-semibold">
+                  <span className="text-black font-semibold text-base">
                     {teacher.gender}
                   </span>
                 </div>
@@ -472,7 +515,7 @@ const ViewTeacher = () => {
                       <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
                         Address
                       </span>
-                      <span className="text-black font-medium leading-relaxed">
+                      <span className="text-black font-medium leading-relaxed text-base">
                         {teacher.address}
                       </span>
                     </div>
@@ -482,11 +525,11 @@ const ViewTeacher = () => {
             </div>
 
             {/* Employment & Academic Information */}
-            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-6 sm:p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
 
               <div className="flex justify-between items-center mb-6 relative z-10">
-                <h3 className="text-xl font-bold text-black flex items-center">
+                <h3 className="text-lg sm:text-xl font-bold text-black flex items-center">
                   <div className="p-2 rounded-lg bg-white/10 border border-white/20 mr-3">
                     <Briefcase className="w-5 h-5 text-black" />
                   </div>
@@ -503,9 +546,10 @@ const ViewTeacher = () => {
                       designation: teacher.designation,
                     });
                   }}
-                  className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
+                  className="text-xs sm:text-sm text-white hover:text-white/80 flex items-center font-bold px-3 py-1.5 sm:px-4 sm:py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
                 >
-                  <Edit className="w-4 h-4 mr-2" /> Edit
+                  <Edit className="w-4 h-4 mr-1 sm:mr-2" />{" "}
+                  <span className="hidden sm:inline">Edit</span>
                 </button>
               </div>
 
@@ -514,7 +558,7 @@ const ViewTeacher = () => {
                   <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
                     Joining Date
                   </span>
-                  <span className="text-black font-semibold">
+                  <span className="text-black font-semibold text-base">
                     {new Date(teacher.hire_date).toLocaleDateString()}
                   </span>
                 </div>
@@ -522,7 +566,7 @@ const ViewTeacher = () => {
                   <span className="font-bold text-gray-400 block mb-2 text-xs uppercase tracking-wider">
                     Designation
                   </span>
-                  <span className="text-black font-semibold">
+                  <span className="text-black font-semibold text-base">
                     {teacher.designation}
                   </span>
                 </div>
@@ -530,11 +574,11 @@ const ViewTeacher = () => {
             </div>
 
             {/* Update Password Section - Admin Only */}
-            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl p-6 sm:p-8 border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
 
-              <div className="flex justify-between items-center relative z-10">
-                <h3 className="text-xl font-bold text-black flex items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center relative z-10 gap-4">
+                <h3 className="text-lg sm:text-xl font-bold text-black flex items-center">
                   <div className="p-2 rounded-lg bg-white/10 border border-white/20 mr-3">
                     <Lock className="w-5 h-5 text-black" />
                   </div>
@@ -543,9 +587,9 @@ const ViewTeacher = () => {
                 <button
                   onClick={() => {
                     // Function to be implemented later
-                    console.log("Update password clicked");
+                    setPasswordModal(true);
                   }}
-                  className="text-sm text-white bg-black flex items-center font-bold px-6 py-3 rounded-lg transition-all duration-300 border border-blue-400/50 shadow-lg hover:shadow-xl"
+                  className="text-sm text-white bg-black flex items-center font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-lg transition-all duration-300 border border-blue-400/50 shadow-lg hover:shadow-xl w-full sm:w-auto justify-center"
                 >
                   <Key className="w-4 h-4 mr-2" /> Update Password
                 </button>
@@ -636,7 +680,7 @@ const ViewTeacher = () => {
                 className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
               >
                 <Save className="w-4 h-4 mr-2" />
-                Save Changes
+                {updateLoading ? "Saving...." : "Save Changes"}
               </button>
             </div>
           </div>
@@ -727,7 +771,7 @@ const ViewTeacher = () => {
                 className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
               >
                 <Save className="w-4 h-4 mr-2" />
-                Save Changes
+                {updateLoading ? "Saving...." : "Save Changes"}
               </button>
             </div>
           </div>
@@ -814,9 +858,114 @@ const ViewTeacher = () => {
                 className="text-sm text-white hover:text-white/80 flex items-center font-bold px-4 py-2 bg-black rounded-lg hover:bg-gray-700 transition-all duration-300 border border-white/20"
               >
                 <Save className="w-4 h-4 mr-2" />
-                Save Changes
+                {updateLoading ? "Saving...." : "Save changes"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {passwordModal && (
+        <div className="fixed inset-0 bg-opacity-70 z-50 flex justify-center items-center">
+          {/* Modal Content - Changed to Grayscale Theme */}
+          <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md border border-gray-300 transform transition-all duration-300 ease-out scale-100">
+            <div className="flex justify-between items-center mb-6 border-b pb-3">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                <Lock className="w-5 h-5 mr-2 text-gray-700" /> Change Password
+              </h2>
+              <button
+                onClick={() => {
+                  setPasswordModal(false);
+                  reset();
+                }}
+                className="text-gray-500 hover:text-gray-800 transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit(changePassword)}>
+              <div className="mb-4">
+                <label
+                  htmlFor="new-password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  New Password
+                </label>
+                <input
+                  {...register("newPassword", {
+                    required: "This field is required",
+                    pattern: {
+                      value:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/,
+                      message:
+                        "Password must be at least 6 characters, with one uppercase, one lowercase, one number, and can include special characters",
+                    },
+                  })}
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+                  placeholder="Enter new password"
+                />
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.newPassword?.message}
+                </p>
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Confirm New Password
+                </label>
+                <input
+                  {...register("confirmPassword", {
+                    required: "This field is required",
+                    validate: (value) =>
+                      value === newPassword || "Passwords do not match",
+                  })}
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+                  placeholder="Confirm new password"
+                />
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.confirmPassword?.message}
+                </p>
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPasswordModal(false);
+                    reset();
+                  }}
+                  className="px-4 py-2 text-sm font-medium border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={updating}
+                  className={`px-4 py-2 text-sm font-medium text-white rounded-md transition shadow-md flex items-center justify-center gap-2
+                          ${
+                            updating
+                              ? "bg-gray-600 cursor-not-allowed"
+                              : "bg-gray-800 hover:bg-gray-700"
+                          }`}
+                >
+                  {updating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import AdminNavbar from "../adminComponents/AdminNavbar";
+import TNavbar from "../TeacherComponents/TNavbar";
 
 const RoleProtectedRoute = ({ role, children }) => {
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
@@ -24,7 +25,7 @@ const RoleProtectedRoute = ({ role, children }) => {
   if (loading)
     return (
       <div className="min-h-screen flex flex-col">
-        <AdminNavbar />
+        {role == "admin" ? <AdminNavbar /> : <TNavbar />}
         <div className="flex-grow flex items-center justify-center bg-gray-50">
           <div className="flex flex-col items-center justify-center space-y-4">
             {/* Spinner */}

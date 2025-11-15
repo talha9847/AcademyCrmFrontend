@@ -50,6 +50,10 @@ import ChangePassword from "./adminComponents/ChangePassword";
 import TFees from "./TeacherComponents/TFees";
 import TStudent from "./TeacherComponents/TStudent";
 import TestingResult from "./components/TestingResult";
+import TViewStudent from "./TeacherComponents/TViewStudent";
+import TCreateAttendancePage from "./TeacherComponents/TCreateAttendanc";
+import TAttendanceView from "./TeacherComponents/TAttendanceView";
+import Slug from "./adminComponents/Slug";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -88,6 +92,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="admin">
                   <AdminDashboard />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/slug"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <Slug />
                 </RoleProtectedRoute>
               }
             />
@@ -242,6 +254,34 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/teacher/attendance/"
+              element={
+                <RoleProtectedRoute role="teacher">
+                  <TCreateAttendancePage />
+                </RoleProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/teacher/attendance/view"
+              element={
+                <RoleProtectedRoute role="teacher">
+                  <TAttendanceView />
+                </RoleProtectedRoute>
+              }
+            />
+
+            <Route
+              path="teacher/student/detail"
+              element={
+                <ProtectedRoute slug="students">
+                  <TViewStudent />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/teacher/profile"
               element={
@@ -304,18 +344,22 @@ function App() {
             <Route
               path="/teachers"
               element={
-                <ProtectedRoute slug="teachers">
-                  <Teachers />
-                </ProtectedRoute>
+                <RoleProtectedRoute role="admin">
+                  <ProtectedRoute slug="teachers">
+                    <Teachers />
+                  </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
 
             <Route
               path="/teacher/detail"
               element={
-                <ProtectedRoute slug="teachers">
-                  <ViewTeacher />
-                </ProtectedRoute>
+                <RoleProtectedRoute role="admin">
+                  <ProtectedRoute slug="teachers">
+                    <ViewTeacher />
+                  </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
 
@@ -331,17 +375,21 @@ function App() {
             <Route
               path="/students"
               element={
-                <ProtectedRoute slug="students">
-                  <Student />
-                </ProtectedRoute>
+                <RoleProtectedRoute role="admin">
+                  <ProtectedRoute slug="students">
+                    <Student />
+                  </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
             <Route
               path="/fees"
               element={
-                <ProtectedRoute slug="fees">
-                  <Fees />
-                </ProtectedRoute>
+                <RoleProtectedRoute role="admin">
+                  <ProtectedRoute slug="fees">
+                    <Fees />
+                  </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
 
