@@ -16,6 +16,7 @@ const Student = () => {
   const [sessions, setSessions] = useState([]);
   const [classId, setClassId] = useState(null);
   const [sections, setSections] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const {
     register,
@@ -73,6 +74,7 @@ const Student = () => {
     formData.append("p_address", data.p_address);
     formData.append("enrollments", JSON.stringify(data.enrollments));
     try {
+      setLoading(true);
       const result = await axios.post(
         `${BASE_URL}/api/user/createStudent`,
         formData,
@@ -80,6 +82,7 @@ const Student = () => {
       );
 
       if (result.status === 201 && result.data.success) {
+        setLoading(false);
         toast.success("🎓 Student added successfully!");
 
         // Fetch updated list before closing modal
@@ -89,9 +92,11 @@ const Student = () => {
         reset();
         setShowModal(false);
       } else {
+        setLoading(false);
         toast.error(result.data.message || "Something went wrong!");
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error submitting student:", error);
       toast.error(
         error.response?.data?.message || "Server error. Please try again."
@@ -953,7 +958,7 @@ const Student = () => {
                   type="submit"
                   className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold"
                 >
-                  Submit
+                  {loading ? "Submitting...." : "Submit"}
                 </button>
               </div>
             </form>
