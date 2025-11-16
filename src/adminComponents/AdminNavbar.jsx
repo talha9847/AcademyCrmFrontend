@@ -61,7 +61,6 @@ const AdminNavbar = () => {
     });
 
     if (result.status == 200) {
-      console.log(result.data.data);
 
       const items = result.data.data.map((item) => ({
         name: item.name,

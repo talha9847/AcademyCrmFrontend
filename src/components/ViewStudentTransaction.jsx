@@ -2,345 +2,413 @@ import React, { useEffect, useState } from "react";
 import AdminNavbar from "../adminComponents/AdminNavbar";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+function convertToWords(num) {
+  const ones = [
+    "",
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+    "Seven",
+    "Eight",
+    "Nine",
+    "Ten",
+    "Eleven",
+    "Twelve",
+    "Thirteen",
+    "Fourteen",
+    "Fifteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+  ];
 
-const printReceipt = (transaction, studentInfo, totalFees) => {
+  const tens = [
+    "",
+    "",
+    "Twenty",
+    "Thirty",
+    "Forty",
+    "Fifty",
+    "Sixty",
+    "Seventy",
+    "Eighty",
+    "Ninety",
+  ];
+
+  const thousands = ["", "Thousand", "Million", "Billion", "Trillion"];
+
+  if (num === 0) return "Zero";
+
+  function toWords(num) {
+    if (num === 0) return "";
+    if (num < 20) return ones[num];
+    if (num < 100)
+      return (
+        tens[Math.floor(num / 10)] + (num % 10 ? " " + ones[num % 10] : "")
+      );
+    if (num < 1000)
+      return (
+        ones[Math.floor(num / 100)] +
+        " Hundred" +
+        (num % 100 ? " " + toWords(num % 100) : "")
+      );
+
+    let idx = 0;
+    let result = "";
+    while (num > 0) {
+      if (num % 1000 !== 0) {
+        result =
+          toWords(num % 1000) +
+          " " +
+          thousands[idx] +
+          (result ? " " + result : "");
+      }
+      num = Math.floor(num / 1000);
+      idx++;
+    }
+    return result;
+  }
+
+  return toWords(num).trim();
+}
+
+async function formatCurrencyInWords(amount_paid) {
+  const amountInWords = convertToWords(amount_paid);
+
+  return amountInWords + " Rupees";
+}
+
+const printReceipt = async (transaction, studentInfo, totalFees) => {
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
-  const receiptNumber = `REC-${transaction.id}-${new Date().getTime().toString().slice(-6)}`;
-  const currentDate = new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  const receiptNumber = `${transaction.receipt_number}-${new Date()
+    .getTime()
+    .toString()
+    .slice(-6)}`;
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
-  const transactionDate = new Date(transaction.payment_date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const transactionDate = new Date(transaction.payment_date).toLocaleDateString(
+    "en-US",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+  );
 
-  const formattedAmount = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
+  const formattedAmount = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
   }).format(transaction.amount_paid);
 
-  const formattedTotal = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
+  const formattedTotal = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
   }).format(totalFees);
 
   const receiptHTML = `
+   <!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Receipt - Mehtab Computer Academy</title>
     <style>
-      @media print {
-        body {
-          margin: 0;
-          padding: 0;
+        /* --- Print Styles: Ensures clean, black & white printing --- */
+        @media print {
+            body { margin: 0; padding: 0; }
+            body * { visibility: hidden; }
+            .receipt-print-wrapper {
+                visibility: visible;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+            }
+            .receipt-print-wrapper * { visibility: visible; }
+            .receipt-container { border: 2px solid black !important; }
         }
-        
-        body * {
-          visibility: hidden;
-        }
-        
+
+        /* --- Traditional Web Styles --- */
         .receipt-print-wrapper {
-          visibility: visible;
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
+            font-family: 'Times New Roman', serif; /* Traditional, paper-like font */
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f0f0f0; /* Light background for paper contrast */
+        }
+
+        .receipt-container {
+            width: 100%;
+            max-width: 650px;
+            background-color: white;
+            padding: 30px;
+            border: 2px solid black; /* Strong border to mimic a paper form */
+            box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header - Mimicking the letterhead and institution details */
+        .receipt-header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 3px double black; /* Double line separator for header */
+        }
+
+        .academy-name {
+            font-size: 30px;
+            font-weight: 900;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .institute-details {
+            font-size: 12px;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        /* Content Fields: Uses dashed lines for writing space */
+        .receipt-content {
+            padding: 0;
+        }
+
+        .info-row-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
         
-        .receipt-print-wrapper * {
-          visibility: visible;
+        .info-field {
+            display: flex;
+            align-items: flex-end;
+            padding: 10px 0;
+            font-size: 14px;
+            color: #111;
+            border-bottom: 1px dashed #777; /* Dashed line for writing space */
+            flex-grow: 1;
         }
-      }
 
-      .receipt-print-wrapper {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        display: block;
-        width: 100%;
-      }
+        .info-label {
+            font-weight: normal;
+            color: #333;
+            white-space: nowrap;
+            padding-right: 8px;
+            flex-shrink: 0;
+        }
 
-      .receipt-container {
-        max-width: 800px;
-        margin: 0 auto;
-        background-color: white;
-        padding: 20px;
-      }
+        .info-value {
+            font-weight: bold; /* Bold value to mimic handwritten entry */
+            color: black;
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 5px;
+            min-width: 50px;
+            text-decoration: underline; /* Emphasizes the filled-in value */
+        }
 
-      .receipt-header {
-        background: linear-gradient(135deg, #1967D2 0%, #1546a0 100%);
-        color: white;
-        padding: 40px 30px;
-        text-align: center;
-        border-bottom: 4px solid #ffd700;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
+        /* Layout specific adjustments for top fields */
+        .receipt-no-date .info-field { width: 50%; }
+        .receipt-no-date .info-field:nth-child(2) { padding-left: 20px; }
+        @media (max-width: 400px) {
+            .receipt-no-date .info-field { width: 100%; padding-left: 0 !important; }
+        }
 
-      .academy-name {
-        font-size: 32px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        letter-spacing: 0.5px;
-      }
+        .fees-in-words-row {
+            padding: 20px 0;
+        }
 
-      .receipt-title {
-        font-size: 16px;
-        font-weight: 300;
-        opacity: 0.95;
-      }
+        /* Amount Paid Box: Large and bordered */
+        .amount-box {
+            display: flex;
+            align-items: center;
+            border: 2px solid black;
+            padding: 10px;
+            margin-top: 20px;
+            width: 50%;
+        }
+        .amount-box .info-label { font-size: 16px; font-weight: bold; }
+        .amount-box .info-value { 
+            font-size: 20px; 
+            font-weight: 900; 
+            text-decoration: none; 
+            padding-left: 20px;
+        }
 
-      .receipt-content {
-        padding: 40px 0;
-      }
+        /* Footer - Signatures and notes */
+        .receipt-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+        }
 
-      .section {
-        margin-bottom: 30px;
-      }
+        .signature-area {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            align-items:center;
+            margin-top: 20px;
+        }
 
-      .section-title {
-        font-size: 13px;
-        font-weight: bold;
-        color: #1967D2;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 15px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #1967D2;
-      }
+        .signature-col {
+            width: 45%;
+        }
 
-      .info-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        font-size: 14px;
-        color: #333;
-        border-bottom: 1px solid #f0f0f0;
-      }
+        .signature-line {
+            border-top: 1px solid black;
+            padding-top: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-      .info-label {
-        font-weight: 600;
-        color: #555;
-      }
-
-      .info-value {
-        color: #333;
-        text-align: right;
-      }
-
-      .student-box {
-        background-color: #f9f9f9;
-        border: 2px solid #e0e0e0;
-        border-radius: 6px;
-        padding: 20px;
-        margin-bottom: 20px;
-      }
-
-      .student-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        font-size: 14px;
-      }
-
-      .student-row:last-child {
-        margin-bottom: 0;
-      }
-
-      .student-label {
-        font-weight: bold;
-        color: #555;
-        width: 35%;
-      }
-
-      .student-value {
-        color: #333;
-        flex: 1;
-      }
-
-      .payment-details-box {
-        background-color: #f0f7ff;
-        border-left: 4px solid #1967D2;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 4px;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .payment-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-        font-size: 14px;
-      }
-
-      .payment-row:last-child {
-        margin-bottom: 0;
-      }
-
-      .payment-label {
-        font-weight: 600;
-        color: #555;
-      }
-
-      .payment-value {
-        color: #333;
-      }
-
-      .amount-paid {
-        font-size: 18px;
-        font-weight: bold;
-        color: #228B22;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .status-badge {
-        display: inline-block;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-weight: bold;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .status-paid {
-        background-color: #d4edda;
-        color: #155724;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .status-pending {
-        background-color: #fff3cd;
-        color: #856404;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .receipt-footer {
-        background-color: #f5f5f5;
-        padding: 25px 30px;
-        border-top: 1px solid #e0e0e0;
-        text-align: center;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .footer-text {
-        font-size: 12px;
-        color: #888;
-        margin-bottom: 8px;
-      }
-
-      .footer-thanks {
-        font-size: 13px;
-        font-weight: 600;
-        color: #1967D2;
-      }
-
-      .divider {
-        height: 1px;
-        background-color: #e0e0e0;
-        margin: 20px 0;
-      }
+        .note {
+            margin-top: 30px;
+            font-size: 11px;
+            text-align: left;
+            border: 1px solid black;
+            padding: 5px 10px;
+            background-color: #f7f7f7;
+        }
     </style>
-
+</head>
+<body>
     <div class="receipt-print-wrapper">
-      <div class="receipt-container">
-        <div class="receipt-header">
-          <div class="academy-name">Mehtab Computer Academy</div>
-          <div class="receipt-title">Professional Fee Receipt</div>
+        <div class="receipt-container">
+            <div class="receipt-header">
+                <div class="institute-details">
+                    AN ISO 9001-2015 CERTIFIED INSTITUTE | UAN No.: G4ZZ... | UDIAM-GJ-06...<br>
+                    25-28, Signature Mall, 1st Floor Near Mota Mandi Road, Kosamba - 394120
+                </div>
+                <div class="academy-name">Mehtab Computer Academy</div>
+            </div>
+
+            <div class="receipt-content">
+                <!-- Receipt Number and Date -->
+                <div class="info-row-container receipt-no-date">
+                    <div class="info-field">
+                        <span class="info-label">Receipt No.:</span>
+                        <span class="info-value">${receiptNumber}</span>
+                    </div>
+                    <div class="info-field">
+                        <!-- Using transactionDate as the main payment date -->
+                        <span class="info-label">Date:</span>
+                        <span class="info-value">${transactionDate}</span>
+                    </div>
+                </div>
+
+                <!-- Student Information -->
+                <div class="info-row-container">
+                    <div class="info-field" style="width: 100%;">
+                        <span class="info-label">Student Name:</span>
+                        <span class="info-value">${studentInfo.name}</span>
+                    </div>
+                </div>
+                
+                <div class="info-row-container">
+                    <div class="info-field" style="width: 100%;">
+                        <span class="info-label">Student ID:</span>
+                        <span class="info-value">${studentInfo.studentId}</span>
+                    </div>
+                </div>
+                
+                <div class="info-row-container">
+                    <div class="info-field" style="width: 100%;">
+                        <span class="info-label">Address:</span>
+                        <span class="info-value">${
+                          studentInfo.address || "N/A"
+                        }</span>
+                    </div>
+                </div>
+
+                <!-- Course/Fee Information -->
+                <div class="info-row-container" style="margin-top: 20px;">
+                    <div class="info-field" style="width: 50%;">
+                        <span class="info-label">Course:</span>
+                        <span class="info-value">${
+                          studentInfo.course || "N/A"
+                        }</span>
+                    </div>
+                    <div class="info-field" style="width: 50%;">
+                        <span class="info-label">Total Fees:</span>
+                        <span class="info-value">${formattedTotal}</span>
+                    </div>
+                </div>
+                
+                <div class="info-row-container">
+                    <div class="info-field" style="width: 50%;">
+                        <span class="info-label">Payment Method:</span>
+                        <span class="info-value">${
+                          transaction.payment_method || "Cash"
+                        }</span>
+                    </div>
+                    <div class="info-field" style="width: 50%;">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value" style="text-decoration: none; font-weight: 700;">
+                            ${
+                              transaction.status === "paid" ? "PAID" : "PENDING"
+                            }
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Amount in Words -->
+                <div class="info-row-container fees-in-words-row">
+                    <span class="info-label">Rupees in Words:</span>
+                    <span class="info-value" style="text-decoration: none; font-style: italic; font-weight: bold; flex-grow: 0;">
+                        ${await formatCurrencyInWords(
+                          transaction.amount_paid
+                        )} only
+                    </span>
+                </div>
+
+                <!-- Amount Paid Box -->
+                <div class="amount-box">
+                    <span class="info-label">RS.</span>
+                    <span class="info-value">${formattedAmount} /-</span>
+                </div>
+            </div>
+
+            <div class="receipt-footer">
+                <div class="signature-area">
+                    <div class="signature-col">
+                        <div class="signature-line">Student Sign.</div>
+                    </div>
+                    <div  class="signature-col">
+                        <div class="signature-line">Authorised Signature</div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    * Once Paid Fees Not Refundable.
+                </div>
+            </div>
         </div>
-
-        <div class="receipt-content">
-          <div class="section">
-            <div class="section-title">Receipt Details</div>
-            <div class="info-row">
-              <span class="info-label">Receipt Number:</span>
-              <span class="info-value">${receiptNumber}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Receipt Date:</span>
-              <span class="info-value">${currentDate}</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Payment Date:</span>
-              <span class="info-value">${transactionDate}</span>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="section">
-            <div class="section-title">Student Information</div>
-            <div class="student-box">
-              <div class="student-row">
-                <span class="student-label">Name:</span>
-                <span class="student-value">${studentInfo.name}</span>
-              </div>
-              <div class="student-row">
-                <span class="student-label">Student ID:</span>
-                <span class="student-value">${studentInfo.studentId}</span>
-              </div>
-              <div class="student-row">
-                <span class="student-label">Total Fees:</span>
-                <span class="student-value">${formattedTotal}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <div class="section-title">Payment Information</div>
-            <div class="payment-details-box">
-              <div class="payment-row">
-                <span class="payment-label">Description:</span>
-                <span class="payment-value">Monthly Fee Payment</span>
-              </div>
-              <div class="payment-row">
-                <span class="payment-label">Payment Method:</span>
-                <span class="payment-value">${transaction.payment_method || 'Online'}</span>
-              </div>
-              <div class="payment-row">
-                <span class="payment-label">Amount Paid:</span>
-                <span class="amount-paid">${formattedAmount}</span>
-              </div>
-              <div class="payment-row">
-                <span class="payment-label">Status:</span>
-                <span class="status-badge ${transaction.status === 'paid' ? 'status-paid' : 'status-pending'}">
-                  ${transaction.status === 'paid' ? 'Paid' : 'Pending'}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="receipt-footer">
-          <div class="footer-text">This is a computer-generated receipt. No signature required.</div>
-          <div class="footer-thanks">Thank you for your payment!</div>
-          <div class="footer-text" style="margin-top: 15px; font-size: 11px;">
-            Mehtab Computer Academy | Contact: +91-XXXXXXXXXX | Email: info@mehtab.com
-          </div>
-        </div>
-      </div>
     </div>
+</body>
+</html>
   `;
 
   // Create a temporary div and inject the receipt
-  const printDiv = document.createElement('div');
-  printDiv.id = 'receipt-print-container';
+  const printDiv = document.createElement("div");
+  printDiv.id = "receipt-print-container";
   printDiv.innerHTML = receiptHTML;
   document.body.appendChild(printDiv);
+  document.title = `Fee Receipt - ${studentInfo.name} - ${receiptNumber}`;
 
   // Trigger print after content is rendered
   setTimeout(() => {
     window.print();
-    
+
     // Remove after print dialog closes
     setTimeout(() => {
-      const element = document.getElementById('receipt-print-container');
+      const element = document.getElementById("receipt-print-container");
       if (element) {
         element.remove();
       }
@@ -350,6 +418,8 @@ const printReceipt = (transaction, studentInfo, totalFees) => {
 
 // Main Component
 export default function ViewStudentTransaction() {
+  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const location = useLocation();
   const { studentId, name, total } = location.state || {};
   const [payments, setPayments] = useState([]);
