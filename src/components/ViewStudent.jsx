@@ -1224,14 +1224,51 @@ const ViewStudent = () => {
         </body>
       </html>
     `;
-    const printWindow = window.open("about:blank", "_blank");
-    printWindow.document.write(printContent);
-    printWindow.document.close();
+    // const printWindow = window.open("about:blank", "_blank");
+    // printWindow.document.write(printContent);
+    // printWindow.document.close();
 
-    printWindow.onload = () => {
-      printWindow.focus();
-      printWindow.print();
-    };
+    // printWindow.onload = () => {
+    //   printWindow.focus();
+    //   printWindow.print();
+    // };
+
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(printContent);
+    doc.close();
+
+    // Wait for images to load
+    const images = doc.images;
+    let loadedCount = 0;
+    const totalImages = images.length;
+
+    if (totalImages === 0) {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } else {
+      for (let img of images) {
+        img.onload = img.onerror = () => {
+          loadedCount++;
+          if (loadedCount === totalImages) {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+          }
+        };
+      }
+    }
+
+    // Remove iframe after printing
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+    }, 2000);
   };
 
   if (loading) {
