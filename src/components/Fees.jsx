@@ -27,6 +27,7 @@ const Fees = () => {
     });
     if (result.status == 200) {
       setFees(result.data.data);
+      console.log(result.data.data);
     }
   }
 
@@ -80,11 +81,9 @@ const Fees = () => {
       method: data.method,
       status: "paid",
     };
-    const result = await axios.post(
-      `${BASE_URL}/api/fees/collectFees`,
-      send,
-      { withCredentials: true }
-    );
+    const result = await axios.post(`${BASE_URL}/api/fees/collectFees`, send, {
+      withCredentials: true,
+    });
     if (result.status == 200) {
       fetchFees();
       setIsDialogOpen(false);
@@ -231,6 +230,9 @@ const Fees = () => {
                     Email
                   </th>
                   <th className="px-4 py-3 sm:px-6 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Discount
+                  </th>
+                  <th className="px-4 py-3 sm:px-6 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Amount / Due
                   </th>
                   <th className="px-4 py-3 sm:px-6 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -244,86 +246,105 @@ const Fees = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
-                {filtered.map((fee) => {
-                  const dueAmount = fee.total_fees - fee.paid_amount;
-                  const isPaid = dueAmount == 0 ? true : false;
-                  return (
-                    <tr
-                      key={fee.id}
-                      className="hover:bg-blue-50/50 transition duration-150"
-                    >
-                      <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {fee.full_name}
-                      </td>
-                      <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-sm text-gray-600">
-                        {fee.email}
-                      </td>
-                      <td className="px-4 py-3 sm:px-6 whitespace-nowrap">
-                        <div className="font-bold text-gray-900 text-sm">
-                          {formatCurrency(fee.total_fees)}
-                        </div>
-                        {fee.paid_amount >= 0 && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            Paid: {formatCurrency(fee.paid_amount)} | Due:{" "}
-                            <span
-                              className={
-                                dueAmount > 0
-                                  ? "text-red-500 font-medium"
-                                  : "text-green-600"
-                              }
-                            >
-                              {formatCurrency(dueAmount)}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-sm text-gray-500">
-                        {formatDate(fee.due_date)}
-                      </td>
-                      <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-center">
-                        <span
-                          className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full shadow-sm ${
-                            isPaid
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {isPaid ? "PAID" : "DUE"}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-center">
-                        <div className="">
-                          <button
-                            onClick={() => {
-                              getDetails(fee);
-                              setIsDialogOpen(true);
-                            }}
-                            className="bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                          >
-                            Collect
-                          </button>
+              {filtered.map((fee) => {
+                // Correct discount logic
+                const discountPercent = fee.discount || 0;
+                const discountAmount = (fee.total_fees * discountPercent) / 100;
+                const actualFees = fee.total_fees - discountAmount;
 
-                          <button
-                            onClick={() => {
-                              navigate("/admin/fees/detail", {
-                                state: {
-                                  studentId: fee.student_id,
-                                  name: fee.full_name,
-                                  total: fee.total_fees,
-                                },
-                              });
-                            }}
-                            className="ml-2 bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                          >
-                            View
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
+                const dueAmount = actualFees - fee.paid_amount;
+                const isPaid = dueAmount <= 0;
+
+                return (
+                  <tr
+                    key={fee.id}
+                    className="hover:bg-blue-50/50 transition duration-150"
+                  >
+                    {/* Name */}
+                    <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {fee.full_name}
+                    </td>
+
+                    {/* Email */}
+                    <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-sm text-gray-600">
+                      {fee.email}
+                    </td>
+
+                    {/* Discount Amount */}
+                    <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-sm text-gray-600">
+                      <div className="text-sm font-medium text-green-600">
+                        {formatCurrency(discountAmount)}
+                      </div>
+                    </td>
+
+                    {/* Total / Paid / Due */}
+                    <td className="px-4 py-3 sm:px-6 whitespace-nowrap">
+                      <div className="font-bold text-gray-900 text-sm">
+                        {formatCurrency(actualFees)}
+                      </div>
+
+                      <div className="text-xs text-gray-500 mt-1">
+                        Paid: {formatCurrency(fee.paid_amount)} | Due:
+                        <span
+                          className={
+                            dueAmount > 0
+                              ? "text-red-500 font-medium"
+                              : "text-green-600"
+                          }
+                        >
+                          {formatCurrency(dueAmount)}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* Due Date */}
+                    <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-sm text-gray-500">
+                      {formatDate(fee.due_date)}
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-center">
+                      <span
+                        className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full shadow-sm ${
+                          isPaid
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {isPaid ? "PAID" : "DUE"}
+                      </span>
+                    </td>
+
+                    {/* Buttons */}
+                    <td className="px-4 py-3 sm:px-6 whitespace-nowrap text-center">
+                      <button
+                        onClick={() => {
+                          getDetails(fee);
+                          setIsDialogOpen(true);
+                        }}
+                        className="bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg"
+                      >
+                        Collect
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          navigate("/admin/fees/detail", {
+                            state: {
+                              studentId: fee.student_id,
+                              name: fee.full_name,
+                              total: actualFees,
+                            },
+                          });
+                        }}
+                        className="ml-2 bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 text-xs font-medium transition duration-150 shadow-md hover:shadow-lg"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </table>
           </div>
         </div>

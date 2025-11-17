@@ -384,81 +384,10 @@ const Student = () => {
                   </div>
 
                   {/* Class ID */}
-                  <div>
-                    <label
-                      htmlFor="classId"
-                      className="block mb-2 font-semibold text-gray-900 text-sm"
-                    >
-                      Class ID
-                    </label>
-                    <select
-                      {...register("classId", {
-                        required: "Please select class",
-                        onChange: (e) => setClassId(e.target.value),
-                      })}
-                      id="classId"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
-                      onChange={(e) => setClassId(e.target.value)} // Added to make section dropdown work
-                    >
-                      <option value="">--select class--</option>
-                      {classes.map((val) => (
-                        <option key={val.id} value={val.id}>
-                          {val.name}
-                        </option>
-                      ))}
-                    </select>
-                    <p className="text-red-500 text-xs">
-                      {errors.classId?.message}
-                    </p>
-                  </div>
 
                   {/* Section ID */}
-                  <div>
-                    <label
-                      htmlFor="sectionId"
-                      className="block mb-2 font-semibold text-gray-900 text-sm"
-                    >
-                      Section ID
-                    </label>
-                    <select
-                      {...register("sectionId", { required: false })}
-                      id="sectionId"
-                      name="sectionId"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
-                      disabled={classId == null || classId === ""}
-                    >
-                      <option key={0} value="">
-                        --select section--
-                      </option>
-                      {sections.map((val, ind) => (
-                        <option key={ind + 1} value={val.id}>
-                          {val.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
 
                   {/* Admission Number */}
-                  <div>
-                    <label
-                      htmlFor="admissionNumber"
-                      className="block mb-2 font-semibold text-gray-900 text-sm"
-                    >
-                      Admission Number
-                    </label>
-                    <input
-                      {...register("admissionNumber", {
-                        required: "Admission Number is required",
-                      })}
-                      id="admissionNumber"
-                      name="admissionNumber"
-                      type="text"
-                      className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-black focus:outline-none transition-colors"
-                    />
-                    <p className="text-red-500 text-xs">
-                      {errors.admissionNumber?.message}
-                    </p>
-                  </div>
 
                   {/* Roll Number */}
                   <div>
@@ -772,12 +701,28 @@ const Student = () => {
                       Discount (%)
                     </label>
                     <input
-                      {...register("discount")}
+                      {...register("discount", {
+                        required:
+                          "Discount is required. Enter 0 if no discount.",
+                        min: {
+                          value: 0,
+                          message: "Discount cannot be less than 0",
+                        },
+                        max: {
+                          value: 100,
+                          message: "Discount cannot be greater than 100",
+                        },
+                        validate: (value) =>
+                          !isNaN(value) || "Discount must be a number",
+                      })}
                       id="discount"
                       name="discount"
-                      type="number"
+                      type="text"
                       className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-colors"
                     />
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.discount?.message}
+                    </p>
                   </div>
 
                   {/* Description */}

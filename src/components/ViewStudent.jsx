@@ -774,8 +774,8 @@ const ViewStudent = () => {
 
             <!-- Form Title and Numbers -->
             <div class="form-header">STUDENT ADMISSION FORM (ACADEMIC YEAR ${new Date().getFullYear()}-${
-        new Date().getFullYear() + 1 - 2000
-      })</div>
+      new Date().getFullYear() + 1 - 2000
+    })</div>
 
             <div class="form-number">
               FORM NO.${student.admission_number || "_______________"}
@@ -801,7 +801,9 @@ const ViewStudent = () => {
               <div class="signature-container">
                 <div class="signature-box">
                   ${
-                    signatureUrl ? `<img src="${signUrl}" alt="Signature" />` : ""
+                    signatureUrl
+                      ? `<img src="${signUrl}" alt="Signature" />`
+                      : ""
                   }
                 </div>
                 <div class="signature-label">Student's Signature (Mandatory)</div>
@@ -972,7 +974,6 @@ const ViewStudent = () => {
   const handleIDCardPrint = () => {
     if (!student) return;
 
-    const printWindow = window.open("", "_blank");
     const profilePhotoUrl = student.profile_photo
       ? `${BASE_URL}/uploads/${student.profile_photo}`
       : "";
@@ -1223,14 +1224,14 @@ const ViewStudent = () => {
         </body>
       </html>
     `;
-
+    const printWindow = window.open("about:blank", "_blank");
     printWindow.document.write(printContent);
     printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => {
+
+    printWindow.onload = () => {
+      printWindow.focus();
       printWindow.print();
-      printWindow.close();
-    }, 250);
+    };
   };
 
   if (loading) {
