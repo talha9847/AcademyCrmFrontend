@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import AdminNavbar from "./AdminNavbar";
 import axios from "axios";
 import QRCode from "qrcode";
+import { useLocation, useNavigate } from "react-router-dom";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
 // Helper component for clearer image presentation
@@ -46,6 +47,8 @@ const StatusPill = ({ isRevoked }) => (
 );
 
 const ViewCertificate = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [Certificates, setCertificates] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -242,9 +245,11 @@ const ViewCertificate = () => {
    * --- Action Handlers (Stubs) ---
    */
   const handleEdit = (certificateId) => {
-    alert(
-      `Editing Certificate ID: ${certificateId}. (Implement actual navigation/modal here)`
-    );
+    navigate("/admin/edit-certificate", {
+      state: {
+        certificateId: certificateId,
+      },
+    });
   };
 
   // --- Simple Black/White Theme Classes ---

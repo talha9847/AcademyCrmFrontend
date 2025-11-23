@@ -54,6 +54,7 @@ import TViewStudent from "./TeacherComponents/TViewStudent";
 import TCreateAttendancePage from "./TeacherComponents/TCreateAttendanc";
 import TAttendanceView from "./TeacherComponents/TAttendanceView";
 import Slug from "./adminComponents/Slug";
+import EditCertificate from "./adminComponents/EditCertificate";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -224,6 +225,14 @@ function App() {
               element={
                 <RoleProtectedRoute role="admin">
                   <ViewCertificate />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/edit-certificate/"
+              element={
+                <RoleProtectedRoute role="admin">
+                  <EditCertificate />
                 </RoleProtectedRoute>
               }
             />
