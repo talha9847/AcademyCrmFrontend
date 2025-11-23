@@ -471,7 +471,6 @@ const ViewStudent = () => {
   const handlePrint = () => {
     if (!student) return;
 
-    const printWindow = window.open("", "_blank");
     const profilePhotoUrl = student.profile_photo
       ? `${BASE_URL}/uploads/${student.profile_photo}`
       : "";
@@ -480,495 +479,650 @@ const ViewStudent = () => {
       : "";
 
     const printContent = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Student Admission Form - ${student.student_name}</title>
-            <style>
-              * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+     <!DOCTYPE html>
+<html>
+  <head>
+    <title>Student Admission Form - ${student.student_name || "New Student"}</title>
+    <style>
+      /* --- Base Styles --- */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 30px;
+        color: #2c3e50;
+        background: #f4f7f6; /* Light background for contrast */
+        min-height: 100vh;
+      }
+      .form-container {
+        max-width: 950px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+      }
+
+      /* --- Letterhead (Improved with Logo) --- */
+      .letterhead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(10deg, #52316f 0%, #52316f 100%); /* Deep Blue gradient */
+        color: white;
+        padding: 20px 40px;
+        position: relative;
+        border-bottom: 5px solid #f2c74f; /* Gold separator */
+      }
+      .logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        object-fit: contain;
+        background: white;
+        padding: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      .institution-details {
+        text-align: right;
+        flex-grow: 1;
+        margin-left: 20px;
+      }
+      .institution-name {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 5px;
+        letter-spacing: 1.5px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+      }
+      .institution-tagline {
+        font-size: 13px;
+        font-style: italic;
+        opacity: 0.9;
+        margin-bottom: 8px;
+      }
+      .institution-address,
+      .institution-contact {
+        font-size: 11px;
+        opacity: 0.8;
+      }
+
+      /* --- Form Content & Header --- */
+      .form-content {
+        padding: 30px;
+      }
+      .form-header {
+        background: #f2f4f8; /* Light gray for a subtle header */
+        color: #375a9b;
+        padding: 15px 20px;
+        margin: -30px -30px 20px -30px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #375a9b;
+      }
+      .form-meta {
+        display: flex;
+        justify-content: flex-end; /* Align right */
+        gap: 30px;
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        background: #e6f0ff; /* Very light blue background */
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #375a9b;
+      }
+
+      /* --- Photo & Signature --- */
+      .photo-section {
+        float: right;
+        margin-left: 30px;
+        margin-bottom: 20px;
+      }
+      .photo-container {
+        background: #f2f4f8;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: 2px solid #375a9b;
+      }
+      .photo-box {
+        width: 120px;
+        height: 140px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        overflow: hidden;
+        border: 1px dashed #375a9b;
+      }
+      .photo-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .photo-placeholder {
+        font-size: 10px;
+        color: #375a9b;
+        text-align: center;
+        padding: 8px;
+        font-weight: 600;
+      }
+      .signature-container {
+        margin-top: 10px;
+        text-align: center;
+      }
+      .signature-box {
+        width: 120px;
+        height: 40px;
+        border-bottom: 2px solid #375a9b;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .signature-box img {
+        max-width: 115px;
+        max-height: 35px;
+        object-fit: contain;
+      }
+      .signature-label {
+        font-size: 10px;
+        color: #52316f;
+        font-weight: 600;
+        padding-top: 5px;
+      }
+
+      /* --- Sections & Info Lines --- */
+      .section {
+        margin-bottom: 20px;
+        clear: both;
+        page-break-inside: avoid;
+      }
+      .section-heading {
+        background: #52316f;
+        color: white;
+        padding: 10px 15px;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      .info-line {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 8px;
+        font-size: 13px;
+        line-height: 1.5;
+        padding-bottom: 2px;
+      }
+      .info-label-inline {
+        font-weight: 600;
+        color: #2c3e50;
+        white-space: nowrap;
+        padding-right: 8px;
+        border-right: 2px solid #e0e0e0;
+        padding-left: 5px;
+        background: #fcfcfc;
+        border-radius: 4px 0 0 4px;
+      }
+      .info-value-fill {
+        flex-grow: 1;
+        border-bottom: 1px solid #375a9b; /* Solid line for a formal look */
+        padding: 0 8px 2px 8px;
+        font-weight: 500;
+        color: #000000;
+        min-height: 20px;
+        background: #f8f9fa;
+        border-radius: 0 4px 4px 0;
+      }
+      
+      /* --- Info Table (Parent Section) --- */
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .info-row {
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-label {
+        width: 25%;
+        padding: 10px 15px;
+        font-weight: 600;
+        font-size: 12px;
+        color: #375a9b;
+        background: #e6f0ff;
+        vertical-align: top;
+        text-align: left;
+      }
+      .info-value {
+        padding: 10px 20px;
+        font-size: 12px;
+        color: #2c3e50;
+        font-weight: 500;
+        border-left: 1px solid #e0e0e0;
+      }
+      
+      /* --- Declaration --- */
+      .declaration-box {
+        border: 3px solid #ffcc00;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        background: #fffdf5;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        page-break-inside: avoid;
+      }
+      .declaration-title {
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        color: #375a9b;
+        text-align: center;
+        padding-bottom: 8px;
+        border-bottom: 1px dashed #375a9b;
+      }
+      .declaration-text {
+        font-size: 12px;
+        line-height: 1.6;
+        text-align: justify;
+        margin-bottom: 15px;
+        color: #2c3e50;
+      }
+      .declaration-date {
+        display: flex;
+        justify-content: flex-start;
+        gap: 80px;
+        margin-top: 15px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #375a9b;
+      }
+      .date-field {
+        border-bottom: 1px solid #375a9b;
+        min-width: 120px;
+        display: inline-block;
+        padding: 0 5px 1px 5px;
+        color: #2c3e50;
+      }
+      
+      /* --- Footer Signatures --- */
+      .signature-footer {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 40px;
+        page-break-inside: avoid;
+      }
+      .signature-block {
+        text-align: center;
+        width: 28%;
+      }
+      .signature-space {
+        height: 50px;
+        border-bottom: 2px solid #375a9b;
+        margin-bottom: 6px;
+      }
+      .signature-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #375a9b;
+      }
+      
+      /* --- Office Stamp --- */
+      .office-stamp {
+        margin-top: 30px;
+        text-align: center;
+        page-break-inside: avoid;
+      }
+      .stamp-box {
+        display: inline-block;
+        border: 2px solid #375a9b;
+        border-radius: 50%;
+        padding: 20px 30px;
+        text-align: center;
+        font-size: 11px;
+        color: #375a9b;
+        font-weight: 700;
+        background: white;
+        box-shadow: 0 0 10px rgba(55, 90, 155, 0.1);
+        border-style: dashed;
+      }
+      
+      /* --- Print Media Query (Essential for formal documents) --- */
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+        }
+        .form-container {
+          box-shadow: none;
+          border: none;
+          max-width: 100%;
+          margin: 0;
+        }
+        .section, .declaration-box, .signature-footer, .office-stamp {
+          page-break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <!-- Letterhead (Now includes Logo) -->
+      <div class="letterhead">
+        <div class="logo-container">
+          <!-- Logo Placeholder: Use a reliable public image URL for your logo -->
+          <img 
+            src="/logo.png" 
+            alt="MCA Logo" 
+            class="logo"
+            onerror="this.onerror=null; this.src='https://placehold.co/80x80/FFCC00/375A9B?text=MCA+Logo'"
+          />
+        </div>
+        <div class="institution-details">
+          <div class="institution-name">MEHTAB COMPUTER ACADEMY</div>
+          <div class="institution-tagline">
+            "Empowering Future Through Technology Education"
+          </div>
+          <div class="institution-address">
+            Regd. Office: 123 Education Street, City - 395006
+          </div>
+          <div class="institution-contact">
+            Phone: +91 91067-04675 | Email: info@mehtabacademy.edu.in | Web:
+            www.mehtabacademy.edu.in
+          </div>
+        </div>
+      </div>
+
+      <div class="form-content">
+        <!-- Form Title -->
+        <div class="form-header">
+          STUDENT ADMISSION FORM (ACADEMIC YEAR ${new Date().getFullYear()}-${
+            (new Date().getFullYear() + 1) % 100
+          })
+        </div>
+
+        <!-- Form Meta Info -->
+        <div class="form-meta">
+          <div>
+            FORM NO: ${student.admission_number || "_______________"}
+          </div>
+          <div>
+            Date of Admission: ${student.admission_date || "DD/MM/YYYY"}
+          </div>
+        </div>
+
+        <!-- Photo and Signature (Floated Right) -->
+        <div class="photo-section">
+          <div class="photo-container">
+            <div class="photo-box">
+              ${
+                profilePhotoUrl
+                  ? `<img src="${photoUrl}" alt="Student Photo" />`
+                  : `
+              <div class="photo-placeholder">
+                PASTE RECENT<br />PASSPORT SIZE<br />PHOTOGRAPH HERE
+              </div>
+              `
               }
-              body {
-                font-family: 'Times New Roman', serif;
-                padding: 30px 60px; /* Reduced vertical padding from 50px to 30px */
-                color: #000;
-                background: #fff;
-                line-height: 1.35; /* Slightly reduced line-height */
-              }
-              .letterhead {
-                text-align: center;
-                margin-bottom: 25px; /* Reduced from 30px */
-                padding-bottom: 8px; /* Reduced from 10px */
-                border-bottom: 2px solid #000;
-              }
-              .institution-name {
-                font-size: 28px;
-                font-weight: bold;
-                color: #000;
-                margin-bottom: 5px;
-                letter-spacing: 0.5px;
-                text-decoration: underline;
-              }
-              .institution-tagline {
-                font-size: 13px;
-                color: #333;
-                font-style: italic;
-                margin-bottom: 5px;
-              }
-              .institution-address, .institution-contact {
-                font-size: 11px;
-                color: #444;
-                margin-bottom: 2px;
-              }
-              .form-header {
-                color: #000;
-                padding: 5px 0;
-                margin: 20px 0 15px 0; /* Reduced margins */
-                text-align: center;
-                font-size: 18px;
-                font-weight: bold;
-                letter-spacing: 2px;
-                border-bottom: 3px double #000;
-                border-top: 1px solid #000;
-              }
-              .form-number {
-                text-align: right;
-                font-size: 11px;
-                margin-bottom: 10px; /* Reduced from 15px */
-                color: #333;
-              }
-              .photo-section {
-                float: right;
-                margin-left: 30px;
-                margin-bottom: 15px;
-                margin-top: -10px;
-              }
-              .photo-container {
-                border: 1px solid #000;
-                padding: 2px;
-                background: white;
-                box-shadow: none;
-              }
-              .photo-box {
-                width: 130px;
-                height: 150px;
-                border: 1px dashed #666;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #fff;
-                overflow: hidden;
-              }
-              .photo-box img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-              }
-              .photo-placeholder {
-                font-size: 10px;
-                color: #999;
-                text-align: center;
-                padding: 5px;
-              }
-              .signature-container {
-                margin-top: 15px;
-                text-align: center;
-              }
-              .signature-box {
-                width: 130px;
-                height: 40px;
-                border: none;
-                border-bottom: 1px solid #000;
-                display: flex;
-                align-items: flex-end;
-                justify-content: center;
-                background: none;
-                margin-bottom: 0px;
-              }
-              .signature-box img {
-                max-width: 125px;
-                max-height: 35px;
-                object-fit: contain;
-              }
-              .signature-label {
-                font-size: 10px;
-                color: #333;
-                padding-top: 3px;
-                width: 130px;
-                margin: 0 auto;
-                font-style: italic;
-              }
-              .section {
-                margin-bottom: 15px; /* Reduced from 20px */
-                clear: both;
-                page-break-inside: avoid;
-              }
-              .section-heading {
-                background: none;
-                border-left: none;
-                padding: 5px 0;
-                font-size: 14px;
-                font-weight: bold;
-                margin-bottom: 8px; /* Reduced from 10px */
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                border-bottom: 1px solid #000;
-                display: inline-block;
-              }
-              /* New style for fillable lines */
-              .info-line {
-                display: flex;
-                align-items: flex-end;
-                margin-bottom: 6px; /* Reduced from 8px */
-                font-size: 13px;
-                line-height: 1.4; /* Adjusted line-height */
-                padding-bottom: 2px;
-              }
-              .info-label-inline {
-                font-weight: bold;
-                color: #000;
-                white-space: nowrap;
-                padding-right: 5px;
-              }
-              .info-value-fill {
-                flex-grow: 1;
-                border-bottom: 1px dotted #000;
-                padding: 0 5px;
-                font-weight: normal;
-                color: #000;
-              }
-              .info-table {
-                width: 100%;
-                border-collapse: collapse;
-              }
-              .info-row {
-                border-bottom: 1px dotted #ccc;
-              }
-              .info-row:last-child {
-                border-bottom: none;
-              }
-              .info-label {
-                width: 30%;
-                padding: 6px 10px 6px 0; /* Reduced padding */
-                font-weight: bold;
-                font-size: 12px;
-                color: #333;
-                background: none;
-                vertical-align: top;
-                text-align: left;
-              }
-              .info-value {
-                padding: 6px 15px; /* Reduced padding */
-                font-size: 12px;
-                color: #000;
-                border-left: 1px dotted #999;
-              }
-              
-              /* Make Declaration look like an important box */
-              .declaration-box {
-                border: 1px solid #000;
-                border-top: 5px solid #000;
-                padding: 15px;
-                margin: 15px 0; /* Reduced margin from 20px */
-                background: #f8f8f8;
-                page-break-inside: avoid;
-              }
-              .declaration-title {
-                font-weight: bold;
-                font-size: 14px;
-                margin-bottom: 8px; /* Reduced from 10px */
-                text-transform: uppercase;
-                color: #000;
-                text-align: center;
-                border-bottom: 1px solid #000;
-                padding-bottom: 3px;
-              }
-              .declaration-text {
-                font-size: 11px;
-                line-height: 1.4; /* Tighter line height for declaration */
-                text-align: justify;
-                margin-bottom: 8px; /* Reduced from 10px */
-              }
-              .declaration-date {
-                display: flex;
-                justify-content: flex-start;
-                gap: 80px;
-                margin-top: 10px; /* Reduced from 15px */
-                font-size: 12px;
-              }
-              .date-field {
-                border-bottom: 1px solid #000;
-                min-width: 120px;
-                display: inline-block;
-                padding: 0 5px;
-              }
-              .signature-footer {
-                display: flex;
-                justify-content: space-around;
-                margin-top: 40px; /* Reduced from 50px */
-                page-break-inside: avoid;
-              }
-              .signature-block {
-                text-align: center;
-                width: 30%;
-              }
-              .signature-space {
-                height: 20px;
-                border-bottom: 1px solid #000;
-                margin-bottom: 5px;
-              }
-              .signature-text {
-                font-size: 11px;
-                font-weight: bold;
-                color: #000;
-                border-top: 1px dotted #000;
-                padding-top: 3px;
-              }
-              .signature-role {
-                font-size: 10px;
-                color: #666;
-                margin-top: 2px;
-              }
-              .office-stamp {
-                margin-top: 30px; /* Reduced from 40px */
-                text-align: right;
-                page-break-inside: avoid;
-              }
-              .stamp-box {
-                display: inline-block;
-                border: 2px solid #000;
-                border-radius: 50%;
-                padding: 25px 35px;
-                text-align: center;
-                font-size: 10px;
-                color: #000;
-                font-weight: bold;
-                border-style: double;
-              }
-              .admission-date {
-                text-align: right;
-                font-size: 12px;
-                margin-bottom: 10px;
-                color: #333;
-              }
-              @media print {
-                body {
-                  padding: 30px;
+            </div>
+          </div>
+          <div class="signature-container">
+            <div class="signature-box">
+              ${signatureUrl ? `<img src="${signUrl}" alt="Signature" />` : ""}
+            </div>
+            <div class="signature-label">Student's Signature</div>
+          </div>
+        </div>
+
+        <!-- Academic Information -->
+        <div class="section">
+          <div class="section-heading">📚 Academic Information</div>
+          <div class="info-line">
+            <span class="info-label-inline">1. Class Enrolled:</span>
+            <span class="info-value-fill"
+              >${student.class_name || "____________________"}</span
+            >
+            <span class="info-label-inline" style="padding-left: 15px; border-left: none;"
+              >2. Section:</span
+            >
+            <span class="info-value-fill" style="flex-basis: 150px; flex-grow: 0;"
+              >${student.section_name || "_________"}</span
+            >
+          </div>
+          <div class="info-line">
+            <span class="info-label-inline">3. Roll Number:</span>
+            <span class="info-value-fill" style="flex-basis: 250px; flex-grow: 0;"
+              >${student.roll_no || "____________________"}</span
+            >
+            <span class="info-label-inline" style="padding-left: 15px; border-left: none;"
+              >4. Session Timing:</span
+            >
+            <span class="info-value-fill"
+              >${student.session_timing || "____________________"}</span
+            >
+          </div>
+        </div>
+
+        <div style="clear: both; margin-bottom: 20px;"></div>
+
+        <!-- Personal Information -->
+        <div class="section">
+          <div class="section-heading">👤 Personal Information</div>
+
+          <div class="info-line">
+            <span class="info-label-inline"
+              >5. Full Name of Student (Block Letters):</span
+            >
+            <span class="info-value-fill"
+              >${
+                student.student_name ||
+                "__________________________________________________________________________________"
+              }</span
+            >
+          </div>
+          <div class="info-line">
+            <span class="info-label-inline">6. Date of Birth (DD/MM/YYYY):</span>
+            <span class="info-value-fill" style="flex-basis: 200px; flex-grow: 0;"
+              >${student.date_of_birth || "DD / MM / YYYY"}</span
+            >
+            <span class="info-label-inline" style="padding-left: 15px; border-left: none;"
+              >7. Gender:</span
+            >
+            <span class="info-value-fill" style="flex-basis: 120px; flex-grow: 0;"
+              >${student.gender || "__________"}</span
+            >
+            <span class="info-label-inline" style="padding-left: 15px; border-left: none;"
+              >8. Nationality:</span
+            >
+            <span class="info-value-fill" style="flex-basis: 120px; flex-grow: 0;"
+              >${student.nationality || "Indian"}</span
+            >
+          </div>
+          <div class="info-line">
+            <span class="info-label-inline"
+              >9. Residential Address (Permanent):</span
+            >
+            <span class="info-value-fill"
+              >${
+                student.student_address ||
+                "__________________________________________________________________________________"
+              }</span
+            >
+          </div>
+          <div class="info-line">
+            <span class="info-label-inline">10. Contact Number:</span>
+            <span class="info-value-fill" style="flex-basis: 250px; flex-grow: 0;"
+              >${student.mobile || "____________________"}</span
+            >
+            <span class="info-label-inline" style="padding-left: 15px; border-left: none;"
+              >11. Email Address:</span
+            >
+            <span class="info-value-fill"
+              >${
+                student.student_email ||
+                "________________________________________________"
+              }</span
+            >
+          </div>
+        </div>
+
+        <!-- Parent / Guardian Information -->
+        <div class="section">
+          <div class="section-heading">👨‍👩‍👧 Parent / Guardian Information</div>
+          <table class="info-table">
+            <tr class="info-row">
+              <td class="info-label">12. Parent/Guardian Name:</td>
+              <td class="info-value">
+                ${student.parent_name || "_________________________________"}
+              </td>
+              <td class="info-label">13. Relationship:</td>
+              <td class="info-value">
+                ${student.parent_relation || "____________________"}
+              </td>
+            </tr>
+            <tr class="info-row">
+              <td class="info-label">14. Contact Number:</td>
+              <td class="info-value">
+                ${student.parent_phone || "_________________________________"}
+              </td>
+              <td class="info-label">15. Occupation:</td>
+              <td class="info-value">
+                ${student.parent_occupation || "____________________"}
+              </td>
+            </tr>
+            <tr class="info-row">
+              <td class="info-label">16. Email Address:</td>
+              <td class="info-value" colspan="3">
+                ${
+                  student.parent_email ||
+                  "__________________________________________________________________________________________________________________"
                 }
-                .section {
-                  page-break-inside: avoid;
-                }
-              }
-            </style>
-          </head>
-          <body>
-            <!-- Letterhead -->
-            <div class="letterhead">
-              <div class="institution-name">MEHTAB COMPUTER ACADEMY</div>
-              <div class="institution-tagline">"Empowering Future Through Technology Education"</div>
-              <div class="institution-address">Regd. Office: 123 Education Street, City - 395006"}</div>
-              <div class="institution-contact">Phone: +91 91067-04675 | Email: info@mehtabacademy.edu.in | Web: www.mehtabacademy.edu.in</div>
-            </div>
+              </td>
+            </tr>
+          </table>
+          <div class="info-line" style="margin-top: 15px">
+            <span class="info-label-inline"
+              >17. Address if different from student:</span
+            >
+            <span class="info-value-fill"
+              >${
+                student.parent_address ||
+                "__________________________________________________________________________________"
+              }</span
+            >
+          </div>
+        </div>
 
-            <!-- Form Title and Numbers -->
-            <div class="form-header">STUDENT ADMISSION FORM (ACADEMIC YEAR ${new Date().getFullYear()}-${
-      new Date().getFullYear() + 1 - 2000
-    })</div>
+        <!-- Declaration -->
+        <div class="declaration-box">
+          <div class="declaration-title">📝 DECLARATION BY PARENT/GUARDIAN</div>
+          <div class="declaration-text">
+            I hereby solemnly affirm and declare that the information provided
+            above is true and correct to the best of my knowledge and belief. I
+            understand that any discrepancy or false information discovered later
+            may result in the cancellation of the student's admission. I further
+            agree that my ward and I shall strictly adhere to all the rules,
+            regulations, and disciplinary policies enforced by Mehtab Computer
+            Academy, and that attendance will be maintained as per institutional
+            requirements.
+          </div>
+          <div class="declaration-date">
+            <div>Place: <span class="date-field">____________________</span></div>
+            <div>Date: <span class="date-field">____________________</span></div>
+          </div>
+        </div>
 
-            <div class="form-number">
-              FORM NO.${student.admission_number || "_______________"}
-            </div>
+        <!-- Signature Footer -->
+        <div class="signature-footer">
+          <div class="signature-block">
+            <div class="signature-space"></div>
+            <div class="signature-text">Student's Signature</div>
+          </div>
+          <div class="signature-block">
+            <div class="signature-space"></div>
+            <div class="signature-text">Parent's/Guardian's Signature</div>
+          </div>
+          <div class="signature-block">
+            <div class="signature-space"></div>
+            <div class="signature-text">Verified By (Office Use)</div>
+          </div>
+        </div>
 
-            <div class="admission-date">
-              Date of Admission: <span class="date-field"> ${
-                student.admission_date || "DD/MM/YYYY"
-              } </span>
-            </div>
+        <div class="office-stamp">
+          <div class="stamp-box">
+            OFFICIAL SEAL / STAMP<br />
+            (FOR OFFICE USE ONLY)
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>`;
 
-            <!-- Photo and Signature (Floated Right) -->
-            <div class="photo-section">
-              <div class="photo-container">
-                <div class="photo-box">
-                  ${
-                    profilePhotoUrl
-                      ? `<img src="${photoUrl}" alt="Student Photo" />`
-                      : '<div class="photo-placeholder">PASTE RECENT<br>PASSPORT SIZE<br>PHOTOGRAPH HERE</div>'
-                  }
-                </div>
-              </div>
-              <div class="signature-container">
-                <div class="signature-box">
-                  ${
-                    signatureUrl
-                      ? `<img src="${signUrl}" alt="Signature" />`
-                      : ""
-                  }
-                </div>
-                <div class="signature-label">Student's Signature (Mandatory)</div>
-              </div>
-            </div>
+    // const printWindow = window.open("", "_blank");
+    // printWindow.document.write(printContent);
+    // printWindow.document.close();
+    // printWindow.focus();
+    // setTimeout(() => {
+    //   printWindow.print();
+    //   printWindow.close();
+    // }, 250);
 
-            <!-- Academic Information -->
-            <div class="section">
-              <div class="section-heading">Academic Information</div>
-              <div class="info-line">
-                <span class="info-label-inline">1. Class Enrolled:</span>
-                <span class="info-value-fill">${
-                  student.class_name || "____________________"
-                }</span>
-                <span class="info-label-inline" style="padding-left: 30px;">2. Section:</span>
-                <span class="info-value-fill" style="flex-basis: 150px;">${
-                  student.section_name || "_________"
-                }</span>
-              </div>
-              <div class="info-line">
-                <span class="info-label-inline">3. Roll Number:</span>
-                <span class="info-value-fill" style="flex-basis: 250px;">${
-                  student.roll_no || "____________________"
-                }</span>
-                <span class="info-label-inline" style="padding-left: 30px;">4. Session Timing:</span>
-                <span class="info-value-fill">${
-                  student.session_timing || "____________________"
-                }</span>
-              </div>
-            </div>
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
 
-            <!-- Personal Information -->
-            <div class="section">
-              <div class="section-heading">Personal Information</div>
-              
-              <div class="info-line">
-                <span class="info-label-inline">5. Full Name of Student (Block Letters):</span>
-                <span class="info-value-fill">${
-                  student.student_name ||
-                  "__________________________________________________________________________________"
-                }</span>
-              </div>
-              <div class="info-line">
-                <span class="info-label-inline">6. Date of Birth (DD/MM/YYYY):</span>
-                <span class="info-value-fill" style="flex-basis: 200px;">${
-                  student.date_of_birth || "DD / MM / YYYY"
-                }</span>
-                <span class="info-label-inline" style="padding-left: 30px;">7. Gender:</span>
-                <span class="info-value-fill" style="flex-basis: 150px;">${
-                  student.gender || "__________"
-                }</span>
-                <span class="info-label-inline" style="padding-left: 30px;">8. Nationality:</span>
-                <span class="info-value-fill" style="flex-basis: 150px;">${
-                  student.nationality || "Indian"
-                }</span>
-              </div>
-              <div class="info-line">
-                <span class="info-label-inline">9. Residential Address (Permanent):</span>
-                <span class="info-value-fill">${
-                  student.student_address ||
-                  "__________________________________________________________________________________"
-                }</span>
-              </div>
-              <div class="info-line">
-                <span class="info-label-inline">10. Contact Number:</span>
-                <span class="info-value-fill" style="flex-basis: 250px;">${
-                  student.mobile || "____________________"
-                }</span>
-                <span class="info-label-inline" style="padding-left: 30px;">11. Email Address:</span>
-                <span class="info-value-fill">${
-                  student.student_email ||
-                  "________________________________________________"
-                }</span>
-              </div>
-            </div>
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(printContent);
+    doc.close();
 
-            <!-- Parent / Guardian Information - Using the simplified table structure for density -->
-            <div class="section">
-              <div class="section-heading">Parent / Guardian Information</div>
-              <table class="info-table">
-                <tr class="info-row">
-                  <td class="info-label">12. Parent/Guardian Name:</td>
-                  <td class="info-value">${
-                    student.parent_name || "_________________________________"
-                  }</td>
-                  <td class="info-label">13. Relationship:</td>
-                  <td class="info-value">${
-                    student.parent_relation || "____________________"
-                  }</td>
-                </tr>
-                <tr class="info-row">
-                  <td class="info-label">14. Contact Number:</td>
-                  <td class="info-value">${
-                    student.parent_phone || "_________________________________"
-                  }</td>
-                  <td class="info-label">15. Occupation:</td>
-                  <td class="info-value">${
-                    student.parent_occupation || "____________________"
-                  }</td>
-                </tr>
-                <tr class="info-row">
-                  <td class="info-label">16. Email Address:</td>
-                  <td class="info-value" colspan="3">${
-                    student.parent_email ||
-                    "__________________________________________________________________________________________________________________"
-                  }</td>
-                </tr>
-              </table>
-              <div class="info-line" style="margin-top: 10px;">
-                <span class="info-label-inline">17. Address if different from student:</span>
-                <span class="info-value-fill">${
-                  student.parent_address ||
-                  "__________________________________________________________________________________"
-                }</span>
-              </div>
-            </div>
+    // Wait for images to load
+    const images = doc.images;
+    let loadedCount = 0;
+    const totalImages = images.length;
 
-            <!-- Declaration -->
-            <div class="declaration-box">
-              <div class="declaration-title">DECLARATION BY PARENT/GUARDIAN</div>
-              <div class="declaration-text">
-                I hereby solemnly affirm and declare that the information provided above is true and correct to the best of my knowledge and belief. I understand that any discrepancy or false information discovered later may result in the cancellation of the student's admission. I further agree that my ward and I shall strictly adhere to all the rules, regulations, and disciplinary policies enforced by Mehtab Computer Academy, and that attendance will be maintained as per institutional requirements.
-              </div>
-              <div class="declaration-date">
-                <div>
-                  Place: <span class="date-field">____________________</span>
-                </div>
-                <div>
-                  Date: <span class="date-field">____________________</span>
-                </div>
-              </div>
-            </div>
+    if (totalImages === 0) {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } else {
+      for (let img of images) {
+        img.onload = img.onerror = () => {
+          loadedCount++;
+          if (loadedCount === totalImages) {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+          }
+        };
+      }
+    }
 
-            <!-- Signature Footer -->
-            <div class="signature-footer">
-              <div class="signature-block">
-                <div class="signature-space"></div>
-                <div class="signature-text">Student's Signature</div>
-              </div>
-              <div class="signature-block">
-                <div class="signature-space"></div>
-                <div class="signature-text">Parent's/Guardian's Signature</div>
-              </div>
-              <div class="signature-block">
-                <div class="signature-space"></div>
-                <div class="signature-text">For Office Use Only - Verified By</div>
-              </div>
-            </div>
-
-            <div class="office-stamp">
-              <div class="stamp-box">
-                OFFICIAL SEAL / STAMP<br>
-                (DO NOT WRITE OR SIGN BELOW)
-              </div>
-            </div>
-          </body>
-        </html>`;
-
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    printWindow.focus();
+    // Remove iframe after printing
     setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 250);
+      document.body.removeChild(iframe);
+    }, 2000);
   };
 
   const handleIDCardPrint = () => {

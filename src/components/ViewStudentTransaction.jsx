@@ -78,21 +78,20 @@ function convertToWords(num) {
 
 async function formatCurrencyInWords(amount_paid) {
   const amountInWords = convertToWords(amount_paid);
+  console.log(amountInWords);
+  console.log(amount_paid);
 
-  return amountInWords + " Rupees";
+  return `${amountInWords} Rupees`;
 }
 
 const printReceipt = async (transaction, studentInfo, totalFees) => {
-  const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
-  const receiptNumber = `${transaction.receipt_number}-${new Date()
-    .getTime()
-    .toString()
-    .slice(-6)}`;
+  const receiptNumber = `${transaction.receipt_number}`;
   const currentDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+  const inWords = await formatCurrencyInWords(transaction.amount_paid);
   const transactionDate = new Date(transaction.payment_date).toLocaleDateString(
     "en-US",
     {
@@ -113,307 +112,383 @@ const printReceipt = async (transaction, studentInfo, totalFees) => {
   }).format(totalFees);
 
   const receiptHTML = `
-   <!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fee Receipt - Mehtab Computer Academy</title>
+
     <style>
-        /* --- Print Styles: Ensures clean, black & white printing --- */
-        @media print {
-            body { margin: 0; padding: 0; }
-            body * { visibility: hidden; }
-            .receipt-print-wrapper {
-                visibility: visible;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                box-shadow: none;
-                border: none;
-            }
-            .receipt-print-wrapper * { visibility: visible; }
-            .receipt-container { border: 2px solid black !important; }
-        }
+      :root {
+        --primary: #6a1b9a;
+        --accent: #ffd700;
+        --text-dark: #1a1a1a;
+        --text-light: #555;
+        --border: #d8d8d8;
+        --bg-light: #f8f9ff;
+        --font: "Inter", Arial, sans-serif;
+      }
 
-        /* --- Traditional Web Styles --- */
-        .receipt-print-wrapper {
-            font-family: 'Times New Roman', serif; /* Traditional, paper-like font */
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-            background-color: #f0f0f0; /* Light background for paper contrast */
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--font);
+        background: #eef2f9;
+      }
 
-        .receipt-container {
-            width: 100%;
-            max-width: 650px;
-            background-color: white;
-            padding: 30px;
-            border: 2px solid black; /* Strong border to mimic a paper form */
-            box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.1);
-        }
+      .page-wrapper {
+        max-width: 900px;
+        background: white;
+        margin: 20px auto;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+      }
 
-        /* Header - Mimicking the letterhead and institution details */
-        .receipt-header {
-            text-align: center;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-            border-bottom: 3px double black; /* Double line separator for header */
-        }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
 
-        .academy-name {
-            font-size: 30px;
-            font-weight: 900;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+      .header img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+      }
 
-        .institute-details {
-            font-size: 12px;
-            margin-top: 5px;
-            line-height: 1.4;
-        }
+      .heading-text {
+        text-align: right;
+        max-width: 75%;
+      }
 
-        /* Content Fields: Uses dashed lines for writing space */
-        .receipt-content {
-            padding: 0;
-        }
+      .heading-text h1 {
+        margin: 0;
+        font-size: 23px;
+        font-weight: 900;
+        color: var(--primary);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
 
-        .info-row-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-        
-        .info-field {
-            display: flex;
-            align-items: flex-end;
-            padding: 10px 0;
-            font-size: 14px;
-            color: #111;
-            border-bottom: 1px dashed #777; /* Dashed line for writing space */
-            flex-grow: 1;
-        }
+      .heading-text p {
+        margin: 5px 0 0;
+        font-size: 0.95rem;
+        color: var(--text-light);
+        line-height: 1.4;
+      }
 
-        .info-label {
-            font-weight: normal;
-            color: #333;
-            white-space: nowrap;
-            padding-right: 8px;
-            flex-shrink: 0;
-        }
+      .header-divider {
+        height: 5px;
+        width: 100%;
+        background: linear-gradient(to right, var(--primary), var(--accent));
+        margin: 25px 0;
+        border-radius: 5px;
+      }
 
-        .info-value {
-            font-weight: bold; /* Bold value to mimic handwritten entry */
-            color: black;
-            flex-grow: 1;
-            text-align: left;
-            padding-left: 5px;
-            min-width: 50px;
-            text-decoration: underline; /* Emphasizes the filled-in value */
-        }
+      .meta-box {
+        display: flex;
+        justify-content: space-between;
+        gap: 25px;
+        background: var(--bg-light);
+        padding: 20px 25px;
+        border: 1px solid var(--primary);
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
 
-        /* Layout specific adjustments for top fields */
-        .receipt-no-date .info-field { width: 50%; }
-        .receipt-no-date .info-field:nth-child(2) { padding-left: 20px; }
-        @media (max-width: 400px) {
-            .receipt-no-date .info-field { width: 100%; padding-left: 0 !important; }
-        }
+      .meta-item {
+        flex: 1;
+      }
 
-        .fees-in-words-row {
-            padding: 20px 0;
-        }
+      .meta-label {
+        font-weight: 700;
+        color: var(--primary);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+      }
 
-        /* Amount Paid Box: Large and bordered */
-        .amount-box {
-            display: flex;
-            align-items: center;
-            border: 2px solid black;
-            padding: 10px;
-            margin-top: 20px;
-            width: 50%;
-        }
-        .amount-box .info-label { font-size: 16px; font-weight: bold; }
-        .amount-box .info-value { 
-            font-size: 20px; 
-            font-weight: 900; 
-            text-decoration: none; 
-            padding-left: 20px;
-        }
+      .meta-value {
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 5px;
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 1.05rem;
+      }
 
-        /* Footer - Signatures and notes */
-        .receipt-footer {
-            margin-top: 30px;
-            padding-top: 15px;
-        }
+      .section-title {
+        font-weight: 800;
+        color: var(--primary);
+        font-size: 1.25rem;
+        margin-top: 20px;
+        margin-bottom: 15px;
+        border-bottom: 3px solid var(--primary);
+        padding-bottom: 6px;
+      }
 
-        .signature-area {
-            display: flex;
-            justify-content: space-between;
-            text-align: center;
-            align-items:center;
-            margin-top: 20px;
-        }
+      .detail-row {
+        display: flex;
+        margin-bottom: 16px;
+        align-items: flex-end;
+      }
 
-        .signature-col {
-            width: 45%;
-        }
+      .detail-label {
+        min-width: 200px;
+        font-weight: 600;
+        color: var(--text-light);
+        padding-bottom: 3px;
+      }
 
-        .signature-line {
-            border-top: 1px solid black;
-            padding-top: 5px;
-            font-size: 12px;
-            font-weight: bold;
-        }
+      .detail-value {
+        flex: 1;
+        border-bottom: 1px dashed var(--border);
+        padding-bottom: 3px;
+        font-weight: 500;
+        color: var(--text-dark);
+      }
 
-        .note {
-            margin-top: 30px;
-            font-size: 11px;
-            text-align: left;
-            border: 1px solid black;
-            padding: 5px 10px;
-            background-color: #f7f7f7;
-        }
+      .payment-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-top: 0px;
+        margin-bottom: 30px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+      }
+
+      .summary-label {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .summary-value {
+        font-weight: 800;
+        font-size: 1.1rem;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 5px;
+        margin-top: 3px;
+        color: var(--text-dark);
+      }
+
+      .status-paid {
+        color: #28a745;
+      }
+
+      .status-pending {
+        color: #dc3545;
+      }
+
+      .amount-section {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        border-left: 5px solid var(--primary);
+        padding-left: 20px;
+      }
+
+      .amount-label {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 1.1rem;
+      }
+
+      .amount-field {
+        font-size: 2.5rem;
+        font-weight: 900;
+        padding-bottom: 8px;
+        border-bottom: 4px double var(--primary);
+        width: fit-content;
+        color: var(--primary);
+        margin-top: 8px;
+      }
+
+      .amount-words {
+        margin-top: 15px;
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: var(--text-dark);
+        background: var(--bg-light);
+        padding: 8px 12px;
+        border-radius: 4px;
+        width: fit-content;
+      }
+
+      .signature-area {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 50px;
+      }
+
+      .sign-box {
+        width: 40%;
+        text-align: center;
+        padding-top: 15px;
+        border-top: 2px solid var(--text-light);
+        font-weight: 600;
+        color: var(--text-light);
+      }
+
+      .note {
+        margin-top: 40px;
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #d40000;
+        border-radius: 8px;
+        background: #fff0f0;
+        color: #a00000;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+     
+
+      @page {
+        size: A4;
+        margin: 10mm;
+      }
+
+
+      
     </style>
-</head>
-<body>
-    <div class="receipt-print-wrapper">
-        <div class="receipt-container">
-            <div class="receipt-header">
-                <div class="institute-details">
-                    AN ISO 9001-2015 CERTIFIED INSTITUTE | UAN No.: G4ZZ... | UDIAM-GJ-06...<br>
-                    25-28, Signature Mall, 1st Floor Near Mota Mandi Road, Kosamba - 394120
-                </div>
-                <div class="academy-name">Mehtab Computer Academy</div>
-            </div>
+  </head>
 
-            <div class="receipt-content">
-                <!-- Receipt Number and Date -->
-                <div class="info-row-container receipt-no-date">
-                    <div class="info-field">
-                        <span class="info-label">Receipt No.:</span>
-                        <span class="info-value">${receiptNumber}</span>
-                    </div>
-                    <div class="info-field">
-                        <!-- Using transactionDate as the main payment date -->
-                        <span class="info-label">Date:</span>
-                        <span class="info-value">${transactionDate}</span>
-                    </div>
-                </div>
+  <body>
+    <div class="page-wrapper">
+      <div class="header">
+        <img src="/logo.png" onerror="this.style.display='none'" />
 
-                <!-- Student Information -->
-                <div class="info-row-container">
-                    <div class="info-field" style="width: 100%;">
-                        <span class="info-label">Student Name:</span>
-                        <span class="info-value">${studentInfo.name}</span>
-                    </div>
-                </div>
-                
-                <div class="info-row-container">
-                    <div class="info-field" style="width: 100%;">
-                        <span class="info-label">Student ID:</span>
-                        <span class="info-value">${studentInfo.studentId}</span>
-                    </div>
-                </div>
-                
-                <div class="info-row-container">
-                    <div class="info-field" style="width: 100%;">
-                        <span class="info-label">Address:</span>
-                        <span class="info-value">${
-                          studentInfo.address || "N/A"
-                        }</span>
-                    </div>
-                </div>
-
-                <!-- Course/Fee Information -->
-                <div class="info-row-container" style="margin-top: 20px;">
-                    <div class="info-field" style="width: 50%;">
-                        <span class="info-label">Course:</span>
-                        <span class="info-value">${
-                          studentInfo.course || "N/A"
-                        }</span>
-                    </div>
-                    <div class="info-field" style="width: 50%;">
-                        <span class="info-label">Total Fees:</span>
-                        <span class="info-value">${formattedTotal}</span>
-                    </div>
-                </div>
-                
-                <div class="info-row-container">
-                    <div class="info-field" style="width: 50%;">
-                        <span class="info-label">Payment Method:</span>
-                        <span class="info-value">${
-                          transaction.payment_method || "Cash"
-                        }</span>
-                    </div>
-                    <div class="info-field" style="width: 50%;">
-                        <span class="info-label">Status:</span>
-                        <span class="info-value" style="text-decoration: none; font-weight: 700;">
-                            ${
-                              transaction.status === "paid" ? "PAID" : "PENDING"
-                            }
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Amount in Words -->
-                <div class="info-row-container fees-in-words-row">
-                    <span class="info-label">Rupees in Words:</span>
-                    <span class="info-value" style="text-decoration: none; font-style: italic; font-weight: bold; flex-grow: 0;">
-                        ${await formatCurrencyInWords(
-                          transaction.amount_paid
-                        )} only
-                    </span>
-                </div>
-
-                <!-- Amount Paid Box -->
-                <div class="amount-box">
-                    <span class="info-label">RS.</span>
-                    <span class="info-value">${formattedAmount} /-</span>
-                </div>
-            </div>
-
-            <div class="receipt-footer">
-                <div class="signature-area">
-                    <div class="signature-col">
-                        <div class="signature-line">Student Sign.</div>
-                    </div>
-                    <div  class="signature-col">
-                        <div class="signature-line">Authorised Signature</div>
-                    </div>
-                </div>
-                
-                <div class="note">
-                    * Once Paid Fees Not Refundable.
-                </div>
-            </div>
+        <div class="heading-text">
+          <h1>Mehtab Computer Academy</h1>
+          <p>
+            AN ISO 9001-2015 CERTIFIED INSTITUTE | UAN No.: G4ZZ...<br />
+            25-28, Signature Mall, Kosamba - 394120
+          </p>
         </div>
+      </div>
+
+      <div class="header-divider"></div>
+
+      <div class="meta-box">
+        <div class="meta-item">
+          <span class="meta-label">Receipt No.</span>
+          <span id="receipt-no" class="meta-value">${receiptNumber}</span>
+        </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Date</span>
+        <span id="transaction-date" class="meta-value">${transactionDate}</span>
+        </div>
+      </div>
+
+      <div class="section-title">Student Details</div>
+
+      <div class="detail-row">
+        <div class="detail-label">Student Name:</div>
+        <div id="student-name" class="detail-value">${studentInfo.name}</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">Student ID:</div>
+        <div id="student-id" class="detail-value">${studentInfo.rollNo}</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">Address:</div>
+        <div id="course" class="detail-value">${studentInfo.address}</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">Email:</div>
+        <div id="student-address" class="detail-value">${studentInfo.email}</div>
+      </div>
+
+      <div class="payment-card">
+        <div class="section-title" style="border: none">Payment Summary</div>
+
+        <div class="summary-grid">
+          <div>
+            <div class="summary-label">Payment Method:</div>
+            <div id="payment-method" class="summary-value">${transaction.payment_method}</div>
+          </div>
+
+          <div>
+            <div class="summary-label">Status:</div>
+            <div id="status" class="summary-value">${transaction.status}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="amount-section">
+        <div class="amount-label">Amount Paid</div>
+        <div id="amount-paid" class="amount-field">${formattedAmount}</div>
+
+        <div class="amount-words">
+          <span id="amount-in-words">${inWords}</span> only
+        </div>
+      </div>
+
+      <div class="signature-area">
+        <div class="sign-box">Student's Signature</div>
+        <div class="sign-box">Authorized Signature & Stamp</div>
+      </div>
+
+      <div class="note">
+        * Once paid, fees are not refundable under any circumstances.
+      </div>
     </div>
-</body>
+  </body>
 </html>
   `;
 
-  // Create a temporary div and inject the receipt
-  const printDiv = document.createElement("div");
-  printDiv.id = "receipt-print-container";
-  printDiv.innerHTML = receiptHTML;
-  document.body.appendChild(printDiv);
-  document.title = `Fee Receipt - ${studentInfo.name} - ${receiptNumber}`;
+  const iframe = document.createElement("iframe");
+  iframe.style.position = "fixed";
+  iframe.style.width = "0";
+  iframe.style.height = "0";
+  iframe.style.border = "0";
+  document.body.appendChild(iframe);
 
-  // Trigger print after content is rendered
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(receiptHTML);
+  doc.close();
+
+  // Wait for images to load
+  const images = doc.images;
+  let loadedCount = 0;
+  const totalImages = images.length;
+
+  if (totalImages === 0) {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  } else {
+    for (let img of images) {
+      img.onload = img.onerror = () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        }
+      };
+    }
+  }
+
+  // Remove iframe after printing
   setTimeout(() => {
-    window.print();
-
-    // Remove after print dialog closes
-    setTimeout(() => {
-      const element = document.getElementById("receipt-print-container");
-      if (element) {
-        element.remove();
-      }
-    }, 500);
-  }, 200);
+    document.body.removeChild(iframe);
+  }, 2000);
 };
 
 // Main Component
@@ -421,7 +496,8 @@ export default function ViewStudentTransaction() {
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
   const location = useLocation();
-  const { studentId, name, total } = location.state || {};
+  const { studentId, name, total, rollNo, address, email } =
+    location.state || {};
   const [payments, setPayments] = useState([]);
   const [downloadingId, setDownloadingId] = useState(null);
 
@@ -464,8 +540,13 @@ export default function ViewStudentTransaction() {
 
   const handleDownloadReceipt = (transaction) => {
     setDownloadingId(transaction.id);
+    console.log(transaction);
     setTimeout(() => {
-      printReceipt(transaction, { studentId, name }, total);
+      printReceipt(
+        transaction,
+        { studentId, name, rollNo, address, email },
+        total
+      );
       setDownloadingId(null);
     }, 300);
   };
@@ -578,7 +659,7 @@ export default function ViewStudentTransaction() {
                       <td className="px-6 py-4 text-center">
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            transaction.status === "paid"
+                            transaction.status === "PAID"
                               ? "bg-gray-900 text-white"
                               : "bg-gray-300 text-gray-900"
                           }`}

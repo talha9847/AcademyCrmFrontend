@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Student Admission Form - ${student.student_name || "New Student"}
+    </title>
+    <style>
+      /* --- Base Styles --- */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        padding: 30px;
+        color: #2c3e50;
+        background: #f4f7f6; /* Light background for contrast */
+        min-height: 100vh;
+      }
+      .form-container {
+        max-width: 950px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+      }
+
+      /* --- Letterhead (Improved with Logo) --- */
+      .letterhead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(
+          10deg,
+          #52316f 0%,
+          #52316f 100%
+        ); /* Deep Blue gradient */
+        color: white;
+        padding: 20px 40px;
+        position: relative;
+        border-bottom: 5px solid #f2c74f; /* Gold separator */
+      }
+      .logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        object-fit: contain;
+        background: white;
+        padding: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .institution-details {
+        text-align: right;
+        flex-grow: 1;
+        margin-left: 20px;
+      }
+      .institution-name {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 5px;
+        letter-spacing: 1.5px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .institution-tagline {
+        font-size: 13px;
+        font-style: italic;
+        opacity: 0.9;
+        margin-bottom: 8px;
+      }
+      .institution-address,
+      .institution-contact {
+        font-size: 11px;
+        opacity: 0.8;
+      }
+
+      /* --- Form Content & Header --- */
+      .form-content {
+        padding: 30px;
+      }
+      .form-header {
+        background: #f2f4f8; /* Light gray for a subtle header */
+        color: #375a9b;
+        padding: 15px 20px;
+        margin: -30px -30px 20px -30px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #375a9b;
+      }
+      .form-meta {
+        display: flex;
+        justify-content: flex-end; /* Align right */
+        gap: 30px;
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        background: #e6f0ff; /* Very light blue background */
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #375a9b;
+      }
+
+      /* --- Photo & Signature --- */
+      .photo-section {
+        float: right;
+        margin-left: 30px;
+        margin-bottom: 20px;
+      }
+      .photo-container {
+        background: #f2f4f8;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 2px solid #375a9b;
+      }
+      .photo-box {
+        width: 120px;
+        height: 140px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        overflow: hidden;
+        border: 1px dashed #375a9b;
+      }
+      .photo-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .photo-placeholder {
+        font-size: 10px;
+        color: #375a9b;
+        text-align: center;
+        padding: 8px;
+        font-weight: 600;
+      }
+      .signature-container {
+        margin-top: 10px;
+        text-align: center;
+      }
+      .signature-box {
+        width: 120px;
+        height: 40px;
+        border-bottom: 2px solid #375a9b;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .signature-box img {
+        max-width: 115px;
+        max-height: 35px;
+        object-fit: contain;
+      }
+      .signature-label {
+        font-size: 10px;
+        color: #52316f;
+        font-weight: 600;
+        padding-top: 5px;
+      }
+
+      /* --- Sections & Info Lines --- */
+      .section {
+        margin-bottom: 20px;
+        clear: both;
+        page-break-inside: avoid;
+      }
+      .section-heading {
+        background: #52316f;
+        color: white;
+        padding: 10px 15px;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .info-line {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 8px;
+        font-size: 13px;
+        line-height: 1.5;
+        padding-bottom: 2px;
+      }
+      .info-label-inline {
+        font-weight: 600;
+        color: #2c3e50;
+        white-space: nowrap;
+        padding-right: 8px;
+        border-right: 2px solid #e0e0e0;
+        padding-left: 5px;
+        background: #fcfcfc;
+        border-radius: 4px 0 0 4px;
+      }
+      .info-value-fill {
+        flex-grow: 1;
+        border-bottom: 1px solid #375a9b; /* Solid line for a formal look */
+        padding: 0 8px 2px 8px;
+        font-weight: 500;
+        color: #000000;
+        min-height: 20px;
+        background: #f8f9fa;
+        border-radius: 0 4px 4px 0;
+      }
+
+      /* --- Info Table (Parent Section) --- */
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .info-row {
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-label {
+        width: 25%;
+        padding: 10px 15px;
+        font-weight: 600;
+        font-size: 12px;
+        color: #375a9b;
+        background: #e6f0ff;
+        vertical-align: top;
+        text-align: left;
+      }
+      .info-value {
+        padding: 10px 20px;
+        font-size: 12px;
+        color: #2c3e50;
+        font-weight: 500;
+        border-left: 1px solid #e0e0e0;
+      }
+
+      /* --- Declaration --- */
+      .declaration-box {
+        border: 3px solid #ffcc00;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        background: #fffdf5;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        page-break-inside: avoid;
+      }
+      .declaration-title {
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        color: #375a9b;
+        text-align: center;
+        padding-bottom: 8px;
+        border-bottom: 1px dashed #375a9b;
+      }
+      .declaration-text {
+        font-size: 12px;
+        line-height: 1.6;
+        text-align: justify;
+        margin-bottom: 15px;
+        color: #2c3e50;
+      }
+      .declaration-date {
+        display: flex;
+        justify-content: flex-start;
+        gap: 80px;
+        margin-top: 15px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #375a9b;
+      }
+      .date-field {
+        border-bottom: 1px solid #375a9b;
+        min-width: 120px;
+        display: inline-block;
+        padding: 0 5px 1px 5px;
+        color: #2c3e50;
+      }
+
+      /* --- Footer Signatures --- */
+      .signature-footer {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 40px;
+        page-break-inside: avoid;
+      }
+      .signature-block {
+        text-align: center;
+        width: 28%;
+      }
+      .signature-space {
+        height: 50px;
+        border-bottom: 2px solid #375a9b;
+        margin-bottom: 6px;
+      }
+      .signature-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #375a9b;
+      }
+
+      /* --- Office Stamp --- */
+      .office-stamp {
+        margin-top: 30px;
+        text-align: center;
+        page-break-inside: avoid;
+      }
+      .stamp-box {
+        display: inline-block;
+        border: 2px solid #375a9b;
+        border-radius: 50%;
+        padding: 20px 30px;
+        text-align: center;
+        font-size: 11px;
+        color: #375a9b;
+        font-weight: 700;
+        background: white;
+        box-shadow: 0 0 10px rgba(55, 90, 155, 0.1);
+        border-style: dashed;
+      }
+
+      /* --- Print Media Query (Essential for formal documents) --- */
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+        }
+        .form-container {
+          box-shadow: none;
+          border: none;
+          max-width: 100%;
+          margin: 0;
+        }
+        .section,
+        .declaration-box,
+        .signature-footer,
+        .office-stamp {
+          page-break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <!-- Letterhead (Now includes Logo) -->
+      <div class="letterhead">
+        <div class="logo-container">
+          <!-- Logo Placeholder: Use a reliable public image URL for your logo -->
+          <img
+            src="/logo.png"
+            alt="MCA Logo"
+            class="logo"
+            onerror="this.onerror=null; this.src='https://placehold.co/80x80/FFCC00/375A9B?text=MCA+Logo'"
+          />
+        </div>
+        <div class="institution-details">
+          <div class="institution-name">MEHTAB COMPUTER ACADEMY</div>
+          <div class="institution-tagline">
+            "Empowering Future Through Technology Education"
+          </div>
+          <div class="institution-address">
+            Regd. Office: 123 Education Street, City - 395006
+          </div>
+          <div class="institution-contact">
+            Phone: +91 91067-04675 | Email: info@mehtabacademy.edu.in | Web:
+            www.mehtabacademy.edu.in
+          </div>
+        </div>
+      </div>
+
+      <div class="form-content">
+        <!-- Form Title -->
+        <div class="form-header">
+          STUDENT ADMISSION FORM (ACADEMIC YEAR ${new Date().getFullYear()}-${
+          (new Date().getFullYear() + 1) % 100 })
+        </div>
+
+        <!-- Form Meta Info -->
+        <div class="form-meta">
+          <div>FORM NO: ${student.admission_number || "_______________"}</div>
+          <div>
+            Date of Admission: ${student.admission_date || "DD/MM/YYYY"}
+          </div>
+        </div>
+
+        <!-- Photo and Signature (Floated Right) -->
+        <div class="photo-section">
+          <div class="photo-container">
+            <div class="photo-box">
+              ${ profilePhotoUrl ? `<img
+                src="${photoUrl}"
+                alt="Student Photo"
+              />` : `
+              <div class="photo-placeholder">
+                PASTE RECENT<br />PASSPORT SIZE<br />PHOTOGRAPH HERE
+              </div>
+              ` }
+            </div>
+          </div>
+          <div class="signature-container">
+            <div class="signature-box">
+              ${signatureUrl ? `<img src="${signUrl}" alt="Signature" />` : ""}
+            </div>
+            <div class="signature-label">Student's Signature</div>
+          </div>
+        </div>
+
+        <!-- Academic Information -->
+        <div class="section">
+          <div class="section-heading">📚 Academic Information</div>
+          <div class="info-line">
+            <span class="info-label-inline">1. Class Enrolled:</span>
+            <span class="info-value-fill"
+              >${student.class_name || "____________________"}</span
+            >
+            <span
+              class="info-label-inline"
+              style="padding-left: 15px; border-left: none"
+              >2. Section:</span
+            >
+            <span
+              class="info-value-fill"
+              style="flex-basis: 150px; flex-grow: 0"
+              >${student.section_name || "_________"}</span
+            >
+          </div>
+          <div class="info-line">
+            <span class="info-label-inline">3. Roll Number:</span>
+            <span
+              class="info-value-fill"
+              style="flex-basis: 250px; flex-grow: 0"
+              >${student.roll_no || "____________________"}</span
+            >
+            <span
+              class="info-label-inline"
+              style="padding-left: 15px; border-left: none"
+              >4. Session Timing:</span
+            >
+            <span class="info-value-fill"
+              >${student.session_timing || "____________________"}</span
+            >
+          </div>
+        </div>
+
+        <div style="clear: both; margin-bottom: 20px"></div>
+
+        <!-- Personal Information -->
+        <div class="section">
+          <div class="section-heading">👤 Personal Information</div>
+
+          <div class="info-line">
+            <span class="info-label-inline"
+              >5. Full Name of Student (Block Letters):</span
+            >
+            <span class="info-value-fill"
+              >${ student.student_name ||
+              "__________________________________________________________________________________"
+              }</span
+            >
+          </div>
+          <div class="info-line">
+            <span class="info-label-inline"
+              >6. Date of Birth (DD/MM/YYYY):</span
+            >
+            <span
+              class="info-value-fill"
+              style="flex-basis: 200px; flex-grow: 0"
+              >${student.date_of_birth || "DD / MM / YYYY"}</span
+            >
+            <span
+              class="info-label-inline"
+              style="padding-left: 15px; border-left: none"
+              >7. Gender:</span
+            >
+            <span
+              class="info-value-fill"
+              style="flex-basis: 120px; flex-grow: 0"
+              >${student.gender || "__________"}</span
+            >
+            <span
+              class="info-label-inline"
+              style="padding-left: 15px; border-left: none"
+              >8. Nationality:</span
+            >
+            <span
+              class="info-value-fill"
+              style="flex-basis: 120px; flex-grow: 0"
+              >${student.nationality || "Indian"}</span
+            >
+          </div>
+          <div class="info-line">
+            <span class="info-label-inline"
+              >9. Residential Address (Permanent):</span
+            >
+            <span class="info-value-fill"
+              >${ student.student_address ||
+              "__________________________________________________________________________________"
+              }</span
+            >
+          </div>
+          <div class="info-line">
+            <span class="info-label-inline">10. Contact Number:</span>
+            <span
+              class="info-value-fill"
+              style="flex-basis: 250px; flex-grow: 0"
+              >${student.mobile || "____________________"}</span
+            >
+            <span
+              class="info-label-inline"
+              style="padding-left: 15px; border-left: none"
+              >11. Email Address:</span
+            >
+            <span class="info-value-fill"
+              >${ student.student_email ||
+              "________________________________________________" }</span
+            >
+          </div>
+        </div>
+
+        <!-- Parent / Guardian Information -->
+        <div class="section">
+          <div class="section-heading">👨‍👩‍👧 Parent / Guardian Information</div>
+          <table class="info-table">
+            <tr class="info-row">
+              <td class="info-label">12. Parent/Guardian Name:</td>
+              <td class="info-value">
+                ${student.parent_name || "_________________________________"}
+              </td>
+              <td class="info-label">13. Relationship:</td>
+              <td class="info-value">
+                ${student.parent_relation || "____________________"}
+              </td>
+            </tr>
+            <tr class="info-row">
+              <td class="info-label">14. Contact Number:</td>
+              <td class="info-value">
+                ${student.parent_phone || "_________________________________"}
+              </td>
+              <td class="info-label">15. Occupation:</td>
+              <td class="info-value">
+                ${student.parent_occupation || "____________________"}
+              </td>
+            </tr>
+            <tr class="info-row">
+              <td class="info-label">16. Email Address:</td>
+              <td class="info-value" colspan="3">
+                ${ student.parent_email ||
+                "__________________________________________________________________________________________________________________"
+                }
+              </td>
+            </tr>
+          </table>
+          <div class="info-line" style="margin-top: 15px">
+            <span class="info-label-inline"
+              >17. Address if different from student:</span
+            >
+            <span class="info-value-fill"
+              >${ student.parent_address ||
+              "__________________________________________________________________________________"
+              }</span
+            >
+          </div>
+        </div>
+
+        <!-- Declaration -->
+        <div class="declaration-box">
+          <div class="declaration-title">📝 DECLARATION BY PARENT/GUARDIAN</div>
+          <div class="declaration-text">
+            I hereby solemnly affirm and declare that the information provided
+            above is true and correct to the best of my knowledge and belief. I
+            understand that any discrepancy or false information discovered
+            later may result in the cancellation of the student's admission. I
+            further agree that my ward and I shall strictly adhere to all the
+            rules, regulations, and disciplinary policies enforced by Mehtab
+            Computer Academy, and that attendance will be maintained as per
+            institutional requirements.
+          </div>
+          <div class="declaration-date">
+            <div>
+              Place: <span class="date-field">____________________</span>
+            </div>
+            <div>
+              Date: <span class="date-field">____________________</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signature Footer -->
+        <div class="signature-footer">
+          <div class="signature-block">
+            <div class="signature-space"></div>
+            <div class="signature-text">Student's Signature</div>
+          </div>
+          <div class="signature-block">
+            <div class="signature-space"></div>
+            <div class="signature-text">Parent's/Guardian's Signature</div>
+          </div>
+          <div class="signature-block">
+            <div class="signature-space"></div>
+            <div class="signature-text">Verified By (Office Use)</div>
+          </div>
+        </div>
+
+        <div class="office-stamp">
+          <div class="stamp-box">
+            OFFICIAL SEAL / STAMP<br />
+            (FOR OFFICE USE ONLY)
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fee Receipt - Mehtab Computer Academy (Comment-Free)</title>
+
+    <style>
+      :root {
+        --academy-primary: #6a1b9a;
+        --academy-accent: #ffd700;
+        --academy-light-bg: #f0f3f7;
+        --font-main: "Inter", sans-serif;
+        --gray-900: #111827;
+        --gray-700: #374151;
+        --gray-600: #4b5563;
+        --gray-500: #6b7280;
+        --gray-300: #d1d5db;
+        --gray-200: #e5e7eb;
+        --white: #ffffff;
+        --red-800: #991b1b;
+        --red-100: #fee2e2;
+        --green-600: #059669;
+        --red-600: #dc2626;
+      }
+
+      body {
+        font-family: var(--font-main);
+        background-color: #eef2f9;
+        min-height: 100vh;
+        padding: 1rem;
+      }
+
+      @media (min-width: 640px) {
+        body {
+          padding: 2rem;
+        }
+      }
+
+      .receipt-print-wrapper {
+        display: flex;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .receipt-container {
+        width: 100%;
+        max-width: 896px;
+        background-color: var(--white);
+        padding: 1.5rem;
+        border: 4px solid var(--gray-200);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-radius: 0.75rem;
+      }
+
+      @media (min-width: 640px) {
+        .receipt-container {
+          padding: 2.5rem;
+        }
+      }
+
+      .receipt-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .modern-divider {
+        height: 3px;
+        background: linear-gradient(
+          to right,
+          var(--academy-primary) 0%,
+          var(--academy-primary) 50%,
+          var(--academy-accent) 50%,
+          var(--academy-accent) 100%
+        );
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0px;
+        margin-top: 5px;
+      }
+
+      .academy-logo {
+        height: 3.5rem;
+        width: 3.5rem;
+        border-radius: 9999px;
+        background-color: var(--academy-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        object-fit: contain;
+      }
+      @media (min-width: 640px) {
+        .academy-logo {
+          height: 4rem;
+          width: 4rem;
+        }
+      }
+
+      .academy-title {
+        font-size: 1.875rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.025em;
+        color: var(--gray-900);
+      }
+      @media (min-width: 640px) {
+        .academy-title {
+          font-size: 2.25rem;
+        }
+      }
+
+      .academy-address {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        line-height: 1.625;
+        padding-top: 0px;
+        margin-top: 0.5rem;
+      }
+
+      .metadata-strip {
+        display: flex;
+        flex-wrap: wrap;
+        background-color: var(--academy-light-bg);
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--gray-200);
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--gray-700);
+      }
+
+      .metadata-field {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+      }
+      .metadata-field:first-child {
+        padding-right: 0;
+      }
+      @media (min-width: 640px) {
+        .metadata-field {
+          width: 50%;
+        }
+        .metadata-field:first-child {
+          padding-right: 1rem;
+        }
+      }
+
+      .metadata-label {
+        white-space: nowrap;
+        padding-right: 0.5rem;
+        color: var(--academy-primary);
+        font-weight: 600;
+      }
+
+      .modern-input-line {
+        border-bottom: 1px solid var(--gray-300);
+        padding-bottom: 4px;
+        font-size: 15px;
+        line-height: 1.5;
+        flex-grow: 1;
+        padding-left: 8px;
+        background-color: #f9fafb;
+        border-radius: 4px;
+        color: var(--gray-800);
+      }
+      .metadata-strip .modern-input-line {
+        border: none;
+        background-color: transparent;
+        font-family: monospace;
+        font-size: 1rem;
+      }
+
+      .student-details {
+        font-size: 0.875rem;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .details-heading {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--academy-primary);
+        border-bottom: 1px solid var(--academy-primary);
+        padding-bottom: 0.25rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .detail-row {
+        display: flex;
+        align-items: flex-end;
+      }
+
+      .detail-label {
+        color: var(--gray-600);
+        white-space: nowrap;
+        padding-right: 1rem;
+        font-weight: 500;
+      }
+
+      .detail-value-name {
+        font-weight: 700;
+        font-size: 1.125rem;
+        color: var(--gray-900);
+      }
+      .detail-value-standard {
+        font-weight: 700;
+        color: var(--gray-900);
+      }
+      .detail-value-address {
+        font-weight: 500;
+        color: var(--gray-800);
+        font-style: italic;
+      }
+
+      .details-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      @media (min-width: 640px) {
+        .details-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      .payment-summary {
+        background-color: var(--academy-light-bg);
+        border-radius: 0.5rem;
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+      }
+
+      .summary-heading {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--academy-primary);
+        border-bottom: 1px solid var(--gray-300);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        font-size: 0.875rem;
+      }
+      @media (min-width: 768px) {
+        .summary-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      .summary-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .summary-label {
+        color: var(--gray-500);
+        font-weight: 500;
+      }
+
+      .summary-value {
+        color: var(--gray-800);
+        font-weight: 600;
+        font-size: 1rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid var(--gray-300);
+      }
+
+      .status-value {
+        font-weight: 700;
+        font-size: 1.125rem;
+        text-transform: uppercase;
+      }
+      .status-paid {
+        color: var(--green-600);
+      }
+      .status-pending {
+        color: var(--red-600);
+      }
+
+      .amount-block {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      @media (min-width: 1024px) {
+        .amount-block {
+          flex-direction: row;
+          align-items: stretch;
+        }
+      }
+
+      .amount-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid var(--academy-accent);
+        padding: 1.5rem;
+        width: 100%;
+        min-width: 250px;
+        background-color: var(--academy-primary);
+        color: var(--white);
+        border-radius: 0.75rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        transition: transform 0.3s ease;
+      }
+      .amount-box:hover {
+        transform: scale(1.02);
+      }
+      @media (min-width: 1024px) {
+        .amount-box {
+          width: 33.333333%;
+        }
+      }
+
+      .amount-label {
+        font-size: 1.25rem;
+        font-weight: 500;
+        opacity: 0.8;
+      }
+
+      .amount-value-group {
+        display: flex;
+        align-items: center;
+        margin-top: 0.25rem;
+      }
+
+      .currency-symbol {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-right: 0.25rem;
+      }
+
+      .amount-value {
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+      }
+
+      .words-box {
+        flex-grow: 1;
+        background-color: rgba(255, 215, 0, 0.1);
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        border-left: 4px solid var(--academy-accent);
+        display: flex;
+        align-items: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .words-content {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .words-label {
+        font-weight: 600;
+        color: var(--gray-700);
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .words-value {
+        font-weight: 800;
+        color: var(--academy-primary);
+        font-size: 1.25rem;
+        font-style: italic;
+        line-height: 1.375;
+      }
+
+      .words-only {
+        font-weight: 700;
+        color: var(--gray-700);
+        margin-top: 0.25rem;
+      }
+
+      .receipt-footer {
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--gray-300);
+      }
+
+      .signature-area {
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        margin-top: 1.5rem;
+      }
+
+      .signature-box {
+        width: 25%;
+      }
+
+      .student-signature {
+        padding-top: 0.5rem;
+        border-top: 2px solid var(--gray-400);
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: var(--gray-600);
+      }
+
+      .authorized-signature {
+        padding-top: 0.5rem;
+        border-top: 2px solid var(--academy-primary);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--academy-primary);
+      }
+
+      .note {
+        margin-top: 2rem;
+        font-size: 0.75rem;
+        text-align: center;
+        padding: 0.75rem;
+        background-color: var(--red-100);
+        border-radius: 0.5rem;
+        color: var(--red-800);
+        font-weight: 500;
+        border: 1px solid #fca5a5;
+      }
+
+      .note .star {
+        font-weight: 800;
+        font-size: 0.875rem;
+      }
+
+      .print-button-container {
+        display: flex;
+        justify-content: center;
+        padding: 1.5rem;
+      }
+
+      .print-button {
+        background-color: var(--academy-primary);
+        color: var(--white);
+        font-weight: 700;
+        padding: 0.75rem 2rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .print-button:hover {
+        background-color: #581480;
+        transform: scale(1.02);
+      }
+      .print-button:active {
+        transform: scale(0.95);
+      }
+
+      @media print {
+        body {
+          margin: 0;
+          padding: 0;
+          background-color: white !important;
+        }
+        body * {
+          visibility: hidden;
+        }
+        .receipt-print-wrapper {
+          visibility: visible !important;
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          box-shadow: none !important;
+          border: none !important;
+          padding: 0 !important;
+        }
+        .receipt-print-wrapper * {
+          visibility: visible !important;
+        }
+        .receipt-container {
+          border: 1px solid black !important;
+          box-shadow: none !important;
+          border-radius: 0 !important;
+          background-color: white !important;
+          padding: 1cm !important;
+        }
+        .print-hidden {
+          display: none !important;
+        }
+        .modern-input-line {
+          background-color: white !important;
+        }
+        .modern-divider {
+          background: black !important;
+          height: 1px !important;
+        }
+        .amount-box {
+          background-color: white !important;
+          color: black !important;
+          border: 3px solid black !important;
+          box-shadow: none !important;
+        }
+        .words-box {
+          background-color: white !important;
+          border-left-color: black !important;
+          box-shadow: none !important;
+        }
+        .words-value,
+        .authorized-signature {
+          color: black !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <div id="app" class="receipt-print-wrapper">
+      <div id="receipt-container" class="receipt-container">
+        <header class="receipt-header">
+          <div class="modern-divider mb-4"></div>
+
+          <div class="header-content">
+            <img
+              id="academy-logo"
+              src="public/logo.png"
+              alt="Mehtab Computer Academy Logo"
+              class="academy-logo"
+              onerror="this.style.display='none'"
+            />
+
+            <h1 class="academy-title">Mehtab Computer Academy</h1>
+          </div>
+
+          <div class="academy-address">
+            AN ISO 9001-2015 CERTIFIED INSTITUTE | UAN No.: G4ZZ...<br />
+            25-28, Signature Mall, 1st Floor Near Mota Mandi Road, Kosamba -
+            394120
+          </div>
+
+          <div class="modern-divider mt-4"></div>
+        </header>
+
+        <div class="metadata-strip">
+          <div class="metadata-field">
+            <span class="metadata-label">Receipt No.:</span>
+            <span id="receipt-no" class="modern-input-line"></span>
+          </div>
+          <div class="metadata-field">
+            <span class="metadata-label">Date:</span>
+            <span id="transaction-date" class="modern-input-line"></span>
+          </div>
+        </div>
+
+        <div class="student-details">
+          <h3 class="details-heading">Student Details</h3>
+
+          <div class="detail-row">
+            <span class="detail-label">Student Name:</span>
+            <span
+              id="student-name"
+              class="detail-value-name modern-input-line"
+            ></span>
+          </div>
+          <div class="details-grid">
+            <div class="detail-row">
+              <span class="detail-label">Student ID:</span>
+              <span
+                id="student-id"
+                class="detail-value-standard modern-input-line"
+              ></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Course:</span>
+              <span
+                id="course"
+                class="detail-value-standard modern-input-line"
+              ></span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Residential Address:</span>
+            <span
+              id="student-address"
+              class="detail-value-address modern-input-line"
+            ></span>
+          </div>
+        </div>
+
+        <div class="payment-summary">
+          <h3 class="summary-heading">Payment Summary</h3>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Total Fees Due:</span>
+              <span id="total-fees" class="summary-value"></span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Payment Method:</span>
+              <span id="payment-method" class="summary-value"></span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Payment Status:</span>
+              <span id="status" class="summary-value status-value"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="amount-block">
+          <div id="amount-box" class="amount-box">
+            <span class="amount-label">AMOUNT PAID</span>
+            <div class="amount-value-group">
+              <span class="currency-symbol">₹</span>
+              <span id="amount-paid" class="amount-value">0.00</span>
+              <span class="currency-symbol">/-</span>
+            </div>
+          </div>
+
+          <div class="words-box">
+            <div class="words-content">
+              <span class="words-label">Total Amount in Words:</span>
+              <span id="amount-in-words" class="words-value"></span>
+              <span class="words-only">only</span>
+            </div>
+          </div>
+        </div>
+
+        <footer class="receipt-footer">
+          <div class="signature-area">
+            <div class="signature-box">
+              <div class="student-signature">Student's Signature</div>
+            </div>
+            <div class="signature-box">
+              <div class="authorized-signature">
+                Authorised Signature & Stamp
+              </div>
+            </div>
+          </div>
+
+          <div class="note">
+            <span class="star">*</span> Once Paid, Fees Are Not Refundable Under
+            Any Circumstances.
+          </div>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

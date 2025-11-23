@@ -67,11 +67,12 @@ const SNavbar = () => {
     const result = await axios.get(`${BASE_URL}/api/user/getSlugs`, {
       withCredentials: true,
     });
+    console.log(result.data.data);
 
     if (result.status == 200) {
       const items = result.data.data.map((item) => ({
         name: item.name,
-        href: "/" + item.slug,
+        href: "/student/" + item.slug,
         icon: iconMap[item.name],
       }));
       setDbNavItems(items);

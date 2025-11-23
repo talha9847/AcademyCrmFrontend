@@ -333,6 +333,17 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
+
+            <Route
+              path="student/students"
+              element={
+                <RoleProtectedRoute role="student">
+                  <ProtectedRoute slug="students">
+                    <Student />
+                  </ProtectedRoute>
+                </RoleProtectedRoute>
+              }
+            />
             <Route
               path="/student/studymaterial"
               element={

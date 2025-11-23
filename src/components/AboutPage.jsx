@@ -19,7 +19,20 @@ import { useEffect, useState } from "react";
 
 export default function ProfessionalAboutPage() {
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    heading1: "Empowering Futures in the Digital Age",
+    description1:
+      "With over two decades of dedicated excellence, Mehtab Computer Academy has transformed thousands of lives, setting the benchmark for quality computer education in Gujarat. Two Decades of Excellence, Defined by Impact",
+    description2:
+      "Mehtab Computer Academy was founded with a powerful vision: to make quality computer education accessible to everyone. What began as a local training center has evolved into one of the most trusted names in the industry.",
+    description3:
+      "For over 20 years, we have been committed to adapting our curriculum to the latest industry standards, ensuring our students are not just taught, but are truly prepared for successful careers in IT, design, and development.",
+    description4:
+      " We are driven by a commitment to quality and a focus on measurable career outcomes for every student.",
+    heading2: "Two Decades of Excellence, Defined by Impact",
+    heading3: "Our Core Mission",
+    state_val: "20",
+  });
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
 
@@ -43,6 +56,7 @@ export default function ProfessionalAboutPage() {
       );
       if (result.status == 200) {
         setData(result.data.data);
+        console.log(result.data.data);
       }
     } catch (error) {}
   };

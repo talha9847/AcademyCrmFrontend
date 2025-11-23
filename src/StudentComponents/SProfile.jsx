@@ -90,6 +90,7 @@ const SProfile = () => {
       }
       if (result.status == 200) {
         setLoading(false);
+        console.log(result.data.data);
         setData(result.data.data);
       }
     } catch (error) {
@@ -310,7 +311,7 @@ const SProfile = () => {
                   />
                   <DetailItem
                     label="Email"
-                    value={data.email}
+                    value={data.parent_email}
                     icon={Mail}
                     color="text-gray-700"
                   />

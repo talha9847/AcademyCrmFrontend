@@ -79,7 +79,7 @@ const Fees = () => {
       feeId: selectedStudent.id,
       amountPaid: data.collectAmount,
       method: data.method,
-      status: "paid",
+      status: "PAID ",
     };
     const result = await axios.post(`${BASE_URL}/api/fees/collectFees`, send, {
       withCredentials: true,
@@ -332,8 +332,11 @@ const Fees = () => {
                           navigate("/admin/fees/detail", {
                             state: {
                               studentId: fee.student_id,
+                              rollNo: fee.roll_no,
+                              email: fee.email,
                               name: fee.full_name,
                               total: actualFees,
+                              address: fee.address,
                             },
                           });
                         }}

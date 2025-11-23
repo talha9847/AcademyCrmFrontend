@@ -12,7 +12,18 @@ import { HashLink } from "react-router-hash-link";
 
 export default function HeroSection() {
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    badge_text: "Trusted by 10,000+ Students",
+    heading1: "Transform Your Future with",
+    heading2: "Expert Training",
+    description:
+      "Join industry-leading courses designed to accelerate your career. Learn from experts and master the skills that matter.",
+    stat1_value: "10+",
+    stat2_value: "25+",
+    stat3_value: "10k+",
+    floating_card1_title: "100%",
+    floating_card1_subtitle: "Job Assistance",
+  });
   const getData = async () => {
     try {
       const result = await axios.get(`${BASE_URL}/api/front/getHeroData`, {
@@ -29,13 +40,10 @@ export default function HeroSection() {
   }, []);
 
   return (
-    // Adjusted height for better mobile viewing, ensuring content fits well.
-    // min-h-[75vh] ensures it's tall enough, but allows it to grow if content is larger.
     <section
       id="home"
       className="relative min-h-[75vh] lg:h-screen flex items-center overflow-hidden py-24 sm:py-32"
     >
-      {/* Full-screen background image */}
       <div className="absolute inset-0">
         <img
           src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80"
@@ -137,7 +145,9 @@ export default function HeroSection() {
             <CheckCircle className="w-8 h-8 text-white" />
           </div>
           <div>
-            <div className="font-bold text-2xl text-white">100%</div>
+            <div className="font-bold text-2xl text-white">
+              {data.floating_card1_title}
+            </div>
             <div className="text-sm text-gray-300 font-medium">
               {data.floating_card1_subtitle}
             </div>
