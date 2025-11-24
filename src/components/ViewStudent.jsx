@@ -482,7 +482,9 @@ const ViewStudent = () => {
      <!DOCTYPE html>
 <html>
   <head>
-    <title>Student Admission Form - ${student.student_name || "New Student"}</title>
+    <title>Student Admission Form - ${
+      student.student_name || "New Student"
+    }</title>
     <style>
       /* --- Base Styles --- */
       * {
@@ -647,7 +649,7 @@ const ViewStudent = () => {
         page-break-inside: avoid;
       }
       .section-heading {
-        background-color: black;
+        background-color:#52316f ;
         color: white;
         padding: 10px 15px;
         font-size: 15px;
@@ -856,8 +858,8 @@ const ViewStudent = () => {
         <!-- Form Title -->
         <div class="form-header">
           STUDENT ADMISSION FORM (ACADEMIC YEAR ${new Date().getFullYear()}-${
-            (new Date().getFullYear() + 1) % 100
-          })
+      (new Date().getFullYear() + 1) % 100
+    })
         </div>
 
         <!-- Form Meta Info -->
@@ -942,7 +944,10 @@ const ViewStudent = () => {
           <div class="info-line">
             <span class="info-label-inline">6. Date of Birth (DD/MM/YYYY):</span>
             <span class="info-value-fill" style="flex-basis: 200px; flex-grow: 0;"
-              >${new Date(student.date_of_birth).toLocaleDateString() || "DD / MM / YYYY"}</span
+              >${
+                new Date(student.date_of_birth).toLocaleDateString() ||
+                "DD / MM / YYYY"
+              }</span
             >
             <span class="info-label-inline" style="padding-left: 15px; border-left: none;"
               >7. Gender:</span
