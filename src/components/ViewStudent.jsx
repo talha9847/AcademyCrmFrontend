@@ -512,7 +512,7 @@ const ViewStudent = () => {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: linear-gradient(10deg, #52316f 0%, #52316f 100%); /* Deep Blue gradient */
+        background: linear-gradient(10deg, #52316f 0%, #744b9a 100%); /* Deep Blue gradient */
         color: white;
         padding: 20px 40px;
         position: relative;
@@ -647,7 +647,7 @@ const ViewStudent = () => {
         page-break-inside: avoid;
       }
       .section-heading {
-        background: #52316f;
+        background-color: #52316f;
         color: white;
         padding: 10px 15px;
         font-size: 15px;
@@ -942,7 +942,7 @@ const ViewStudent = () => {
           <div class="info-line">
             <span class="info-label-inline">6. Date of Birth (DD/MM/YYYY):</span>
             <span class="info-value-fill" style="flex-basis: 200px; flex-grow: 0;"
-              >${student.date_of_birth || "DD / MM / YYYY"}</span
+              >${new Date(student.date_of_birth).toLocaleDateString() || "DD / MM / YYYY"}</span
             >
             <span class="info-label-inline" style="padding-left: 15px; border-left: none;"
               >7. Gender:</span
