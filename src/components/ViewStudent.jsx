@@ -895,7 +895,7 @@ const ViewStudent = () => {
 
         <!-- Academic Information -->
         <div class="section">
-          <div class="section-heading">📚 Academic Information</div>
+          <div style="background-color: #52316f;" class="section-heading">📚 Academic Information</div>
           <div class="info-line">
             <span class="info-label-inline">1. Class Enrolled:</span>
             <span class="info-value-fill"
@@ -926,7 +926,7 @@ const ViewStudent = () => {
 
         <!-- Personal Information -->
         <div class="section">
-          <div class="section-heading">👤 Personal Information</div>
+          <div style="background-color: #52316f;" class="section-heading">👤 Personal Information</div>
 
           <div class="info-line">
             <span class="info-label-inline"
@@ -987,7 +987,7 @@ const ViewStudent = () => {
 
         <!-- Parent / Guardian Information -->
         <div class="section">
-          <div class="section-heading">👨‍👩‍👧 Parent / Guardian Information</div>
+          <div style="background-color: #52316f;" class="section-heading">👨‍👩‍👧 Parent / Guardian Information</div>
           <table class="info-table">
             <tr class="info-row">
               <td class="info-label">12. Parent/Guardian Name:</td>
