@@ -470,6 +470,7 @@ const ViewStudent = () => {
 
   const handlePrint = () => {
     if (!student) return;
+    console.log(student);
 
     const profilePhotoUrl = student.profile_photo
       ? `${BASE_URL}/uploads/${student.profile_photo}`
@@ -868,7 +869,9 @@ const ViewStudent = () => {
             FORM NO: ${student.admission_number || "_______________"}
           </div>
           <div>
-            Date of Admission: ${student.admission_date || "DD/MM/YYYY"}
+            Date of Admission: ${
+              new Date(student.created_at).toLocaleDateString() || "DD/MM/YYYY"
+            }
           </div>
         </div>
 
