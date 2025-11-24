@@ -647,7 +647,7 @@ const ViewStudent = () => {
         page-break-inside: avoid;
       }
       .section-heading {
-        background-color: #52316f;
+        background-color: black;
         color: white;
         padding: 10px 15px;
         font-size: 15px;
