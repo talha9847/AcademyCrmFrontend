@@ -76,23 +76,32 @@ const Fees = () => {
   }
 
   const collectFee = async (data) => {
-    setLoading(true);
-    const send = {
-      studentId: selectedStudent.student_id,
-      feeId: selectedStudent.id,
-      amountPaid: data.collectAmount,
-      method: data.method,
-      status: "PAID ",
-    };
-    const result = await axios.post(`${BASE_URL}/api/fees/collectFees`, send, {
-      withCredentials: true,
-    });
-    if (result.status == 200) {
+    try {
+      setLoading(true);
+      const send = {
+        studentId: selectedStudent.student_id,
+        feeId: selectedStudent.id,
+        amountPaid: data.collectAmount,
+        method: data.method,
+        status: "PAID ",
+      };
+      const result = await axios.post(
+        `${BASE_URL}/api/fees/collectFees`,
+        send,
+        {
+          withCredentials: true,
+        }
+      );
+      if (result.status == 200) {
+        setLoading(false);
+        fetchFees();
+        setIsDialogOpen(false);
+        reset();
+        toast.success("Fees Collected Successfullyy");
+      }
+    } catch (error) {
+      console.log(error);
       setLoading(false);
-      fetchFees();
-      setIsDialogOpen(false);
-      reset();
-      toast.success("Fees Collected Successfullyy");
     }
   };
 
