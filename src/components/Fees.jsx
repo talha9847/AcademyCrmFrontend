@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 const Fees = () => {
   const BASE_URL = import.meta.env.VITE_APP_BACKEND_URL;
