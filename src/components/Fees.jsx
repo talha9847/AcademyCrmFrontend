@@ -14,6 +14,7 @@ const Fees = () => {
   const [selectedStudent, setSelectedStudent] = useState();
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -74,6 +75,7 @@ const Fees = () => {
   }
 
   const collectFee = async (data) => {
+    setLoading(true);
     const send = {
       studentId: selectedStudent.student_id,
       feeId: selectedStudent.id,
@@ -85,6 +87,7 @@ const Fees = () => {
       withCredentials: true,
     });
     if (result.status == 200) {
+      setLoading(false);
       fetchFees();
       setIsDialogOpen(false);
       reset();
@@ -466,9 +469,19 @@ const Fees = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 transition duration-150 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={loading}
+                  className="px-5 py-2.5 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 
+             transition duration-150 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed
+             flex items-center gap-2"
                 >
-                  Confirm Collection
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Confirming...
+                    </>
+                  ) : (
+                    "Confirm Collection"
+                  )}
                 </button>
               </div>
             </form>
