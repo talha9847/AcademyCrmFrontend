@@ -31,7 +31,6 @@ const Website = () => {
       <FNavbar />
       <TopBanner />
       <Hero />
-      {/* <ContactInfoBar /> */}
       <CategoriesSection />
       <CoursesSection />
       <AboutUs />
