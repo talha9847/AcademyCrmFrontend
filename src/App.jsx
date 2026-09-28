@@ -55,6 +55,7 @@ import TCreateAttendancePage from "./TeacherComponents/TCreateAttendanc";
 import TAttendanceView from "./TeacherComponents/TAttendanceView";
 import Slug from "./adminComponents/Slug";
 import EditCertificate from "./adminComponents/EditCertificate";
+import CategoryPage from "./components/CategoryPage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -77,7 +78,8 @@ function App() {
         <div className="flex-grow">
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Website />} />
+            <Route path="/" element={<Website />} />{" "}
+            <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/test" element={<Dashboard />} />
             <Route path="/verify" element={<Verification />} />
             <Route path="/test2" element={<Test />} />
@@ -86,7 +88,6 @@ function App() {
             <Route path="/gallery" element={<FullGallery />} />
             <Route path="/blogs" element={<AllBlogs />} />
             <Route path="/election" element={<TestingResult />} />
-
             {/* Admin Routes */}
             <Route
               path="/admin/dashboard"
@@ -112,7 +113,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="/admin/classes"
               element={
@@ -121,7 +121,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="/admin/manage"
               element={
@@ -154,7 +153,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="/admin/fees/detail"
               element={
@@ -163,7 +161,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="/admin/manage/hero"
               element={
@@ -236,7 +233,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             {/* Teachers Route */}
             <Route
               path="/teacher/dashboard"
@@ -246,7 +242,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="teacher/fees"
               element={
@@ -263,7 +258,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/teacher/attendance/"
               element={
@@ -272,7 +266,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="/teacher/attendance/view"
               element={
@@ -281,7 +274,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="teacher/student/detail"
               element={
@@ -290,7 +282,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/teacher/profile"
               element={
@@ -299,7 +290,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             {/* Student Route    */}
             <Route
               path="/student/dashboard"
@@ -325,7 +315,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="/student/attendance"
               element={
@@ -342,7 +331,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="student/students"
               element={
@@ -371,7 +359,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="/teacher/detail"
               element={
@@ -382,7 +369,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route
               path="/student/detail"
               element={
@@ -391,7 +377,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/students"
               element={
@@ -412,7 +397,6 @@ function App() {
                 </RoleProtectedRoute>
               }
             />
-
             <Route path="*" element={<UnauthorizedPage />} />
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
           </Routes>

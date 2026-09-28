@@ -1,149 +1,127 @@
-import { useState, useEffect } from "react";
-import { Menu, X, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { HashLink } from "react-router-hash-link";
+import { useState } from "react";
+import { ChevronDown, LogIn, Download, Menu, X } from "lucide-react";
 
-export default function ProfessionalNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+const NAV_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "Courses", href: "/courses", dropdown: true },
+  { label: "About Us", href: "/about", dropdown: true },
+  { label: "Top Performers", href: "/top-performers" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Our Services", href: "/services" },
+  { label: "Verification", href: "/student_verification" },
+  { label: "Franchise Registration", href: "/franchise-registration" },
+];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+function EnrollButton() {
+  return (
+    <a
+      href="/enroll"
+      className="relative overflow-hidden rounded-full border-2 border-indigo-500 w-[120px] h-[44px] flex items-center text-[15px] font-semibold text-indigo-600"
+    >
+      <div className="animate-marquee flex whitespace-nowrap">
+        <span className="mx-5">Enroll Now</span>
+        <span className="mx-5">Enroll Now</span>
+        <span className="mx-5">Enroll Now</span>
+        <span className="mx-5">Enroll Now</span>
+        <span className="mx-5">Enroll Now</span>
+        <span className="mx-5">Enroll Now</span>
+      </div>
+    </a>
+  );
+}
 
-  const navLinks = [
-    { href: "#home", label: "Home" },
-    { href: "#about", label: "About Us" },
-    { href: "#courses", label: "Programs" },
-    { href: "#testimonials", label: "Success Stories" },
-    { href: "#contact", label: "Contact" },
-    { href: "#gallery", label: "Gallery" },
-  ];
+export default function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-md" : "bg-white"
-      }`}
-    >
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo */}
-          <a href="#home" className="flex items-center gap-2 sm:gap-3 group">
-            <div className=" rounded-lg group-hover:scale-105 transition-transform">
-              <img
-                className="w-8 h-8 sm:w-12 sm:h-12"
-                alt="MCA Logo"
-                src="/logo.png"
-              />
-            </div>
-            <div className="hidden sm:block">
-              <div className="font-bold text-xl text-gray-900">
-                Mehtab Computer Academy
-              </div>
-              <div className="text-xs text-gray-500 font-medium">
-                ISO 9001:2015 Certified
-              </div>
-            </div>
-            <div className="sm:hidden">
-              <div className="font-bold text-base text-gray-900">MCA</div>
-              <div className="text-[10px] text-gray-500 font-medium">
-                ISO Certified
-              </div>
-            </div>
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-7">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="group relative flex items-center gap-1 text-[15px] font-medium text-slate-700 hover:text-indigo-600 transition-colors duration-300"
+            >
+              {link.label}
+
+              {link.dropdown && (
+                <ChevronDown
+                  size={14}
+                  className="transition-transform duration-300 group-hover:rotate-180"
+                />
+              )}
+
+              <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-gradient-to-r from-indigo-500 to-orange-400 transition-all duration-300 group-hover:w-full rounded-full" />
+            </a>
+          ))}
+        </nav>
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-4 lg:gap-5">
+          {/* Login */}
+          <a
+            href="/login"
+            aria-label="Login"
+            className="group flex items-center gap-1.5 text-[15px] font-medium text-slate-700 hover:text-indigo-600 transition-colors duration-300"
+          >
+            <LogIn
+              size={18}
+              className="transition-transform duration-300 group-hover:-translate-x-0.5"
+            />
+
+            <span className="hidden lg:inline">Login</span>
           </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <HashLink
-                key={link.href}
-                smooth
-                to={`/${link.href}`} // ensures it always goes to the homepage first
-                className="text-gray-700 hover:text-blue-600 font-medium text-[15px] transition-colors relative group"
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
-              </HashLink>
-            ))}
-            <Link
-              className="text-gray-700 hover:text-blue-600 font-medium text-[15px] transition-colors relative group"
-              to="/verify"
-            >
-              Verification
-            </Link>
-          </div>
+          {/* Download */}
+          <button
+            aria-label="Download brochure"
+            className="group text-slate-700 hover:text-indigo-600 transition-colors duration-300"
+          >
+            <Download
+              size={18}
+              className="transition-transform duration-300 group-hover:translate-y-0.5"
+            />
+          </button>
 
-          {/* CTA Buttons - Desktop */}
-          <div className="hidden lg:flex items-center gap-3">
-            <a
-              href="/login"
-              className="text-gray-700 hover:text-blue-600 font-semibold text-[15px] px-5 py-2 transition-colors"
-            >
-              Login
-            </a>
-            <HashLink
-              key={123}
-              smooth
-              to={`/#contact`}
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
-            >
-              Enroll Now
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </HashLink>
+          {/* Desktop Enroll */}
+          <div className="hidden lg:block">
+            <EnrollButton />
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-gray-700 hover:text-blue-600 transition-colors"
+            className="lg:hidden text-slate-700 hover:text-indigo-600 transition-colors"
             aria-label="Toggle menu"
+            onClick={() => setMobileOpen((open) => !open)}
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileOpen ? <X /> : <Menu />}
           </button>
         </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="lg:hidden py-2 border-t border-gray-100">
-            <div className="flex flex-col space-y-1">
-              {navLinks.map((link) => (
-                <HashLink
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-gray-700 hover:text-blue-600 hover:bg-gray-50 font-medium py-3 px-4 rounded-lg transition-colors"
-                >
-                  {link.label}
-                </HashLink>
-              ))}
-              <div className="pt-4 space-y-2">
-                <Link
-                  to="/login"
-                  onClick={() => setIsOpen(false)}
-                  className="block text-center text-gray-700 hover:bg-gray-50 font-semibold py-3 px-4 rounded-lg transition-colors border border-gray-200"
-                >
-                  Login
-                </Link>
-                <HashLink
-                  key={123}
-                  smooth
-                  to={`/#contact`}
-                  onClick={() => setIsOpen(false)}
-                  className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-3 rounded-full font-bold text-base text-white transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:bg-indigo-700 transform hover:scale-[1.02]"
-                >
-                  Enroll Now
-                  <ChevronRight className="w-4 h-4" />
-                </HashLink>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
-    </nav>
+
+      {/* Mobile Menu */}
+      <div
+        className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out ${
+          mobileOpen ? "max-h-[700px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="border-t border-gray-100 px-6 py-4 space-y-4 bg-white">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="block text-slate-700 font-medium hover:text-indigo-600 transition-colors"
+            >
+              {link.label}
+            </a>
+          ))}
+
+          {/* Mobile Enroll */}
+          <EnrollButton />
+        </div>
+      </div>
+    </header>
   );
 }

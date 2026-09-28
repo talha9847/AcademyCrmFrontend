@@ -5,24 +5,37 @@ import Testimonials from "./Testimonials";
 import CtaSection from "./CtaSection";
 import Contact from "./Contact";
 import Blog from "./Blog";
-import ChooseUs from "./ChooseUs";
 import Stats from "./Stats";
 import FeaturedCourses from "./FeaturedCourses";
-import AboutPage from "./AboutPage";
 import Journey from "./Journey";
 import FNavbar from "./FNavbar";
 import Gallery from "./Gallery";
+import TopBanner from "./TopBanner";
+import BrandStrip from "./BrandStrip";
+import ContactInfoBar from "./ContactInfoBar";
+import CategoriesSection from "./CategoriesSection";
+import CoursesSection from "./CoursesSection";
+import AboutUs from "./AboutUs";
+import WhyChooseUs from "./WhyChooseUs";
+import FloatingWidgets from "./FloatingWidgets";
 
 const Website = () => {
   return (
     <div className="overflow-x-hidden px-2">
+      <FloatingWidgets />
+      <BrandStrip />
       <FNavbar />
+      <TopBanner />
       <Hero />
+      {/* <ContactInfoBar /> */}
+      <CategoriesSection />
+      <CoursesSection />
+      <AboutUs />
+      <WhyChooseUs />
       <Stats />
-      <AboutPage />
+
       <FeaturedCourses />
       <Journey />
-      <ChooseUs />
       <Blog />
       <Gallery />
       <Testimonials />
