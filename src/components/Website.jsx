@@ -12,7 +12,6 @@ import FNavbar from "./FNavbar";
 import Gallery from "./Gallery";
 import TopBanner from "./TopBanner";
 import BrandStrip from "./BrandStrip";
-import ContactInfoBar from "./ContactInfoBar";
 import CategoriesSection from "./CategoriesSection";
 import CoursesSection from "./CoursesSection";
 import AboutUs from "./AboutUs";
@@ -20,7 +19,7 @@ import WhyChooseUs from "./WhyChooseUs";
 import FloatingWidgets from "./FloatingWidgets";
 import PromoPopup from "./PromoPopUp";
 import UpcomingEvents from "./UpcomingEvents";
-import FAQSection from "./FaqSection";
+import FAQSection from "./FAQSection";
 import PopularPosts from "./PopularPost";
 
 const Website = () => {
