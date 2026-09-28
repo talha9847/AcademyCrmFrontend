@@ -1,157 +1,157 @@
-"use client";
+import { ArrowRight, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
 
-import { Link } from "react-router-dom";
-import {
-  GraduationCap,
-  Facebook,
-  Instagram,
-  Youtube,
-  Linkedin,
-  Mail,
-  Phone,
-  MapPin,
-} from "lucide-react";
+const LOGO_FALLBACK = "https://placehold.co/160x60/1e293b/ffffff?text=IICS";
+
+const USEFUL_LINKS = [
+  "Study Materials",
+  "Certificates",
+  "Our Affiliations",
+  "Authorized Centers",
+  "Important Links",
+  "Payment Details",
+];
+
+const COMPANY_LINKS = ["Contact Us", "Blog", "Jobs", "Franchise Details"];
+
+const linkCls =
+  "inline-block text-sm text-slate-500 transition-all hover:translate-x-1 hover:text-orange-500";
 
 export default function Footer() {
-  const quickLinks = [
-    { href: "#home", label: "Home" },
-    { href: "#about", label: "About Us" },
-    { href: "#courses", label: "Programs" },
-    { href: "#gallery", label: "Gallery" },
-  ];
-
-  const courses = [
-    { href: "#programming", label: "Programming" },
-    { href: "#web-development", label: "Web Development" },
-    { href: "#design", label: "Design & Multimedia" },
-    { href: "#languages", label: "Language Training" },
-  ];
-
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
-          {/* About */}
+    <footer className="relative bg-gradient-to-b from-white to-slate-50 border-t border-gray-100">
+      <div className="h-1 bg-gradient-to-r from-orange-500 via-indigo-500 to-slate-900" />
+      <div className="max-w-7xl mx-auto px-6 pt-16 pb-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1.4fr] gap-10">
+          {/* Brand column */}
           <div>
-            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="rounded-lg">
+            <img
+              src="/logo.png"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = LOGO_FALLBACK;
+              }}
+              alt="Ignite Institute of Computer Skills"
+              className="h-12 w-auto mb-6"
+            />
+            <a
+              href="/contact"
+              className="group flex items-center justify-between rounded-full border-2 border-indigo-500 px-6 py-3 max-w-xs font-semibold text-slate-900 transition-colors hover:bg-indigo-500 hover:text-white"
+            >
+              Contact With Us{" "}
+              <ArrowRight
+                size={16}
+                className="transition-transform group-hover:translate-x-1"
+              />
+            </a>
+            <div className="flex gap-3 mt-5">
+              <a href="#">
                 <img
-                  className="w-[40px] h-[40px] text-white"
-                  alt=""
-                  src="./logo.png"
+                  src="https://placehold.co/135x40/000000/ffffff?text=Google+Play"
+                  alt="Get it on Google Play"
+                  className="h-11 rounded-lg"
                 />
-              </div>
-              <div className="font-bold text-base sm:text-xl">
-                Mehtab Computer Academy
-              </div>
-            </div>
-            <p className="text-xs sm:text-sm text-gray-400 leading-relaxed mb-4 sm:mb-6">
-              ISO certified computer education institute in Surat with 20+ years
-              of excellence in training.
-            </p>
-            <div className="flex gap-3 sm:gap-4">
-              {[Facebook, Instagram, Youtube, Linkedin].map((Icon, i) => (
-                <button
-                  key={i}
-                  className="bg-gray-800 hover:bg-blue-600 p-2 rounded-lg transition-colors"
-                >
-                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-              ))}
+              </a>
+              <a href="#">
+                <img
+                  src="https://placehold.co/135x40/000000/ffffff?text=App+Store"
+                  alt="Download on the App Store"
+                  className="h-11 rounded-lg"
+                />
+              </a>
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6">
-              Quick Links
-            </h3>
-            <ul className="space-y-2 sm:space-y-3">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
+            <h4 className="font-extrabold text-slate-900 mb-5">Useful Links</h4>
+            <ul className="space-y-3">
+              {USEFUL_LINKS.map((l) => (
+                <li key={l}>
+                  <a href="#" className={linkCls}>
+                    {l}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Courses */}
           <div>
-            <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6">
-              Popular Courses
-            </h3>
-            <ul className="space-y-2 sm:space-y-3">
-              {courses.map((course) => (
-                <li key={course.href}>
-                  <a
-                    href={course.href}
-                    className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
-                  >
-                    {course.label}
+            <h4 className="font-extrabold text-slate-900 mb-5">Our Company</h4>
+            <ul className="space-y-3">
+              {COMPANY_LINKS.map((l) => (
+                <li key={l}>
+                  <a href="#" className={linkCls}>
+                    {l}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
-            <h3 className="font-bold text-base sm:text-lg mb-4 sm:mb-6">
-              Contact Us
-            </h3>
-            <ul className="space-y-3 sm:space-y-4">
-              <li className="flex items-start gap-2 sm:gap-3">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-xs sm:text-sm text-gray-400">
-                  Surat, Gujarat, India
+            <h4 className="font-extrabold text-slate-900 mb-5">Get Contact</h4>
+            <ul className="space-y-4 text-sm text-slate-600">
+              <li className="flex gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-500">
+                  <Phone size={16} />
                 </span>
-              </li>
-              <li className="flex items-center gap-2 sm:gap-3">
-                <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
                 <a
-                  href="tel:+919825123456"
-                  className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
+                  href="tel:+919727346487"
+                  className="self-center hover:text-orange-500"
                 >
-                  +91 98251 23456
+                  <span className="font-bold">Phone:</span> +91 9727346487
                 </a>
               </li>
-              <li className="flex items-center gap-2 sm:gap-3">
-                <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
+              <li className="flex gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-500">
+                  <Mail size={16} />
+                </span>
                 <a
-                  href="mailto:info@mehtabacademy.com"
-                  className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
+                  href="mailto:infomehtabsir@gmail.com"
+                  className="self-center break-all hover:text-orange-500"
                 >
-                  info@mehtabacademy.com
+                  <span className="font-bold">E-mail:</span>{" "}
+                  infomehtabsir@gmail.com
                 </a>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-500">
+                  <MapPin size={16} />
+                </span>
+                <p>
+                  <span className="font-bold">Location:</span> SN FF 25-28
+                  SIGNATURE SQUARE MALL MOTA MANDIR ROAD TARSADI KOSAMBA MANGROL
+                  SURAT
+                </p>
               </li>
             </ul>
+            <a
+              href="https://wa.me/919727346487"
+              aria-label="Chat on WhatsApp"
+              className="mt-5 inline-flex h-10 w-10 items-center justify-center rounded-full bg-green-500 text-white shadow-md transition-transform hover:-translate-y-0.5"
+            >
+              <MessageCircle size={20} />
+            </a>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-6 sm:pt-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
-            <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
-              © 2025 Mehtab Computer Academy. All rights reserved.
-            </p>
-            <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm">
-              <a
-                href="/privacy"
-                className="text-gray-500 hover:text-white transition-colors"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="/terms"
-                className="text-gray-500 hover:text-white transition-colors"
-              >
-                Terms of Service
-              </a>
-            </div>
+        <hr className="my-8 border-gray-200" />
+
+        <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-500">
+          <p>
+            Copyright © 2026{" "}
+            <span className="font-semibold text-slate-800">DITRP INDIA.</span>{" "}
+            All Rights Reserved
+          </p>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <a href="/privacy-policy" className="hover:text-orange-500">
+              Privacy policy
+            </a>
+            <a href="/terms" className="hover:text-orange-500">
+              Term and conditions
+            </a>
+            <a href="/refund-policy" className="hover:text-orange-500">
+              Refund policy
+            </a>
           </div>
         </div>
       </div>

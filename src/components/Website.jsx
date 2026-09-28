@@ -18,6 +18,10 @@ import CoursesSection from "./CoursesSection";
 import AboutUs from "./AboutUs";
 import WhyChooseUs from "./WhyChooseUs";
 import FloatingWidgets from "./FloatingWidgets";
+import PromoPopup from "./PromoPopUp";
+import UpcomingEvents from "./UpcomingEvents";
+import FAQSection from "./FaqSection";
+import PopularPosts from "./PopularPost";
 
 const Website = () => {
   return (
@@ -32,16 +36,19 @@ const Website = () => {
       <CoursesSection />
       <AboutUs />
       <WhyChooseUs />
+      <UpcomingEvents />
+      <FAQSection />
+      <PopularPosts />
+      <Testimonials />
+      <Footer />
       <Stats />
-
       <FeaturedCourses />
       <Journey />
       <Blog />
       <Gallery />
-      <Testimonials />
       <Contact />
       <CtaSection />
-      <Footer />
+      <PromoPopup />
     </div>
   );
 };

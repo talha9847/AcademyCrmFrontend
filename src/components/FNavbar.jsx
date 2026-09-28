@@ -16,7 +16,7 @@ function EnrollButton() {
   return (
     <a
       href="/enroll"
-      className="relative overflow-hidden rounded-full border-2 border-indigo-500 w-[120px] h-[44px] flex items-center text-[15px] font-semibold text-indigo-600"
+      className="relative shrink-0 overflow-hidden rounded-full border-2 border-indigo-500 w-[120px] h-[44px] flex items-center text-[15px] font-semibold text-indigo-600"
     >
       <div className="animate-marquee flex whitespace-nowrap">
         <span className="mx-5">Enroll Now</span>
@@ -35,14 +35,14 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <div className="max-w-7xl mx-auto flex flex-nowrap items-center justify-between px-6 py-3">
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-7">
+        <nav className="hidden xl:flex items-center gap-6 2xl:gap-8">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="group relative flex items-center gap-1 text-[15px] font-medium text-slate-700 hover:text-indigo-600 transition-colors duration-300"
+              className="group relative flex shrink-0 items-center gap-1 whitespace-nowrap text-sm 2xl:text-[15px] font-medium text-slate-700 hover:text-indigo-600 transition-colors duration-300"
             >
               {link.label}
 
@@ -58,8 +58,8 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-4 lg:gap-5">
+        {/* Right Actions — ml-auto keeps them on the right on mobile, where the nav above is hidden */}
+        <div className="ml-auto flex items-center gap-4 xl:gap-5">
           {/* Login */}
           <a
             href="/login"
@@ -71,7 +71,7 @@ export default function Navbar() {
               className="transition-transform duration-300 group-hover:-translate-x-0.5"
             />
 
-            <span className="hidden lg:inline">Login</span>
+            <span className="hidden xl:inline">Login</span>
           </a>
 
           {/* Download */}
@@ -86,13 +86,13 @@ export default function Navbar() {
           </button>
 
           {/* Desktop Enroll */}
-          <div className="hidden lg:block">
+          <div className="hidden xl:block">
             <EnrollButton />
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden text-slate-700 hover:text-indigo-600 transition-colors"
+            className="xl:hidden text-slate-700 hover:text-indigo-600 transition-colors"
             aria-label="Toggle menu"
             onClick={() => setMobileOpen((open) => !open)}
           >
@@ -103,7 +103,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out ${
+        className={`xl:hidden overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out ${
           mobileOpen ? "max-h-[700px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
