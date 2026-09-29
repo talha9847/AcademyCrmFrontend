@@ -1,132 +1,228 @@
-// Course names/descriptions/prices marked REAL come from the live site screenshots.
-// Everything else is sample data — replace with your own or load from an API.
+// src/data/categories.js
+
 export const CATEGORIES = [
+  // =====================================================
+  // DEGREE PROGRAMMES
+  // =====================================================
   {
-    slug: "computer-course",
-    name: "COMPUTER COURSE",
-    image: "https://picsum.photos/id/1/900/600",
+    slug: "degree-programmes",
+    name: "DEGREE PROGRAMMES",
+    image:
+      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80",
     intro:
-      "Diploma and certificate programs that take you from computer fundamentals to job-ready office and application skills.",
+      "Future-focused degree programmes in AI-ML, Data Science, Full Stack Development and Cyber Security.",
     courses: [
       {
-        name: "Diploma In Computer Application",
-        code: "M-DCA-5433",
-        duration: "1 Year",
-        fees: "₹25,000",
-        desc: "Complete foundation in computer applications with practical lab sessions.",
-      }, // REAL
-      {
-        name: "Diploma In Primary Teacher Training",
-        code: "M-DPTT-6285",
-        duration: "1 Year",
-        fees: "₹25,000",
-        desc: "Teacher-training diploma with a technology-friendly classroom approach.",
-      }, // REAL
-      {
-        name: "Diploma In Office Automation & Desktop Publishing",
-        code: "M-DOA&DP-6466",
-        duration: "1 Year",
-        fees: "₹22,500",
-        desc: "Office tools and desktop publishing for professional documents and layouts.",
-      }, // REAL
-      {
-        name: "Advanced Diploma In Computer Application (ADCA)",
-        duration: "Contact us",
-        fees: "Contact for fees",
-        desc: "Advanced diploma covering deeper application and programming basics.",
+        name: "BCA (AI-ML)",
+        duration: "3/4 Years",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
       },
       {
-        name: "MS-Office",
-        duration: "Contact us",
-        fees: "Contact for fees",
-        desc: "Word, Excel, PowerPoint, Outlook & More.",
+        name: "BCA (Data Science)",
+        duration: "3/4 Years",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
       },
       {
-        name: "Basic To Advanced Computer",
-        duration: "Contact us",
-        fees: "Contact for fees",
-        desc: "Fundamentals to Expert Level.",
+        name: "BCA (Full Stack Development)",
+        duration: "3/4 Years",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "BCA (Cyber Security)",
+        duration: "3/4 Years",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "M.Sc (AI-ML)",
+        duration: "2 Years",
+        eligibility: "Graduation",
+        fees: "₹45,000 / Semester",
+      },
+      {
+        name: "M.Sc (Data Science)",
+        duration: "2 Years",
+        eligibility: "Graduation",
+        fees: "₹45,000 / Semester",
+      },
+      {
+        name: "M.Sc (Full Stack Development)",
+        duration: "2 Years",
+        eligibility: "Graduation",
+        fees: "₹45,000 / Semester",
+      },
+      {
+        name: "M.Sc (Cyber Security)",
+        duration: "2 Years",
+        eligibility: "Graduation",
+        fees: "₹45,000 / Semester",
       },
     ],
   },
+
+  // =====================================================
+  // DIPLOMA / P.G DIPLOMA PROGRAMMES
+  // =====================================================
   {
-    slug: "digital-marketing",
-    name: "DIGITAL MARKETING",
-    image: "https://picsum.photos/id/20/900/600",
+    slug: "diploma-programmes",
+    name: "DIPLOMA / P.G DIPLOMA",
+    image:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
     intro:
-      "Learn to grow brands online with search, social media and paid advertising.",
+      "Job-relevant diploma programmes covering AI, Data Science, Big Data, Programming, IoT, Web Development, Cyber Security and Digital Marketing.",
     courses: [
       {
-        name: "Digital Marketing",
-        duration: "Contact us",
-        fees: "Contact for fees",
-        desc: "SEO, Social Media, Google Ads & More.",
+        name: "Diploma in AI-ML",
+        duration: "12 Months",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Diploma in Data Science",
+        duration: "12 Months",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Diploma in Big Data Technology",
+        duration: "12 Months",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Diploma in Computer Programming",
+        duration: "12 Months",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Diploma in IOT using AI-ML",
+        duration: "12 Months",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Diploma in Web Development",
+        duration: "12 Months",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Diploma in Cyber Security",
+        duration: "12 Months",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Diploma in Digital Marketing",
+        duration: "12 Months",
+        eligibility: "12th Pass",
+        fees: "₹40,000 / Semester",
       },
     ],
   },
+
+  // =====================================================
+  // CERTIFICATE PROGRAMMES
+  // =====================================================
   {
-    slug: "web-designing",
-    name: "WEB DESIGNING",
-    image: "https://picsum.photos/id/48/900/600",
-    intro: "Build modern, responsive websites from the ground up.",
+    slug: "certificate-programmes",
+    name: "CERTIFICATE PROGRAMMES",
+    image:
+      "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80",
+    intro:
+      "Six-month certificate programmes designed to build practical skills in technology and digital fields.",
     courses: [
       {
-        name: "Web Designing",
-        duration: "Contact us",
-        fees: "Contact for fees",
-        desc: "HTML, CSS, JavaScript & Responsive Design.",
+        name: "Certificate in Data Science",
+        duration: "6 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Certificate in Computer Programming",
+        duration: "6 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Certificate in Full Stack Development",
+        duration: "6 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Certificate in IOT",
+        duration: "6 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Certificate in Data Analytics Using Excel & Power BI",
+        duration: "6 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Certificate in Big Data",
+        duration: "6 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Certificate in Cyber Security",
+        duration: "6 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
+      },
+      {
+        name: "Certificate in Digital Marketing",
+        duration: "6 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
       },
     ],
   },
+
+  // =====================================================
+  // SHORT-TERM CERTIFICATE COURSES
+  // =====================================================
   {
-    slug: "tally-accounting",
-    name: "TALLY & ACCOUNTING",
-    image: "https://picsum.photos/id/60/900/600",
-    intro: "Accounting and GST skills used in everyday business.",
+    slug: "short-term-courses",
+    name: "SHORT-TERM CERTIFICATE COURSES",
+    image:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80",
+    intro:
+      "Short-term courses for quickly developing practical technology and cybersecurity skills.",
     courses: [
       {
-        name: "Tally",
-        duration: "Contact us",
-        fees: "Contact for fees",
-        desc: "GST, Accounting & Financial Management.",
-      },
-    ],
-  },
-  {
-    slug: "office-automation",
-    name: "OFFICE AUTOMATION",
-    image: "https://picsum.photos/id/96/900/600",
-    intro: "Everyday office productivity tools, taught hands-on.",
-    courses: [
-      {
-        name: "Diploma In Office Automation & Desktop Publishing",
-        code: "M-DOA&DP-6466",
-        duration: "1 Year",
-        fees: "₹22,500",
-        desc: "Office tools and desktop publishing for professional documents and layouts.",
+        name: "Certified Ethical Hacker",
+        duration: "3 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
       },
       {
-        name: "MS-Office",
-        duration: "Contact us",
-        fees: "Contact for fees",
-        desc: "Word, Excel, PowerPoint, Outlook & More.",
+        name: "Programming With Python",
+        duration: "2 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
       },
-    ],
-  },
-  {
-    slug: "typing",
-    name: "TYPING",
-    image: "https://picsum.photos/id/119/900/600",
-    intro: "Build speed and accuracy in typing.",
-    courses: [
       {
-        name: "Typing",
-        duration: "Contact us",
-        fees: "Contact for fees",
-        desc: "English & Gujarati Typing.",
+        name: "Junior Software Developer",
+        duration: "3 Months",
+        eligibility: "10th Pass",
+        fees: "₹40,000 / Semester",
       },
     ],
   },
 ];
 
-export const getCategory = (slug) => CATEGORIES.find((c) => c.slug === slug);
+// =====================================================
+// GET CATEGORY BY SLUG
+// =====================================================
+
+export const getCategory = (slug) =>
+  CATEGORIES.find((category) => category.slug === slug);
